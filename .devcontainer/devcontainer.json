@@ -1,0 +1,34 @@
+{
+  "name": "Vite + React + TS (compose)",
+  "dockerComposeFile": ["../compose.dev.yml"],
+  "service": "web",
+  "workspaceFolder": "/app",
+  "shutdownAction": "stopCompose",
+  "overrideCommand": true,
+
+  "forwardPorts": [5173],
+  "portsAttributes": {
+    "5173": { "label": "Vite dev server", "onAutoForward": "notify" }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "pkief.material-icon-theme",
+        "ms-azuretools.vscode-docker",
+        "ms-vscode.vscode-typescript-next",
+        "mhutchie.git-graph",
+        "eamodio.gitlens"
+      ],
+      "settings": {
+        "git.path": "/usr/bin/git"
+      }
+    }
+  },
+
+  "postCreateCommand": "npm ci",
+  "postStartCommand": "printf \"\\nContainer is ready. Start Vite if needed with:\\n  npm run dev\\n\\n\""
+}
