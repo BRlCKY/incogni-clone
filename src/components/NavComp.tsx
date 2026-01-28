@@ -28,8 +28,11 @@ const NavComp = () => {
 
     const handleMouseLeave = () => {
         setIsFadingOut(true);
-        setTimeout(() => setShowIcons(false), 2000);
-        setTimeout(() => setIsHovered(false), 2000);
+        setTimeout(() => setShowIcons(false), 100);
+        setTimeout(() => {
+            setIsHovered(false);
+            setIsFadingOut(false);
+        }, 100);
     };
 
     return (
@@ -50,7 +53,7 @@ const NavComp = () => {
                             key={index}
                             className="animate-in fade-in duration-100"
                             style={{ 
-                                animation: isFadingOut ? 'fadeIn 0.2s ease-out' : 'fadeOut 1s ease-out'
+                                animation: isFadingOut ? 'fadeOut 0.2s ease-out' : 'fadeIn 0.2s ease-out'
                             }}
                         >
                             {placeholder()}
