@@ -1,5 +1,5 @@
 import { useState } from "react";
-import GlassSurface from "./GlassContainer";
+import GlassContainer from "./GlassContainer";
 
 const icon_size = 50;
 const icon_count = 7;
@@ -18,26 +18,56 @@ const placeholder = () => {
 
 const NavComp = () => {
     const [isHovered, setIsHovered] = useState(false);
+    const [showIcons, setShowIcons] = useState(false);
+    const [isFadingOut, setIsFadingOut] = useState(false);
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+        setTimeout(() => setShowIcons(true), 100);
+    };
+
+    const handleMouseLeave = () => {
+        setIsFadingOut(true);
+        setTimeout(() => setShowIcons(false), 2000);
+        setTimeout(() => setIsHovered(false), 2000);
+    };
 
     return (
         <nav
             className="fixed bottom-0 left-0 w-full h-[110px] flex justify-center items-end p-4 z-50"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
         >
-            <GlassSurface 
+            <GlassContainer 
             width={isHovered ? container_width : container_width * .6}
             height={isHovered ? container_height : container_height * .6}
             borderRadius={50}
+            style={{ transition: 'width 0.2s ease-out, height 0.2s ease-out' }}
             >
                 <div className="flex justify-around w-full">
-                    {isHovered && [...Array(icon_count)].map((_, index) => (
-                        <>
+                    {showIcons && [...Array(icon_count)].map((_, index) => (
+                        <div 
+                            key={index}
+                            className="animate-in fade-in duration-100"
+                            style={{ 
+                                animation: isFadingOut ? 'fadeIn 0.2s ease-out' : 'fadeOut 1s ease-out'
+                            }}
+                        >
                             {placeholder()}
-                        </>
+                        </div>
                     ))}
                 </div>
-            </GlassSurface>
+            </GlassContainer>
+            <style>{`
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                @keyframes fadeOut {
+                    from { opacity: 1; }
+                    to { opacity: 0; }
+                }
+            `}</style>
         </nav>
     )
 }
