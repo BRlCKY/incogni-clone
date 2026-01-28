@@ -1,23 +1,35 @@
+import { useState } from "react";
 import GlassSurface from "./GlassContainer";
+
+const icon_size = 50;
+const icon_count = 7;
+const icon_padding = 10;
+
 
 const placeholder = () => {
     return (
         <>
-            <div className="w-[50px] h-[50px] bg-gray-400 rounded-full"></div>
+            <div className={`w-[${icon_size}px] h-[${icon_size}px] bg-gray-400 rounded-full`}></div>
         </>
     )
 }
 
 const NavComp = () => {
+    const [isHovered, setIsHovered] = useState(false);
+
     return (
-        <nav className="fixed bottom-0 left-0 w-full flex justify-center items-center p-4 z-50">
+        <nav
+            className="fixed bottom-0 left-0 w-full h-[110px] flex justify-center items-end p-4 z-50"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
             <GlassSurface 
-            width={7*(50+10)+10}
-            height={70}
+            width={icon_count * (icon_size + icon_padding) + icon_padding}
+            height={icon_size + icon_padding * 2}
             borderRadius={50}
             >
                 <div className="flex justify-around w-full">
-                    {[...Array(7)].map((_, index) => (
+                    {isHovered && [...Array(icon_count)].map((_, index) => (
                         <>
                             {placeholder()}
                         </>
