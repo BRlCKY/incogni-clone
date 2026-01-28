@@ -11,7 +11,7 @@ const container_height = icon_size + icon_padding * 2;
 const placeholder = () => {
     return (
         <>
-            <div className={`w-[${icon_size}px] h-[${icon_size}px] bg-gray-400 rounded-full`}></div>
+            <div className={`w-[${icon_size}px] h-[${icon_size}px] bg-gray-500 rounded-full hover:bg-white`}></div>
         </>
     )
 }
