@@ -5,6 +5,8 @@ const icon_size = 50;
 const icon_count = 7;
 const icon_padding = 10;
 
+const container_width = icon_count * (icon_size + icon_padding) + icon_padding;
+const container_height = icon_size + icon_padding * 2;
 
 const placeholder = () => {
     return (
@@ -24,8 +26,8 @@ const NavComp = () => {
             onMouseLeave={() => setIsHovered(false)}
         >
             <GlassSurface 
-            width={icon_count * (icon_size + icon_padding) + icon_padding}
-            height={icon_size + icon_padding * 2}
+            width={isHovered ? container_width : container_width * .6}
+            height={isHovered ? container_height : container_height * .6}
             borderRadius={50}
             >
                 <div className="flex justify-around w-full">
