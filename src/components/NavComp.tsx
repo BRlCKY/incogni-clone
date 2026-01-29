@@ -8,14 +8,6 @@ const icon_padding = 10;
 const container_width = icon_count * (icon_size + icon_padding) + icon_padding;
 const container_height = icon_size + icon_padding * 2;
 
-const placeholder = () => {
-    return (
-        <>
-            <div className={`w-[${icon_size}px] h-[${icon_size}px] bg-gray-500 rounded-full hover:bg-white`}></div>
-        </>
-    )
-}
-
 const NavComp = () => {
     const [isHovered, setIsHovered] = useState(false);
     const [showIcons, setShowIcons] = useState(false);
@@ -34,6 +26,17 @@ const NavComp = () => {
             setIsFadingOut(false);
         }, 100);
     };
+
+    const placeholder = () => {
+        return (
+            <>
+                <div 
+                    className={`bg-gray-500 rounded-full hover:bg-white transition-colors relative hover:bottom-[3px]`}
+                    style={{ width: `${icon_size}px`, height: `${icon_size}px` }}
+                ></div>
+            </>
+        )
+    }
 
     return (
         <nav
