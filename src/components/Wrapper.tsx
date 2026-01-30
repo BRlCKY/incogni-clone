@@ -1,3 +1,4 @@
+import { useState } from "react";
 import NavComp from "./NavComp";
 import Dashboard from "./views/DashboardComp";
 import Cases from "./views/CasesComp";
@@ -8,28 +9,24 @@ import BrokerList from "./views/BrokerListComp";
 import Settings from "./views/SettingsComp";
 
 const views = ['DASHBOARD', 'CASES', 'HELPCENTER', 'LOG', 'MAIL', 'BROKERLIST', 'SETTINGS'];
-let active_view = views[0];
 
 const Wrapper = () => {
+    const [active_view, setActiveView] = useState(views[0]);
+
+    const handleNavClick = (index: number) => {
+        setActiveView(views[index]);
+    };
+
     return (
         <div>
-            <NavComp />
-            if (active_view === 'DASHBOARD') (
-                <Dashboard />
-            ) else if (active_view === 'CASES') (
-                <Cases />
-            ) else if (active_view === 'HELPCENTER') (
-                <HelpCenter />
-            ) else if (active_view === 'LOG') (
-                <Log />
-            ) else if (active_view === 'MAIL') (
-                <Mail />
-            ) else if (active_view === 'BROKERLIST') (
-                <BrokerList />
-            ) else if (active_view === 'SETTINGS') (
-                <Settings />
-            )
-            <h1>Wrapper</h1>
+            <NavComp onNavClick={handleNavClick} />
+            {active_view === 'DASHBOARD' && <Dashboard />}
+            {active_view === 'CASES' && <Cases />}
+            {active_view === 'HELPCENTER' && <HelpCenter />}
+            {active_view === 'LOG' && <Log />}
+            {active_view === 'MAIL' && <Mail />}
+            {active_view === 'BROKERLIST' && <BrokerList />}
+            {active_view === 'SETTINGS' && <Settings />}
         </div>
     )
 };

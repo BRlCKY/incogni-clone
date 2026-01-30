@@ -8,7 +8,11 @@ const icon_padding = 10;
 const container_width = icon_count * (icon_size + icon_padding) + icon_padding;
 const container_height = icon_size + icon_padding * 2;
 
-const NavComp = () => {
+interface NavCompProps {
+    onNavClick: (index: number) => void;
+}
+
+const NavComp = ({ onNavClick }: NavCompProps) => {
     const [isHovered, setIsHovered] = useState(false);
     const [showIcons, setShowIcons] = useState(false);
     const [isFadingOut, setIsFadingOut] = useState(false);
@@ -58,6 +62,7 @@ const NavComp = () => {
                             style={{ 
                                 animation: isFadingOut ? 'fadeOut 0.2s ease-out' : 'fadeIn 0.2s ease-out'
                             }}
+                            onClick={() => onNavClick(index)}
                         >
                             {placeholder()}
                         </div>
