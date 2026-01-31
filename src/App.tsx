@@ -1,12 +1,13 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import SelectComp from "./components/SelectComp";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import LogPage from "./components/view_log/LogPage";
 import NotFound from "./NotFound";
-import ListElement from "./components/logs/ListElement";
+import SelectComp from "./components/SelectComp";
 
 const App = () => (
 	<BrowserRouter>
 		<Routes>
-			<Route path="/" element={<ListElement />} />
+			<Route path="/" element={<SelectComp />} />
+			<Route path="/logs" element={<LogPage />} />
 			<Route path="*" element={<NotFound />} />
 		</Routes>
 	</BrowserRouter>
