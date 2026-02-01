@@ -10,9 +10,9 @@ const LogPage = () => {
                     <SearchbarComp />
                 </div>
                 
-                <ListComp text="Broker geantwortet" />
-                <ListComp text="Nachricht gesendet" />
-                <ListComp text="Wartet auf Antwort" />
+                <ListComp title="Broker geantwortet" text2="Broker XY hat mit einer Bestätigung geddddddddddddddddddddddddddantwortet. Deine ..." text3="4. Januar 2026, 13:45" circleColor="bg-green-500" />
+                <ListComp title="Broker geantwortet" text2="Broker XY hat mit einer Bestätigung geantwortet. Deine ..." text3="4. Januar 2026, 13:45"/>
+                <ListComp title="Broker geantwortet" text2="Broker XY hat mit einer Bestätigung geantwortet. Deine ..." text3="4. Januar 2026, 13:45"/>
             </div>
         </div>
     );
