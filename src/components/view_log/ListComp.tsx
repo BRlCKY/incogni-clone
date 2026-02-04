@@ -10,8 +10,6 @@ type ListCompProps = {
     perimeter?: number;
 }
 
-// TODO: Scrollbox 
-
 const ListComp = ({ title, text2, text3, circleColor, perimeter }: ListCompProps) => {
     
     return (
