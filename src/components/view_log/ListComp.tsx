@@ -1,7 +1,3 @@
-import { Color } from "ogl";
-import React from "react"
-import { text } from "stream/consumers";
-
 type ListCompProps = {
     title: string;
     text2?: string;
@@ -10,11 +6,13 @@ type ListCompProps = {
     perimeter?: number;
 }
 
+const elementHeight = 40;
+
 const ListComp = ({ title, text2, text3, circleColor, perimeter }: ListCompProps) => {
     
     return (
         <div
-            className="h-[40px] w-3/4 bg-gray-800 rounded-full flex items-center px-1 hover:bg-gray-700 transition-colors duration-200 cursor-default"
+            className={`h-[${elementHeight}px] w-3/4 bg-gray-800 rounded-full flex items-center px-1 hover:bg-gray-700 transition-colors duration-200 cursor-pointer`}
         >
             <div 
                 className={`${circleColor ? circleColor : "bg-white"} rounded-full align-middle relative left-[2px]`} 
