@@ -7,7 +7,7 @@ const LogComp = () => {
             {[...Array(100)].map((_, index) => (
                 <div className="mb-2">
                     <ListComp 
-                      height={40}
+                      height={30}
                       title={`Log Entry ${index + 2}`} 
                       details="This is a log entry" 
                       date="24.01.2026" 
