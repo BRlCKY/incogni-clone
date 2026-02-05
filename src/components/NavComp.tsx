@@ -48,26 +48,24 @@ const NavComp = ({ onNavClick, viewData }: NavCompProps) => {
 
     return (
         <nav
-            className="fixed bottom-0 left-0 w-full h-[110px] flex justify-center items-end p-4 z-50"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-        >
+          className="fixed bottom-0 h-[100px] flex justify-center items-end p-4 z-50"
+          style={{width: `${container_width + 100}px`, left: `calc(50% - (${container_width / 2 + 50}px))`}}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave} >
             <GlassContainer 
-            width={isHovered ? container_width : container_width * .6}
-            height={isHovered ? container_height : container_height * .6}
-            borderRadius={50}
-            style={{ transition: 'width 0.2s ease-out, height 0.2s ease-out' }}
-            >
+              width={isHovered ? container_width : container_width * .6}
+              height={isHovered ? container_height : container_height * .6}
+              borderRadius={50}
+              style={{ transition: 'width 0.2s ease-out, height 0.2s ease-out' }} >
                 <div className={`flex justify-around w-full max-w-[${icon_constrainer}px]`}>
                     {showIcons && Object.entries(viewData).map(([key, data]) => (
                         <div 
-                            key={key}
-                            className="animate-in fade-in duration-100"
-                            style={{ 
-                                animation: isFadingOut ? 'fadeOut 0.2s ease-out' : 'fadeIn 0.2s ease-out'
-                            }}
-                            onClick={() => onNavClick(key)}
-                        >
+                          key={key}
+                          className="animate-in fade-in duration-100"
+                          style={{ 
+                            animation: isFadingOut ? 'fadeOut 0.2s ease-out' : 'fadeIn 0.2s ease-out'
+                          }}
+                          onClick={() => onNavClick(key)} >
                             {navIcon(data.icon, data.alt)}
                         </div>
                     ))}
