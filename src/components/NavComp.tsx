@@ -2,17 +2,19 @@ import { useState } from "react";
 import GlassContainer from "./GlassContainer";
 
 const icon_size = 50;
-const icon_count = 7;
 const icon_padding = 10;
 
-const container_width = icon_count * (icon_size + icon_padding) + icon_padding;
-const container_height = icon_size + icon_padding * 2;
-
 interface NavCompProps {
-    onNavClick: (index: number) => void;
+    onNavClick: (key: string) => void;
+    viewData: Record<string, { icon: string; alt: string; text: string }>;
 }
 
-const NavComp = ({ onNavClick }: NavCompProps) => {
+const NavComp = ({ onNavClick, viewData }: NavCompProps) => {
+    const icon_count = Object.keys(viewData).length;
+    const container_width = icon_count * (icon_size + icon_padding) + icon_padding + 25; // 25px extra padding for non round icons
+    const container_height = icon_size + icon_padding * 2;
+    const icon_constrainer = icon_count * (icon_size + icon_padding) + icon_padding - 16; // 1rem = 16px padding on both sides
+
     const [isHovered, setIsHovered] = useState(false);
     const [showIcons, setShowIcons] = useState(false);
     const [isFadingOut, setIsFadingOut] = useState(false);
@@ -31,13 +33,15 @@ const NavComp = ({ onNavClick }: NavCompProps) => {
         }, 100);
     };
 
-    const placeholder = () => {
+    const navIcon = (iconSrc: string, alt: string) => {
         return (
             <>
-                <div 
-                    className={`bg-gray-500 rounded-full hover:bg-white transition-colors relative hover:bottom-[3px]`}
-                    style={{ width: `${icon_size}px`, height: `${icon_size}px` }}
-                ></div>
+                <img 
+                  src={iconSrc}
+                  alt={alt}
+                  width={icon_size}
+                  height={icon_size}
+                  className="relative hover:bottom-[3px] filter brightness-50 hover:brightness-100 transition-all"/>
             </>
         )
     }
@@ -54,17 +58,17 @@ const NavComp = ({ onNavClick }: NavCompProps) => {
             borderRadius={50}
             style={{ transition: 'width 0.2s ease-out, height 0.2s ease-out' }}
             >
-                <div className="flex justify-around w-full">
-                    {showIcons && [...Array(icon_count)].map((_, index) => (
+                <div className={`flex justify-around w-full max-w-[${icon_constrainer}px]`}>
+                    {showIcons && Object.entries(viewData).map(([key, data]) => (
                         <div 
-                            key={index}
+                            key={key}
                             className="animate-in fade-in duration-100"
                             style={{ 
                                 animation: isFadingOut ? 'fadeOut 0.2s ease-out' : 'fadeIn 0.2s ease-out'
                             }}
-                            onClick={() => onNavClick(index)}
+                            onClick={() => onNavClick(key)}
                         >
-                            {placeholder()}
+                            {navIcon(data.icon, data.alt)}
                         </div>
                     ))}
                 </div>

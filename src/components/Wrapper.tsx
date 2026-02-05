@@ -8,18 +8,26 @@ import Mail from "./views/MailComp";
 import BrokerList from "./views/BrokerListComp";
 import Settings from "./views/SettingsComp";
 
-const views = ['DASHBOARD', 'CASES', 'HELPCENTER', 'LOG', 'MAIL', 'BROKERLIST', 'SETTINGS'];
+const view_data = {
+    'DASHBOARD': { icon: 'dashboard.svg', alt: 'dashboard', text: 'Dashboard' },
+    'CASES': { icon: 'cases.svg', alt: 'cases', text: 'Einzelfälle' },
+    'HELPCENTER': { icon: 'help.svg', alt: 'helpcenter', text: 'Hilfe' },
+    'LOG': { icon: 'log.svg', alt: 'log', text: 'Logs' },
+    'MAIL': { icon: 'mail.svg', alt: 'mail', text: 'Benachrichtigungen' },
+    'BROKERLIST': { icon: 'broker.svg', alt: 'brokerlist', text: 'Broker Liste' },
+    'SETTINGS': { icon: 'settings.svg', alt: 'settings', text: 'Einstellungen' },
+}
 
 const Wrapper = () => {
-    const [active_view, setActiveView] = useState(views[0]);
+    const [active_view, setActiveView] = useState(Object.keys(view_data)[0]);
 
-    const handleNavClick = (index: number) => {
-        setActiveView(views[index]);
+    const handleNavClick = (key: string) => {
+        setActiveView(key);
     };
 
     return (
         <div>
-            <NavComp onNavClick={handleNavClick} />
+            <NavComp onNavClick={handleNavClick} viewData={view_data} />
             {active_view === 'DASHBOARD' && <Dashboard />}
             {active_view === 'CASES' && <Cases />}
             {active_view === 'HELPCENTER' && <HelpCenter />}
