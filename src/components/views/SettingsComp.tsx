@@ -1,6 +1,6 @@
 const SettingsComp = () => {
     return (
-        <div>
+        <div className="flex justify-center items-center h-full-respect-nav">
             <h1>Settings</h1>
         </div>
     )

@@ -1,7 +1,7 @@
 const MailComp = () => {
     return (
-        <div>
-            <h1>Mail</h1>
+        <div className="flex justify-center items-center h-full-respect-nav">
+            <h1>Messages</h1>
         </div>
     )
 };

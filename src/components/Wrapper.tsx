@@ -7,6 +7,7 @@ import Log from "./views/LogComp";
 import Mail from "./views/MailComp";
 import BrokerList from "./views/BrokerListComp";
 import Settings from "./views/SettingsComp";
+import ColorBlendBackground from "./backgrounds/ColorBlendBackground";
 
 const view_data = {
     'DASHBOARD': { icon: 'dashboard.svg', alt: 'dashboard', text: 'Dashboard' },
@@ -35,6 +36,9 @@ const Wrapper = () => {
             {active_view === 'MAIL' && <Mail />}
             {active_view === 'BROKERLIST' && <BrokerList />}
             {active_view === 'SETTINGS' && <Settings />}
+            <div className="fixed w-full h-full -z-50 top-0 left-0">
+                <ColorBlendBackground />
+            </div>
         </div>
     )
 };

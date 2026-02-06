@@ -1,6 +1,6 @@
 const HelpCenterComp = () => {
     return (
-        <div>
+        <div className="flex justify-center items-center h-full-respect-nav">
             <h1>Help Center</h1>
         </div>
     )

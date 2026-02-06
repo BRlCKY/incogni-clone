@@ -298,9 +298,10 @@ export default function ColorBends({
       pointerTargetRef.current.set(x, y);
     };
 
-    container.addEventListener('pointermove', handlePointerMove);
+    // Listen on window so background still responds even when other elements are on top.
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
     return () => {
-      container.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointermove', handlePointerMove);
     };
   }, []);
 
