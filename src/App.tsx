@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import SelectComp from "./components/SelectComp";
 import NotFound from "./NotFound";
+import Wrapper from "./components/Wrapper";
 
 const App = () => (
 	<BrowserRouter>
 		<Routes>
-			<Route path="/" element={<SelectComp />} />
+			<Route path="/" element={<Wrapper />} />
 			<Route path="*" element={<NotFound />} />
 		</Routes>
 	</BrowserRouter>
