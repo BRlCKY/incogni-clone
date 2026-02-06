@@ -1,5 +1,6 @@
 import { useState } from "react";
 import GlassContainer from "./GlassContainer";
+import { max } from "three/tsl";
 
 const icon_size = 50;
 const icon_padding = 10;
@@ -57,7 +58,9 @@ const NavComp = ({ onNavClick, viewData }: NavCompProps) => {
               height={isHovered ? container_height : container_height * .6}
               borderRadius={50}
               style={{ transition: 'width 0.2s ease-out, height 0.2s ease-out' }} >
-                <div className={`flex justify-around w-full max-w-[${icon_constrainer}px]`}>
+                <div 
+                  className="flex justify-around w-full"
+                  style={{maxWidth: `${icon_constrainer}px`}} >
                     {showIcons && Object.entries(viewData).map(([key, data]) => (
                         <div 
                           key={key}
