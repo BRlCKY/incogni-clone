@@ -1,12 +1,11 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import LogPage from "./components/view_log/LogPage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NotFound from "./NotFound";
-import LogComp from "./components/views/LogComp";
+import Wrapper from "./components/Wrapper";
 
 const App = () => (
 	<BrowserRouter>
 		<Routes>
-			<Route path="/" element={<LogComp />} />
+			<Route path="/" element={<Wrapper />} />
 			<Route path="*" element={<NotFound />} />
 		</Routes>
 	</BrowserRouter>
