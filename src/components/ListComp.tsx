@@ -18,8 +18,8 @@ const ListComp = (props: ListCompProps) => {
 			  className={`${props.circleColorClass ? props.circleColorClass : "bg-white"} rounded-full relative left-[3px] flex-shrink-0`} 
 			  style={{width: `${perimeter}px`, height: `${perimeter}px`}}/>
 			<div className="flex justify-end ml-3 w-full">
-				<p className="font-bold min-w-[200px]">{props.title}</p>
-				<p className="ml-2 text-gray-400 flex-1 truncate">{props.details}</p>
+				<p className="font-bold min-w-[200px] max-[500px]:flex-1 max-[500px]:min-w-[100px] truncate">{props.title}</p>
+				<p className="ml-2 text-gray-400 flex-1 truncate max-[500px]:hidden">{props.details}</p>
 				<p className="mx-[10px] text-gray-400">{props.date}, {props.time}</p>
 			</div>
 		</div>
