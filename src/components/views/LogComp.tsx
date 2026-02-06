@@ -3,9 +3,8 @@ import ListComp from "../ListComp";
 const LogComp = () => {
     return (
         <div className="p-4 h-full-respect-nav overflow-y-scroll">
-            <h1>Log</h1>
             {[...Array(100)].map((_, index) => (
-                <div className="mb-2">
+                <div className="mb-1">
                     <ListComp 
                       height={30}
                       title={`Log Entry ${index + 2}`} 
