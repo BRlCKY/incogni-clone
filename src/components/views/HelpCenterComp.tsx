@@ -1,9 +1,17 @@
 const HelpCenterComp = () => {
-    return (
-        <div className="flex justify-center items-center h-full-respect-nav">
-            <h1>Help Center</h1>
-        </div>
-    )
+     const boxes = Array.from({ length: 10 }, (_, i) => i + 1);
+
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="demo-grid">
+        {boxes.map((num) => (
+          <div key={num} className="box">
+            {num}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default HelpCenterComp;
