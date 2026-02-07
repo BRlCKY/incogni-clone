@@ -1,6 +1,6 @@
 import { useState } from "react";
 import GlassContainer from "./GlassContainer";
-import { max } from "three/tsl";
+import { Tooltip } from "react-tooltip";
 
 const icon_size = 50;
 const icon_padding = 10;
@@ -35,6 +35,9 @@ const NavComp = ({ onNavClick, viewData }: NavCompProps) => {
     };
 
     const navIcon = (iconSrc: string, alt: string) => {
+        const tooltip_id = `tooltip-${alt}`
+        const tooltip_text = String(alt).charAt(0).toUpperCase() + String(alt).slice(1)
+        
         return (
             <>
                 <img 
@@ -42,7 +45,11 @@ const NavComp = ({ onNavClick, viewData }: NavCompProps) => {
                   alt={alt}
                   width={icon_size}
                   height={icon_size}
-                  className="relative hover:bottom-[3px] filter brightness-50 hover:brightness-100 transition-all"/>
+                  className="relative hover:bottom-[3px] filter brightness-50 hover:brightness-100 transition-all"
+                  data-tooltip-id={tooltip_id}
+                  data-tooltip-content={tooltip_text}
+                  />
+                  <Tooltip id={tooltip_id} place="top" />
             </>
         )
     }
