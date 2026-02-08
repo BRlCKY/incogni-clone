@@ -34,9 +34,8 @@ const NavComp = ({ onNavClick, viewData }: NavCompProps) => {
         }, 100);
     };
 
-    const navIcon = (iconSrc: string, alt: string) => {
+    const navIcon = (iconSrc: string, alt: string, text: string) => {
         const tooltip_id = `tooltip-${alt}`
-        const tooltip_text = String(alt).charAt(0).toUpperCase() + String(alt).slice(1)
         
         return (
             <>
@@ -47,7 +46,7 @@ const NavComp = ({ onNavClick, viewData }: NavCompProps) => {
                   height={icon_size}
                   className="relative hover:bottom-[3px] filter brightness-50 hover:brightness-100 transition-all"
                   data-tooltip-id={tooltip_id}
-                  data-tooltip-content={tooltip_text}
+                  data-tooltip-content={text}
                   />
                   <Tooltip id={tooltip_id} place="top" />
             </>
@@ -64,7 +63,8 @@ const NavComp = ({ onNavClick, viewData }: NavCompProps) => {
               width={isHovered ? container_width : container_width * .6}
               height={isHovered ? container_height : container_height * .6}
               borderRadius={50}
-              style={{ transition: 'width 0.2s ease-out, height 0.2s ease-out' }} >
+              style={{ transition: 'width 0.2s ease-out, height 0.2s ease-out' }} 
+              className="overflow-visible" >
                 <div 
                   className="flex justify-around w-full"
                   style={{maxWidth: `${icon_constrainer}px`}} >
@@ -76,7 +76,7 @@ const NavComp = ({ onNavClick, viewData }: NavCompProps) => {
                             animation: isFadingOut ? 'fadeOut 0.2s ease-out' : 'fadeIn 0.2s ease-out'
                           }}
                           onClick={() => onNavClick(key)} >
-                            {navIcon(data.icon, data.alt)}
+                            {navIcon(data.icon, data.alt, data.text)}
                         </div>
                     ))}
                 </div>
