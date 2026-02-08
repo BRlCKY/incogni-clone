@@ -4,7 +4,7 @@ interface ListCompProps {
   details: string;
   date: string;
   time: string;
-  circleColorClass: string;
+  circleColorClass?: string;
 }
 
 const ListComp = (props: ListCompProps) => {
