@@ -8,7 +8,7 @@ interface ListCompProps {
 }
 
 const ListComp = (props: ListCompProps) => {
-	const perimeter =  props.height - 6;
+	const diameter =  props.height - 6;
 	
 	return (
 		<div 
@@ -16,7 +16,7 @@ const ListComp = (props: ListCompProps) => {
 		  style={{height: `${props.height}px`}}>
 			<div 
 			  className={`${props.circleColorClass ? props.circleColorClass : "bg-white"} rounded-full relative left-[3px] flex-shrink-0`} 
-			  style={{width: `${perimeter}px`, height: `${perimeter}px`}}/>
+			  style={{width: `${diameter}px`, height: `${diameter}px`}}/>
 			<div className="flex justify-end ml-3 w-full">
 				<p className="font-bold min-w-[200px] max-[500px]:flex-1 max-[500px]:min-w-[100px] truncate">{props.title}</p>
 				<p className="ml-2 text-gray-400 flex-1 truncate max-[500px]:hidden">{props.details}</p>

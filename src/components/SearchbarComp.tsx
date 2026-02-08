@@ -1,6 +1,6 @@
 const SearchbarComp = () => {
     return (
-        <div className="h-[40px] w-1/4 bg-gray-900 rounded-full flex items-center px-3">
+        <div className="h-[40px] w-full bg-gray-900 rounded-full flex items-center px-3">
             <svg width="20px" 
                  height="20px" 
                  viewBox="0 0 20 20" 
