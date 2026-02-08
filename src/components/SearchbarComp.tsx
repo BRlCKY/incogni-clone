@@ -1,6 +1,6 @@
 const SearchbarComp = () => {
     return (
-        <div className="h-[40px] w-1/4 bg-gray-800 rounded-full flex items-center px-3">
+        <div className="h-[40px] w-1/4 bg-gray-900 rounded-full flex items-center px-3">
             <svg width="20px" 
                  height="20px" 
                  viewBox="0 0 20 20" 
@@ -13,7 +13,7 @@ const SearchbarComp = () => {
                 type="text"
                 placeholder="Suchen"
                 maxLength={30}
-                className="rounded-full pl-3 bg-gray-800 text-white outline-none w-full min-w-0 overflow-hidden text-ellipsis whitespace-nowrap" />
+                className="rounded-full pl-3 bg-gray-900 text-white outline-none w-full min-w-0 overflow-hidden text-ellipsis whitespace-nowrap" />
         </div>
     )
 }
