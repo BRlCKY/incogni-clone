@@ -9,4 +9,5 @@ body {
 
 .h-full-respect-nav {
   height: calc(100vh - 70px);
+  overflow-y: scroll;
 }
