@@ -17,13 +17,8 @@ const questions: Question[] = [
 const HelpCenterComp = () => {
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
 
-  const handleClick = (q: Question) => {
-    if (q.url) {
-      window.open(q.url, "", "");
-    } else {
-      setSelectedQuestion(q);
-    }
-  };
+ const handleClick = (q: Question) => q.url ? window.open(q.url) : setSelectedQuestion(q);
+
 
   return (
     <>
