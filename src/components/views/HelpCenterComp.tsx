@@ -12,6 +12,8 @@ const questions: Question[] = [
   { text: "Google", url: "https://google.com" },
   { text: "Frage 4", content: "Antwort zu Frage 4" },
   { text: "Frage 5", content: "Antwort zu Frage 5" },
+  { text: "Frage 6", content: "Antwort zu Frage 6" },
+
 ];
 
 const HelpCenterComp = () => {
@@ -32,7 +34,7 @@ const HelpCenterComp = () => {
                 text-gray-400 transition-all duration-200 cursor-pointer hover:bg-gray-700 hover:scale-105 
                 hover:shadow-lg"
             >
-              <span className="font-semibold truncate">
+              <span className="font-semibold ">
                 {q.text}
               </span>
             </div>
