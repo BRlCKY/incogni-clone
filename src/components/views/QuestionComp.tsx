@@ -7,17 +7,19 @@ interface QuestionCard {
 
 const QuestionComp = ({ question, onClick }: QuestionCard) => {
   return (
-    <div
+    <button
       onClick={() => onClick(question)}
+     // title={question.text}
       className="aspect-square bg-gray-800 rounded-2xl flex items-center justify-center text-center p-4 
-      text-gray-400 transition-all duration-200 cursor-pointer hover:bg-gray-700 
-      hover:scale-105 hover:shadow-lg"
+                 text-gray-400 transition-all duration-200 hover:bg-gray-700 
+                 hover:scale-105 hover:shadow-lg"
     >
       <span className="font-semibold">
         {question.text}
       </span>
-    </div>
+    </button>
   );
 };
+
 
 export default QuestionComp;
