@@ -8,6 +8,7 @@ export interface BentoCardProps {
   label?: string;
   textAutoHide?: boolean;
   disableAnimations?: boolean;
+  content?: React.ReactNode;
 }
 
 export interface BentoProps {
@@ -32,21 +33,98 @@ const MOBILE_BREAKPOINT = 768;
 const cardData: BentoCardProps[] = [
   {
     color: '#060010',
-    title: 'Analytics',
-    description: 'Track user behavior',
-    label: 'Insights'
+    title: 'Statistics',
+    label: 'Overview',
+    content: (
+      <div className="flex flex-col gap-6 h-full">
+        <div>
+          <div className="text-3xl font-semibold text-yellow-400">42</div>
+          <div className="text-sm opacity-70 mt-1">Broker angeschrieben</div>
+        </div>
+        <div>
+          <div className="text-3xl font-semibold text-green-400">18</div>
+          <div className="text-sm opacity-70 mt-1">Broker haben geantwortet</div>
+        </div>
+        <div>
+          <div className="text-3xl font-semibold text-red-400">12</div>
+          <div className="text-sm opacity-70 mt-1">Cases aktuell offen</div>
+        </div>
+      </div>
+    )
   },
   {
     color: '#060010',
-    title: 'Dashboard',
-    description: 'Centralized data view',
-    label: 'Overview'
+    title: 'Broker Performance',
+    label: 'Response Times',
+    content: (
+      <div className="flex flex-col gap-4 h-full overflow-y-auto pr-2">
+        <div className="flex justify-between items-center text-sm">
+          <span>Broker G</span>
+          <span className="text-red-400 font-semibold">14 days</span>
+        </div>
+        <div className="flex justify-between items-center text-sm">
+          <span>Broker F</span>
+          <span className="text-red-400 font-semibold">12 days</span>
+        </div>
+        <div className="flex justify-between items-center text-sm">
+          <span>Broker E</span>
+          <span className="text-yellow-400 font-semibold">8 days</span>
+        </div>
+        <div className="flex justify-between items-center text-sm">
+          <span>Broker D</span>
+          <span className="text-yellow-400 font-semibold">6 days</span>
+        </div>
+        <div className="flex justify-between items-center text-sm">
+          <span>Broker C</span>
+          <span className="text-green-400 font-semibold">2 days</span>
+        </div>
+        <div className="flex justify-between items-center text-sm">
+          <span>Broker B</span>
+          <span className="text-green-400 font-semibold">1 day</span>
+        </div>
+        <div className="flex justify-between items-center text-sm">
+          <span>Broker A</span>
+          <span className="text-green-400 font-semibold">4 hours</span>
+        </div>
+      </div>
+    )
   },
   {
     color: '#060010',
-    title: 'Collaboration',
-    description: 'Work together seamlessly',
-    label: 'Teamwork'
+    title: 'Activity Log',
+    label: 'Recent',
+    content: (
+      <div className="flex flex-col gap-3 h-full overflow-y-auto pr-2">
+        <div className="flex gap-3 text-sm">
+          <div className="text-purple-primary font-semibold min-w-fit">14:32</div>
+          <div className="opacity-90">Broker A agreed to delete data</div>
+        </div>
+        <div className="flex gap-3 text-sm">
+          <div className="text-purple-primary font-semibold min-w-fit">13:45</div>
+          <div className="opacity-90">Broker B asked for additional time</div>
+        </div>
+        <div className="flex gap-3 text-sm">
+          <div className="text-purple-primary font-semibold min-w-fit">13:12</div>
+          <div className="opacity-90">Case resolved with Broker C</div>
+        </div>
+        <div className="flex gap-3 text-sm">
+          <div className="text-purple-primary font-semibold min-w-fit">12:58</div>
+          <div className="opacity-90">Broker D sent confirmation</div>
+        </div>
+        <div className="flex gap-3 text-sm">
+          <div className="text-purple-primary font-semibold min-w-fit">12:20</div>
+          <div className="opacity-90">New request to Broker E</div>
+        </div>
+        <div className="flex gap-3 text-sm">
+          <div className="text-purple-primary font-semibold min-w-fit">11:45</div>
+          <div className="opacity-90">Broker F responded with questions</div>
+        </div>
+        <div className="flex gap-3 text-sm">
+          <div className="text-purple-primary font-semibold min-w-fit">11:00</div>
+          <div className="opacity-90">Reminder sent to Broker G</div>
+        </div>
+      </div>
+    )
   },
   {
     color: '#060010',
@@ -710,14 +788,20 @@ const MagicBento: React.FC<BentoProps> = ({
                     <span className="card__label text-base">{card.label}</span>
                   </div>
                   <div className="card__content flex flex-col relative text-white">
-                    <h3 className={`card__title font-normal text-base m-0 mb-1 ${textAutoHide ? 'text-clamp-1' : ''}`}>
-                      {card.title}
-                    </h3>
-                    <p
-                      className={`card__description text-xs leading-5 opacity-90 ${textAutoHide ? 'text-clamp-2' : ''}`}
-                    >
-                      {card.description}
-                    </p>
+                    {card.content ? (
+                      card.content
+                    ) : (
+                      <>
+                        <h3 className={`card__title font-normal text-base m-0 mb-1 ${textAutoHide ? 'text-clamp-1' : ''}`}>
+                          {card.title}
+                        </h3>
+                        <p
+                          className={`card__description text-xs leading-5 opacity-90 ${textAutoHide ? 'text-clamp-2' : ''}`}
+                        >
+                          {card.description}
+                        </p>
+                      </>
+                    )}
                   </div>
                 </ParticleCard>
               );
@@ -842,12 +926,18 @@ const MagicBento: React.FC<BentoProps> = ({
                   <span className="card__label text-base">{card.label}</span>
                 </div>
                 <div className="card__content flex flex-col relative text-white">
-                  <h3 className={`card__title font-normal text-base m-0 mb-1 ${textAutoHide ? 'text-clamp-1' : ''}`}>
-                    {card.title}
-                  </h3>
-                  <p className={`card__description text-xs leading-5 opacity-90 ${textAutoHide ? 'text-clamp-2' : ''}`}>
-                    {card.description}
-                  </p>
+                  {card.content ? (
+                    card.content
+                  ) : (
+                    <>
+                      <h3 className={`card__title font-normal text-base m-0 mb-1 ${textAutoHide ? 'text-clamp-1' : ''}`}>
+                        {card.title}
+                      </h3>
+                      <p className={`card__description text-xs leading-5 opacity-90 ${textAutoHide ? 'text-clamp-2' : ''}`}>
+                        {card.description}
+                      </p>
+                    </>
+                  )}
                 </div>
               </div>
             );
