@@ -2,6 +2,7 @@ import MergedShape from "../DashboardShapes";
 import MagicBento from "../MagicBento";
 
 const DashboardComp = () => {
+    /* we dont like magic bentos. but we like magic bendschus */
     return (
         <div className="flex justify-center items-center h-full-respect-nav">
             <MagicBento
