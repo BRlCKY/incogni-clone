@@ -1,5 +1,5 @@
 import { useState } from "react";
-import QuestionComp from "./QuestionComp";
+import Topic from "./TopicComp";
 import QuestionModal from "./ModalComp";
 
 export type Question =
@@ -31,17 +31,14 @@ const HelpCenterComp = () => {
     <>
       
       <div className="h-full-respect-nav w-full overflow-y-auto bg-transparent">
-        
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-6 w-full">
             {questions.map((q, i) => (
-              <QuestionComp
-                key={i}
-                question={q}
-                onClick={handleClick}
-              />
-            ))}
-          
-          
+              <Topic
+              key={i}           
+              text={q.text}
+              onClick={() => handleClick(q)} 
+            />
+          ))}
         </div>
       </div>
 
