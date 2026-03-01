@@ -9,9 +9,15 @@ const QuestionModal = ({ question, onClose }: Modal) => {
   if (!question) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-800/60 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-gray-800 rounded-2xl p-8 max-w-2xl w-full min-h-[300px] relative shadow-xl border border-gray-700">
-        
+   
+    <div
+      onClick={onClose}
+      className="fixed inset-0 bg-gray-800/60 backdrop-blur-sm flex items-center justify-center z-50"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-gray-800 rounded-2xl p-8 max-w-2xl w-full min-h-[300px] relative shadow-xl border border-gray-700"
+      >
         <button
           onClick={onClose}
           className="absolute top-3 right-3 text-gray-400 hover:text-white transition-colors"
