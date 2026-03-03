@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Topic from "./TopicComp";
-import QuestionModal from "./ModalComp";
+import Topic from "../TopicComp";
+import QuestionModal from "../ModalComp";
 
 export type Question =
   | { text: string; content: string; url?: never }

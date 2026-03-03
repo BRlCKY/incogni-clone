@@ -1,4 +1,4 @@
-import type { Question } from "./HelpCenterComp";
+import type { Question } from "./views/HelpCenterComp";
 
 interface Modal {
   question: Question | null;
