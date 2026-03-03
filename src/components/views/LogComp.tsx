@@ -13,9 +13,9 @@ const LogComp = () => {
                         <ListComp
                             height={30}
                             title={`Log Entry ${index + 1}`}
-                            details="This is a log entry"
-                            date="24.01.2026"
-                            time="13:45"
+                            text1="This is a log entry"
+                            text2="24.01.2026"
+                            text3="13:45"
                             circleColorClass="bg-blue-500" />
                     </div>
                 ))}

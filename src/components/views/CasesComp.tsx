@@ -1,9 +1,15 @@
 import { useState } from "react";
+import ButtonComp from "../ButtonComp";
 import ListComp from "../ListComp";
 
 const CasesComp = () => {
-    /* TODO: create a map for color. fe.: "done": "bg-green-600" */
-    const colors = ["bg-red-700", "bg-yellow-500", "bg-green-600"];
+    const statusColorMap = {
+        rejected: "bg-red-700",
+        stalled: "bg-yellow-500",
+        done: "bg-green-600",
+    } as const;
+    const selectedColor = "bg-blue-500";
+    const statuses = Object.keys(statusColorMap) as Array<keyof typeof statusColorMap>;
     const [items, setItems] = useState<number[]>([...Array(100)].map((_, i) => i));
     const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
 
@@ -16,7 +22,7 @@ const CasesComp = () => {
     };
 
     const handleSelectRed = () => {
-        setSelectedItems(new Set(items.filter(item => colors[item % colors.length] === "bg-red-700")));
+        setSelectedItems(new Set(items.filter(item => statuses[item % statuses.length] === "rejected")));
     };
 
     const handleDeleteSelected = () => {
@@ -35,32 +41,21 @@ const CasesComp = () => {
         setSelectedItems(newSelected);
     };
 
+    const buttonActions: Array<{ label: string; onClick?: () => void }> = [
+        { label: "Alle auswählen", onClick: handleSelectAll },
+        { label: "Alle abwählen", onClick: handleDeselectAll },
+        { label: "Rote auswählen", onClick: handleSelectRed },
+        { label: "Filtern" },
+        { label: "Ausgewählte anschreiben" },
+        { label: "Ausgewählte löschen", onClick: handleDeleteSelected },
+    ];
+
     return (
         <>
             <div className="fixed flex justify-evenly pl-8 top-4 right-4 z-50 w-full h-[50px]">
-                {/* TODO: Make this a component and map through an array of button names and onClick functions */}
-                <div className="h-[50px] w-full mr-4 bg-gray-900 rounded-full items-center justify-center flex font-bold hover:bg-gray-800 cursor-pointer"
-                    onClick={handleSelectAll}>
-                    <p className="text-white text-sm">Alle auswählen</p>
-                </div>
-                <div className="h-[50px] w-full mr-4 bg-gray-900 rounded-full items-center justify-center flex font-bold hover:bg-gray-800 cursor-pointer"
-                    onClick={handleDeselectAll}>
-                    <p className="text-white text-sm">Alle abwählen</p>
-                </div>
-                <div className="h-[50px] w-full mr-4 bg-gray-900 rounded-full items-center justify-center flex font-bold hover:bg-gray-800 cursor-pointer"
-                    onClick={handleSelectRed}>
-                    <p className="text-white text-sm">Rote auswählen</p>
-                </div>
-                <div className="h-[50px] w-full mr-4 bg-gray-900 rounded-full items-center justify-center flex font-bold hover:bg-gray-800 cursor-pointer">
-                    <p className="text-white text-sm">Filtern</p>
-                </div>
-                <div className="h-[50px] w-full mr-4 bg-gray-900 rounded-full items-center justify-center flex font-bold hover:bg-gray-800 cursor-pointer">
-                    <p className="text-white text-sm">Ausgewählte anschreiben</p>
-                </div>
-                <div className="h-[50px] w-full mr-4 bg-gray-900 rounded-full items-center justify-center flex font-bold hover:bg-gray-800 cursor-pointer"
-                    onClick={handleDeleteSelected}>
-                    <p className="text-white text-sm">Ausgewählte löschen</p>
-                </div>
+                {buttonActions.map(({ label, onClick }) => (
+                    <ButtonComp key={label} label={label} onClick={onClick} />
+                ))}
             </div>
             <div className="h-full-respect-nav p-4">
 
@@ -70,8 +65,8 @@ const CasesComp = () => {
                             <ListComp
                                 height={50}
                                 title={`Broker Number ${index + 1}`}
-                                details="Latest update: Request accepted/stalled/rejected"
-                                circleColorClass={selectedItems.has(index) ? "bg-blue-500" : colors[index % colors.length]}
+                                text1="Latest update: Request accepted/stalled/rejected"
+                                circleColorClass={selectedItems.has(index) ? selectedColor : statusColorMap[statuses[index % statuses.length]]}
                                 onItemClick={() => handleToggleItem(index)} />
                         </div>
                     ))}

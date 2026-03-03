@@ -1,9 +1,9 @@
 interface ListCompProps {
   height: number;
   title: string;
-  details?: string;
-  date?: string;
-  time?: string;
+  text1?: string;
+  text2?: string;
+  text3?: string;
   circleColorClass?: string;
   onItemClick?: () => void;
 }
@@ -21,8 +21,8 @@ const ListComp = (props: ListCompProps) => {
 			  onClick={props.onItemClick} />
 			<div className="flex justify-end ml-3 w-full">
 				<p className="font-bold min-w-[200px] max-[500px]:flex-1 max-[500px]:min-w-[100px] truncate">{props.title}</p>
-				<p className="ml-2 text-gray-400 flex-1 truncate max-[500px]:hidden">{props.details}</p>
-				<p className="mx-[10px] text-gray-400">{props.date} {props.time}</p>
+				<p className="ml-2 text-gray-400 flex-1 truncate max-[500px]:hidden">{props.text1}</p>
+				<p className="mx-[10px] text-gray-400">{props.text2} {props.text3}</p>
 			</div>
 		</div>
 	);
