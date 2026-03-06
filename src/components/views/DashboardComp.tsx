@@ -1,3 +1,11 @@
+// TODO: API
+const summaryData = [
+    { label: "Broker angeschrieben", value: 41, colorClass: "text-yellow-400" },
+    { label: "Broker haben geantwortet", value: 18, colorClass: "text-green-400" },
+    { label: "Cases aktuell offen", value: 12, colorClass: "text-red-400" },
+];
+
+// TODO: API
 const brokerPerformance = [
     { name: "Broker G", time: "14 Tage", colorClass: "text-red-400" },
     { name: "Broker F", time: "12 Tage", colorClass: "text-red-400" },
@@ -22,31 +30,39 @@ const activityLog = [
 const cardClassName =
     "rounded-3xl bg-gray-800 hover:bg-gray-700 border border-gray-700 transition-colors duration-200 p-6";
 
-const DashboardComp = () => {
+type DashboardCompProps = {
+    onTileClick: (view: string) => void;
+};
+
+const getTileInteractionProps = (onClick: () => void) => ({
+    onClick,
+});
+
+const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
     return (
         <div className="h-full-respect-nav px-4 py-5 md:px-6 md:py-6">
             <div className="mx-auto grid w-full max-w-[80rem] grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[1fr_1.5fr]">
-                <section className={`${cardClassName} min-h-[350px] md:min-h-[390px]`}>
+                <section
+                    className={`${cardClassName} min-h-[350px] cursor-pointer md:min-h-[390px]`}
+                    {...getTileInteractionProps(() => onTileClick("CASES"))}
+                >
                     <div className="mb-5 text-base text-gray-300">Übersicht</div>
                     <div className="flex h-[calc(100%-2rem)] flex-col gap-6">
-                        <div>
-                            <div className="text-3xl font-semibold text-yellow-400">42</div>
-                            <div className="mt-1 text-sm text-gray-400">Broker angeschrieben</div>
-                        </div>
-                        <div>
-                            <div className="text-3xl font-semibold text-green-400">18</div>
-                            <div className="mt-1 text-sm text-gray-400">Broker haben geantwortet</div>
-                        </div>
-                        <div>
-                            <div className="text-3xl font-semibold text-red-400">12</div>
-                            <div className="mt-1 text-sm text-gray-400">Cases aktuell offen</div>
-                        </div>
+                        {summaryData.map((item) => (
+                            <div key={item.label}>
+                                <div className={`text-3xl font-semibold ${item.colorClass}`}>{item.value}</div>
+                                <div className="mt-1 text-sm text-gray-400">{item.label}</div>
+                            </div>
+                        ))}
                     </div>
                 </section>
 
-                <section className={`${cardClassName} min-h-[350px] md:min-h-[390px] lg:col-start-1`}>
+                <section
+                    className={`${cardClassName} min-h-[350px] cursor-pointer md:min-h-[390px] lg:col-start-1`}
+                    {...getTileInteractionProps(() => onTileClick("MAIL"))}
+                >
                     <div className="mb-5 text-base text-gray-300">Antwortzeiten</div>
-                    <div className="flex max-h-[290px] flex-col gap-3 overflow-y-auto pr-1">
+                    <div className="flex max-h-[290px] flex-col gap-3 overflow-y-hidden pr-1">
                         {brokerPerformance.map((broker) => (
                             <div key={broker.name} className="flex items-center justify-between text-sm">
                                 <span className="text-white">{broker.name}</span>
@@ -56,9 +72,12 @@ const DashboardComp = () => {
                     </div>
                 </section>
 
-                <section className={`${cardClassName} min-h-[350px] md:min-h-[390px] lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:min-h-[794px]`}>
+                <section
+                    className={`${cardClassName} min-h-[350px] cursor-pointer md:min-h-[390px] lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:min-h-[794px]`}
+                    {...getTileInteractionProps(() => onTileClick("LOG"))}
+                >
                     <div className="mb-5 text-base text-gray-300">Aktuell</div>
-                    <div className="flex max-h-[700px] flex-col gap-3 overflow-y-auto pr-1">
+                    <div className="flex max-h-[700px] flex-col gap-3 overflow-hidden pr-1">
                         {activityLog.map((log) => (
                             <div key={`${log.time}-${log.message}`} className="flex gap-3 text-sm">
                                 <div className="min-w-fit font-semibold text-purple-primary">{log.time}</div>
