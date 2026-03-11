@@ -1,3 +1,5 @@
+import GlassContainer from "../GlassContainer";
+
 // TODO: API
 const summaryData = [
     { label: "Broker angeschrieben", value: 41, colorClass: "text-yellow-400" },
@@ -42,7 +44,10 @@ const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
     return (
         <div className="h-full-respect-nav px-4 py-5 md:px-6 md:py-6">
             <div className="mx-auto grid w-full max-w-[80rem] grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[1fr_1.5fr]">
-                <section
+                <GlassContainer
+                  width={480}
+                  height={300}
+                  backgroundOpacity={.5}
                     className={`${cardClassName} min-h-[350px] cursor-pointer md:min-h-[390px]`}
                     {...getTileInteractionProps(() => onTileClick("CASES"))}
                 >
@@ -55,7 +60,7 @@ const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
                             </div>
                         ))}
                     </div>
-                </section>
+                </GlassContainer>
 
                 <section
                     className={`${cardClassName} min-h-[350px] cursor-pointer md:min-h-[390px] lg:col-start-1`}
