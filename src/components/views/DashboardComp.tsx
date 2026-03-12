@@ -45,53 +45,65 @@ const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
         <div className="h-full-respect-nav px-4 py-5 md:px-6 md:py-6">
             <div className="mx-auto grid w-full max-w-[80rem] grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[1fr_1.5fr]">
                 <GlassContainer
-                  width={480}
-                  height={300}
-                  backgroundOpacity={.5}
+                    width="100%"
+                    height="auto"
+                    backgroundOpacity={0.5}
                     className={`${cardClassName} min-h-[350px] cursor-pointer md:min-h-[390px]`}
                     {...getTileInteractionProps(() => onTileClick("CASES"))}
                 >
-                    <div className="mb-5 text-base text-gray-300">Übersicht</div>
-                    <div className="flex h-[calc(100%-2rem)] flex-col gap-6">
-                        {summaryData.map((item) => (
-                            <div key={item.label}>
-                                <div className={`text-3xl font-semibold ${item.colorClass}`}>{item.value}</div>
-                                <div className="mt-1 text-sm text-gray-400">{item.label}</div>
-                            </div>
-                        ))}
+                    <div className="flex h-full w-full flex-col items-start justify-start text-left">
+                        <div className="mb-5 text-base text-gray-300">Übersicht</div>
+                        <div className="flex w-full flex-1 flex-col gap-6">
+                            {summaryData.map((item) => (
+                                <div key={item.label}>
+                                    <div className={`text-3xl font-semibold ${item.colorClass}`}>{item.value}</div>
+                                    <div className="mt-1 text-sm text-gray-400">{item.label}</div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </GlassContainer>
 
-                <section
+                <GlassContainer
+                    width="100%"
+                    height="auto"
+                    backgroundOpacity={0.5}
                     className={`${cardClassName} min-h-[350px] cursor-pointer md:min-h-[390px] lg:col-start-1`}
                     {...getTileInteractionProps(() => onTileClick("MAIL"))}
                 >
-                    <div className="mb-5 text-base text-gray-300">Antwortzeiten</div>
-                    <div className="flex max-h-[290px] flex-col gap-3 overflow-y-hidden pr-1">
-                        {brokerPerformance.map((broker) => (
-                            <div key={broker.name} className="flex items-center justify-between text-sm">
-                                <span className="text-white">{broker.name}</span>
-                                <span className={`font-semibold ${broker.colorClass}`}>{broker.time}</span>
-                            </div>
-                        ))}
+                    <div className="flex h-full w-full flex-col items-start justify-start text-left">
+                        <div className="mb-5 text-base text-gray-300">Antwortzeiten</div>
+                        <div className="flex w-full max-h-[290px] flex-col gap-3 overflow-y-hidden pr-1">
+                            {brokerPerformance.map((broker) => (
+                                <div key={broker.name} className="flex items-center justify-between text-sm">
+                                    <span className="text-white">{broker.name}</span>
+                                    <span className={`font-semibold ${broker.colorClass}`}>{broker.time}</span>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </section>
+                </GlassContainer>
 
-                <section
+                <GlassContainer
+                    width="100%"
+                    height="auto"
+                    backgroundOpacity={0.5}
                     className={`${cardClassName} min-h-[350px] cursor-pointer md:min-h-[390px] lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:min-h-[794px]`}
                     {...getTileInteractionProps(() => onTileClick("LOG"))}
                 >
-                    <div className="mb-5 text-base text-gray-300">Aktuell</div>
-                    <div className="flex max-h-[700px] flex-col gap-3 overflow-hidden pr-1">
-                        {activityLog.map((log) => (
-                            <div key={`${log.time}-${log.message}`} className="flex gap-3 text-sm">
-                                <div className="min-w-fit font-semibold text-purple-primary">{log.time}</div>
-                                <div className="text-gray-200">{log.message}</div>
-                            </div>
-                        ))}
+                    <div className="flex h-full w-full flex-col items-start justify-start text-left">
+                        <div className="mb-5 text-base text-gray-300">Aktuell</div>
+                        <div className="flex w-full max-h-[700px] flex-col gap-3 overflow-hidden pr-1">
+                            {activityLog.map((log) => (
+                                <div key={`${log.time}-${log.message}`} className="flex gap-3 text-sm">
+                                    <div className="min-w-fit font-semibold text-purple-primary">{log.time}</div>
+                                    <div className="text-gray-200">{log.message}</div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </section>
-            </div>  
+                </GlassContainer>
+            </div>
         </div>
     );
 };
