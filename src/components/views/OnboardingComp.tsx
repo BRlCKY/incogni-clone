@@ -1,12 +1,18 @@
 import { FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import ColorBlendBackground from "../backgrounds/ColorBlendBackground";
 import GlassContainer from "../GlassContainer";
+import InputComp from "../InputComp";
 
 const OnboardingComp = () => {
+    const navigate = useNavigate();
 
-    const onLogin = (event: FormEvent<HTMLFormElement>, password: string) => {
+    const onSavePassword = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        navigate("/onboarding/data");
     };
+
+    const onContinueWithoutPassword = () => navigate("/onboarding/data");
 
     return (
         <div className="min-h-screen w-full flex justify-center items-center">
@@ -17,11 +23,10 @@ const OnboardingComp = () => {
 
                     <form
                         className="w-full max-w-[340px] flex flex-col gap-3"
-                        onSubmit={(event) => event.preventDefault()}>
-                        <input
+                        onSubmit={onSavePassword}>
+                        <InputComp
                             type="password"
                             placeholder="Password"
-                            className="h-[50px] w-full bg-transparent outline-[1.5px] outline-white focus-visible:outline-[3px] rounded-full px-5 text-white placeholder:text-gray-400 outline-none border-transparent transition-colors duration-200"
                         />
                         <button
                             type="submit"
@@ -29,7 +34,8 @@ const OnboardingComp = () => {
                             Passwort speichern
                         </button>
                         <button
-                            type="submit"
+                            type="button"
+                            onClick={onContinueWithoutPassword}
                             className="h-[50px] w-full bg-transparent rounded-full items-center justify-center flex font-bold hover:bg-[rgba(255,255,255,0.2)] cursor-pointer transition-colors duration-200">
                             Ohne Passwort fortfahren
                         </button>

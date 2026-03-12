@@ -1,6 +1,7 @@
 import { FormEvent } from "react";
 import ColorBlendBackground from "../backgrounds/ColorBlendBackground";
 import GlassContainer from "../GlassContainer";
+import InputComp from "../InputComp";
 
 const LoginComp = () => {
 
@@ -18,10 +19,9 @@ const LoginComp = () => {
                     <form
                         className="w-full max-w-[340px] flex flex-col gap-3"
                         onSubmit={(event) => event.preventDefault()}>
-                        <input
+                        <InputComp
                             type="password"
                             placeholder="Password"
-                            className="h-[50px] w-full bg-transparent outline-[1.5px] outline-white focus-visible:outline-[3px] rounded-full px-5 text-white placeholder:text-gray-400 outline-none border-transparent transition-colors duration-200"
                         />
                         <button
                             type="submit"
