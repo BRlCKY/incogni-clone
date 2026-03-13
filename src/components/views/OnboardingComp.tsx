@@ -1,7 +1,7 @@
 import { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import ColorBlendBackground from "../backgrounds/ColorBlendBackground";
-import GlassContainer from "../GlassContainer";
+import GlassContainer from "../GlassComp";
 import InputComp from "../InputComp";
 
 const OnboardingComp = () => {
@@ -16,7 +16,9 @@ const OnboardingComp = () => {
 
     return (
         <div className="min-h-screen w-full flex justify-center items-center">
-            <GlassContainer width={500} height={300}>
+            <GlassContainer 
+              width={500} 
+              height={350}>
                 <div className="w-full h-full flex flex-col justify-center items-center px-8">
                     <h1 className="text-2xl font-bold tracking-tight">Willkommen!</h1>
                     <p className="text-sm text-gray-300 mt-1 mb-5">Möchtest du ein Passwort eingeben, um deine Daten zu schützen?</p>

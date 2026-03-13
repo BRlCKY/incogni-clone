@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ColorBlendBackground from "../backgrounds/ColorBlendBackground";
-import GlassContainer from "../GlassContainer";
+import GlassContainer from "../GlassComp";
 import InputComp from "../InputComp";
 
 type RemovalData = {
@@ -45,7 +45,10 @@ const OnboardingDataComp = () => {
 
     return (
         <div className="min-h-screen w-full flex justify-center items-center py-6">
-            <GlassContainer width={620} height={590}>
+            <GlassContainer 
+                width={580}
+                height={610}
+                >
                 <div className="w-full h-full flex flex-col items-center px-8 py-8">
                     <h1 className="text-2xl font-bold tracking-tight text-center">Welche Daten sollen entfernt werden?</h1>
                     <p className="text-sm text-gray-300 mt-1 mb-5 text-center max-w-[440px]">
