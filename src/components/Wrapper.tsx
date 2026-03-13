@@ -29,7 +29,7 @@ const Wrapper = () => {
     return (
         <div>
             <NavComp onNavClick={handleNavClick} viewData={view_data} />
-            {active_view === 'DASHBOARD' && <Dashboard />}
+            {active_view === 'DASHBOARD' && <Dashboard onTileClick={handleNavClick} />}
             {active_view === 'CASES' && <Cases />}
             {active_view === 'HELPCENTER' && <HelpCenter />}
             {active_view === 'LOG' && <Log />}
