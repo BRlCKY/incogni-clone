@@ -18,7 +18,8 @@ const OnboardingComp = () => {
         <div className="min-h-screen w-full flex justify-center items-center">
             <GlassContainer 
               width={500} 
-              height={350}>
+              height={350}
+              tintOpacity={0.6}>
                 <div className="w-full h-full flex flex-col justify-center items-center px-8">
                     <h1 className="text-2xl font-bold tracking-tight">Willkommen!</h1>
                     <p className="text-sm text-gray-300 mt-1 mb-5">Möchtest du ein Passwort eingeben, um deine Daten zu schützen?</p>
