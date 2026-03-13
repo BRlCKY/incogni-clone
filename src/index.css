@@ -11,3 +11,13 @@ body {
   height: calc(100vh - 70px);
   overflow-y: scroll;
 }
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
