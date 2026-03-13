@@ -28,6 +28,8 @@ const Wrapper = () => {
 
     return (
         <div>
+            {/* TODO: Conditional rendering. Differentiate between first login and login/logout */}
+            {/* <LoginComp /> */}
             <NavComp onNavClick={handleNavClick} viewData={view_data} />
             {active_view === 'DASHBOARD' && <Dashboard onTileClick={handleNavClick} />}
             {active_view === 'CASES' && <Cases />}

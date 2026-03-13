@@ -47,7 +47,7 @@ const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
                 <GlassComp
                     width="100%"
                     height="auto"
-                    backgroundOpacity={0.5}
+                    tintOpacity={0.5}
                     className={`${cardClassName} min-h-[350px] cursor-pointer md:min-h-[390px]`}
                     {...getTileInteractionProps(() => onTileClick("CASES"))}
                 >
@@ -67,7 +67,7 @@ const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
                 <GlassComp
                     width="100%"
                     height="auto"
-                    backgroundOpacity={0.5}
+                    tintOpacity={0.5}
                     className={`${cardClassName} min-h-[350px] cursor-pointer md:min-h-[390px] lg:col-start-1`}
                     {...getTileInteractionProps(() => onTileClick("MAIL"))}
                 >
@@ -87,7 +87,7 @@ const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
                 <GlassComp
                     width="100%"
                     height="auto"
-                    backgroundOpacity={0.5}
+                    tintOpacity={0.5}
                     className={`${cardClassName} min-h-[350px] cursor-pointer md:min-h-[390px] lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:min-h-[794px]`}
                     {...getTileInteractionProps(() => onTileClick("LOG"))}
                 >
