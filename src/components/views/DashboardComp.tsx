@@ -27,6 +27,27 @@ const activityLog = [
     { time: "12:20", message: "Neue Anfrage an Broker E" },
     { time: "11:45", message: "Broker F hat mit Rueckfragen geantwortet" },
     { time: "11:00", message: "Erinnerung an Broker G gesendet" },
+    { time: "14:32", message: "Broker A hat der Datenloeschung zugestimmt" },
+    { time: "13:45", message: "Broker B hat um mehr Zeit gebeten" },
+    { time: "13:12", message: "Fall mit Broker C abgeschlossen" },
+    { time: "12:58", message: "Broker D hat eine Bestaetigung gesendet" },
+    { time: "12:20", message: "Neue Anfrage an Broker E" },
+    { time: "11:45", message: "Broker F hat mit Rueckfragen geantwortet" },
+    { time: "11:00", message: "Erinnerung an Broker G gesendet" },
+    { time: "14:32", message: "Broker A hat der Datenloeschung zugestimmt" },
+    { time: "13:45", message: "Broker B hat um mehr Zeit gebeten" },
+    { time: "13:12", message: "Fall mit Broker C abgeschlossen" },
+    { time: "12:58", message: "Broker D hat eine Bestaetigung gesendet" },
+    { time: "12:20", message: "Neue Anfrage an Broker E" },
+    { time: "11:45", message: "Broker F hat mit Rueckfragen geantwortet" },
+    { time: "11:00", message: "Erinnerung an Broker G gesendet" },
+    { time: "14:32", message: "Broker A hat der Datenloeschung zugestimmt" },
+    { time: "13:45", message: "Broker B hat um mehr Zeit gebeten" },
+    { time: "13:12", message: "Fall mit Broker C abgeschlossen" },
+    { time: "12:58", message: "Broker D hat eine Bestaetigung gesendet" },
+    { time: "12:20", message: "Neue Anfrage an Broker E" },
+    { time: "11:45", message: "Broker F hat mit Rueckfragen geantwortet" },
+    { time: "11:00", message: "Erinnerung an Broker G gesendet" },
 ];
 
 const cardClassName =
@@ -42,18 +63,18 @@ const getTileInteractionProps = (onClick: () => void) => ({
 
 const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
     return (
-        <div className="h-full-respect-nav px-4 py-5 md:px-6 md:py-6">
-            <div className="mx-auto grid w-full max-w-[80rem] grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[1fr_1.5fr]">
+        <div className="h-[calc(100dvh-100px)] w-full overflow-y-auto px-4 py-4 md:px-6 md:py-6">
+            <div className="grid h-full w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[1fr_1.5fr] lg:grid-rows-2">
                 <GlassComp
                     width="100%"
                     height="auto"
                     tintOpacity={0.5}
-                    className={`${cardClassName} min-h-[350px] cursor-pointer md:min-h-[390px]`}
+                    className={`${cardClassName} min-h-[260px] cursor-pointer md:min-h-[320px] lg:min-h-0 lg:h-full`}
                     {...getTileInteractionProps(() => onTileClick("CASES"))}
                 >
                     <div className="flex h-full w-full flex-col items-start justify-start text-left">
                         <div className="mb-5 text-base text-gray-300">Übersicht</div>
-                        <div className="flex w-full flex-1 flex-col gap-6">
+                        <div className="flex w-full flex-1 flex-col justify-between">
                             {summaryData.map((item) => (
                                 <div key={item.label}>
                                     <div className={`text-3xl font-semibold ${item.colorClass}`}>{item.value}</div>
@@ -68,12 +89,12 @@ const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
                     width="100%"
                     height="auto"
                     tintOpacity={0.5}
-                    className={`${cardClassName} min-h-[350px] cursor-pointer md:min-h-[390px] lg:col-start-1`}
+                    className={`${cardClassName} min-h-[260px] cursor-pointer md:min-h-[320px] lg:col-start-1 lg:row-start-2 lg:min-h-0 lg:h-full`}
                     {...getTileInteractionProps(() => onTileClick("MAIL"))}
                 >
                     <div className="flex h-full w-full flex-col items-start justify-start text-left">
                         <div className="mb-5 text-base text-gray-300">Antwortzeiten</div>
-                        <div className="flex w-full max-h-[290px] flex-col gap-3 overflow-y-hidden pr-1">
+                        <div className="flex w-full flex-1 flex-col gap-3 overflow-y-auto no-scrollbar pr-1">
                             {brokerPerformance.map((broker) => (
                                 <div key={broker.name} className="flex items-center justify-between text-sm">
                                     <span className="text-white">{broker.name}</span>
@@ -88,12 +109,12 @@ const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
                     width="100%"
                     height="auto"
                     tintOpacity={0.5}
-                    className={`${cardClassName} min-h-[350px] cursor-pointer md:min-h-[390px] lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:min-h-[794px]`}
+                    className={`${cardClassName} min-h-[300px] cursor-pointer md:min-h-[390px] lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:min-h-0 lg:h-full`}
                     {...getTileInteractionProps(() => onTileClick("LOG"))}
                 >
                     <div className="flex h-full w-full flex-col items-start justify-start text-left">
                         <div className="mb-5 text-base text-gray-300">Aktuell</div>
-                        <div className="flex w-full max-h-[700px] flex-col gap-3 overflow-hidden pr-1">
+                        <div className="flex w-full flex-1 flex-col gap-3 overflow-y-auto no-scrollbar pr-1">
                             {activityLog.map((log) => (
                                 <div key={`${log.time}-${log.message}`} className="flex gap-3 text-sm">
                                     <div className="min-w-fit font-semibold text-purple-primary">{log.time}</div>

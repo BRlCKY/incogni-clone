@@ -1,6 +1,6 @@
 import { FormEvent } from "react";
 import ColorBlendBackground from "../backgrounds/ColorBlendBackground";
-import GlassContainer from "../GlassContainer";
+import GlassContainer from "../GlassComp";
 import InputComp from "../InputComp";
 
 const LoginComp = () => {
@@ -11,7 +11,10 @@ const LoginComp = () => {
 
     return (
         <div className="min-h-screen w-full flex justify-center items-center">
-            <GlassContainer width={500} height={300}>
+            <GlassContainer 
+                width={450} 
+                height={280}
+                tintOpacity={0.5}>
                 <div className="w-full h-full flex flex-col justify-center items-center px-8">
                     <h1 className="text-2xl font-bold tracking-tight">Willkommen zurück!</h1>
                     <p className="text-sm text-gray-300 mt-1 mb-5">Gib dein Passwort ein, um dich anzumelden!</p>

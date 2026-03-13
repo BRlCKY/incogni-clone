@@ -48,6 +48,7 @@ const OnboardingDataComp = () => {
             <GlassContainer 
                 width={580}
                 height={610}
+                tintOpacity={0.5}
                 >
                 <div className="w-full h-full flex flex-col items-center px-8 py-8">
                     <h1 className="text-2xl font-bold tracking-tight text-center">Welche Daten sollen entfernt werden?</h1>
