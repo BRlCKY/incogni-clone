@@ -1,4 +1,4 @@
-import GlassContainer from "../GlassContainer";
+import GlassComp from "../GlassComp";
 
 // TODO: API
 const summaryData = [
@@ -44,7 +44,7 @@ const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
     return (
         <div className="h-full-respect-nav px-4 py-5 md:px-6 md:py-6">
             <div className="mx-auto grid w-full max-w-[80rem] grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[1fr_1.5fr]">
-                <GlassContainer
+                <GlassComp
                     width="100%"
                     height="auto"
                     backgroundOpacity={0.5}
@@ -62,9 +62,9 @@ const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
                             ))}
                         </div>
                     </div>
-                </GlassContainer>
+                </GlassComp>
 
-                <GlassContainer
+                <GlassComp
                     width="100%"
                     height="auto"
                     backgroundOpacity={0.5}
@@ -82,9 +82,9 @@ const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
                             ))}
                         </div>
                     </div>
-                </GlassContainer>
+                </GlassComp>
 
-                <GlassContainer
+                <GlassComp
                     width="100%"
                     height="auto"
                     backgroundOpacity={0.5}
@@ -102,7 +102,7 @@ const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
                             ))}
                         </div>
                     </div>
-                </GlassContainer>
+                </GlassComp>
             </div>
         </div>
     );
