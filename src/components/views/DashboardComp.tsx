@@ -74,7 +74,7 @@ const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
                 >
                     <div className="flex h-full w-full flex-col items-start justify-start text-left">
                         <div className="mb-5 text-base text-gray-300">Übersicht</div>
-                        <div className="flex w-full flex-1 flex-col justify-between">
+                        <div className="flex w-full flex-1 flex-col justify-between lg:justify-start lg:gap-6">
                             {summaryData.map((item) => (
                                 <div key={item.label}>
                                     <div className={`text-3xl font-semibold ${item.colorClass}`}>{item.value}</div>
