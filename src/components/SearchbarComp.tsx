@@ -1,6 +1,17 @@
-const SearchbarComp = () => {
+type SearchbarCompProps = Omit<React.ComponentProps<"input">, "type"> & {
+    containerClassName?: string;
+    inputClassName?: string;
+};
+
+const SearchbarComp = ({
+    placeholder = "Suchen",
+    maxLength = 30,
+    containerClassName = "",
+    inputClassName = "",
+    ...inputProps
+}: SearchbarCompProps) => {
     return (
-        <div className="h-[40px] w-full bg-gray-900 rounded-full flex items-center px-3">
+        <div className={`h-[40px] w-full bg-gray-900 rounded-full flex items-center px-3 ${containerClassName}`.trim()}>
             <svg width="20px" 
                  height="20px" 
                  viewBox="0 0 20 20" 
@@ -11,9 +22,10 @@ const SearchbarComp = () => {
 
             <input
                 type="text"
-                placeholder="Suchen"
-                maxLength={30}
-                className="rounded-full pl-3 bg-gray-900 text-white outline-none w-full min-w-0 overflow-hidden text-ellipsis whitespace-nowrap" />
+                placeholder={placeholder}
+                maxLength={maxLength}
+                className={`rounded-full pl-3 bg-gray-900 text-white outline-none w-full min-w-0 overflow-hidden text-ellipsis whitespace-nowrap ${inputClassName}`.trim()}
+                {...inputProps} />
         </div>
     )
 }
