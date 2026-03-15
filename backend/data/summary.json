@@ -1,0 +1,17 @@
+[
+  {
+    "label": "Broker angeschrieben",
+    "value": 41,
+    "colorClass": "text-yellow-400"
+  },
+  {
+    "label": "Broker haben geantwortet",
+    "value": 18,
+    "colorClass": "text-green-400"
+  },
+  {
+    "label": "Cases aktuell offen",
+    "value": 12,
+    "colorClass": "text-red-400"
+  }
+]

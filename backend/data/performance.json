@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Broker G",
+    "time": "14 Tage",
+    "colorClass": "text-red-400"
+  },
+  {
+    "name": "Broker F",
+    "time": "12 Tage",
+    "colorClass": "text-red-400"
+  },
+  {
+    "name": "Broker E",
+    "time": "8 Tage",
+    "colorClass": "text-yellow-400"
+  },
+  {
+    "name": "Broker D",
+    "time": "6 Tage",
+    "colorClass": "text-yellow-400"
+  },
+  {
+    "name": "Broker C",
+    "time": "2 Tage",
+    "colorClass": "text-green-400"
+  },
+  {
+    "name": "Broker B",
+    "time": "1 Tag",
+    "colorClass": "text-green-400"
+  },
+  {
+    "name": "Broker A",
+    "time": "4 Stunden",
+    "colorClass": "text-green-400"
+  }
+]
