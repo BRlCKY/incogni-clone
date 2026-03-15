@@ -1,9 +1,339 @@
+import { useMemo, useState } from "react";
+import GlassComp from "../GlassComp";
+import InputComp from "../InputComp";
+import SearchbarComp from "../SearchbarComp";
+
+type Broker = {
+    id: number;
+    name: string;
+    email: string;
+    website: string;
+    locale: string;
+};
+
+type SortKey = "name" | "email" | "website" | "locale";
+type SortDirection = "asc" | "desc";
+
+const initialBrokers: Broker[] = [
+    {
+        id: 1,
+        name: "Acme Data Brokers",
+        email: "privacy@acme-brokers.com",
+        website: "https://acme-brokers.com",
+        locale: "Englisch / USA",
+    },
+    {
+        id: 2,
+        name: "Nordic Insight",
+        email: "contact@nordic-insight.eu",
+        website: "https://nordic-insight.eu",
+        locale: "Englisch / Deutschland",
+    },
+    {
+        id: 3,
+        name: "Global Registry Services",
+        email: "support@globalregistry.io",
+        website: "https://globalregistry.io",
+        locale: "Englisch / UK",
+    },
+];
+
 const BrokerListComp = () => {
+    const [brokers, setBrokers] = useState<Broker[]>(initialBrokers);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [sortKey, setSortKey] = useState<SortKey>("name");
+    const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+    const [isCreatingBroker, setIsCreatingBroker] = useState(false);
+    const [draftBroker, setDraftBroker] = useState<Omit<Broker, "id">>({
+        name: "",
+        email: "",
+        website: "",
+        locale: "",
+    });
+
+    const setDraftBrokerField = (field: keyof Omit<Broker, "id">, value: string) => {
+        setDraftBroker((previous) => ({
+            ...previous,
+            [field]: value,
+        }));
+    };
+
+    const handleSort = (key: SortKey) => {
+        if (sortKey === key) {
+            setSortDirection((previous) => (previous === "asc" ? "desc" : "asc"));
+            return;
+        }
+
+        setSortKey(key);
+        setSortDirection("asc");
+    };
+
+    const openDraftBrokerRow = () => {
+        setDraftBroker({
+            name: "",
+            email: "",
+            website: "",
+            locale: "",
+        });
+        setIsCreatingBroker(true);
+    };
+
+    const closeDraftBrokerRow = () => {
+        setIsCreatingBroker(false);
+        setDraftBroker({
+            name: "",
+            email: "",
+            website: "",
+            locale: "",
+        });
+    };
+
+    const handleSaveDraftBroker = () => {
+        const name = draftBroker.name.trim();
+        const email = draftBroker.email.trim();
+        const website = draftBroker.website.trim();
+        const locale = draftBroker.locale.trim();
+
+        if (!name || !email) {
+            return;
+        }
+
+        setBrokers((previous) => [
+            ...previous,
+            {
+                id: Date.now(),
+                name,
+                email,
+                website,
+                locale,
+            },
+        ]);
+        closeDraftBrokerRow();
+    };
+
+    const handleRemoveBroker = (id: number) => {
+        setBrokers((previous) => previous.filter((broker) => broker.id !== id));
+    };
+
+    const displayedBrokers = useMemo(() => {
+        const normalizedQuery = searchQuery.trim().toLowerCase();
+        const filtered = normalizedQuery
+            ? brokers.filter((broker) =>
+                  [broker.name, broker.email, broker.website, broker.locale]
+                      .join(" ")
+                      .toLowerCase()
+                      .includes(normalizedQuery),
+              )
+            : brokers;
+
+        return [...filtered].sort((brokerA, brokerB) => {
+            const valueA = brokerA[sortKey].toLowerCase();
+            const valueB = brokerB[sortKey].toLowerCase();
+            const comparison = valueA.localeCompare(valueB);
+
+            return sortDirection === "asc" ? comparison : comparison * -1;
+        });
+    }, [brokers, searchQuery, sortDirection, sortKey]);
+
+    const renderSortLabel = (label: string, key: SortKey) => {
+        if (sortKey !== key) {
+            return `${label} <>`;
+        }
+
+        return `${label} ${sortDirection === "asc" ? "↑" : "↓"}`;
+    };
+
+    const isDraftComplete = draftBroker.name.trim().length > 0 && draftBroker.email.trim().length > 0;
+
     return (
-        <div className="flex justify-center items-center h-full-respect-nav">
-            <h1>Broker List</h1>
+        <div className="h-full-respect-nav w-full overflow-y-auto p-6">
+            <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 pb-24">
+                <GlassComp
+                    width="100%"
+                    height="auto"
+                    tintOpacity={0.5}
+                    className="rounded-3xl border border-gray-700 p-6"
+                >
+                    <div className="w-full">
+                        <div className="mb-5">
+                            <h1 className="text-xl font-semibold text-white">Broker-Verwaltung</h1>
+                            <p className="mt-1 text-sm text-gray-400">
+                                Broker direkt in der Tabelle hinzufügen, sortieren und entfernen.
+                            </p>
+                        </div>
+
+                        <div className="flex items-center justify-between gap-4">
+                            <div className="text-sm text-gray-300">
+                                Zeige {displayedBrokers.length} von {brokers.length} Brokern
+                            </div>
+                            <div className="flex min-w-[560px] items-center justify-end gap-3">
+                                <button
+                                    type="button"
+                                    className={`h-[40px] rounded-full px-4 text-sm font-semibold transition-colors ${
+                                        isCreatingBroker
+                                            ? "cursor-not-allowed bg-gray-700 text-gray-400"
+                                            : "bg-gray-900 text-white hover:bg-gray-800"
+                                    }`}
+                                    onClick={openDraftBrokerRow}
+                                    disabled={isCreatingBroker}
+                                >
+                                    + Broker
+                                </button>
+                                <SearchbarComp
+                                    value={searchQuery}
+                                    onChange={(event) => setSearchQuery(event.target.value)}
+                                    placeholder="Broker suchen"
+                                    containerClassName="max-w-[380px]"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="mt-4 overflow-x-auto rounded-2xl border border-gray-700 bg-black/30">
+                            <table className="min-w-full text-left text-sm text-gray-200">
+                                <thead className="bg-gray-900/80 text-xs uppercase tracking-wide text-gray-400">
+                                    <tr>
+                                        <th className="px-4 py-3">
+                                            <button
+                                                type="button"
+                                                className="font-semibold hover:text-white"
+                                                onClick={() => handleSort("name")}
+                                            >
+                                                {renderSortLabel("Name", "name")}
+                                            </button>
+                                        </th>
+                                        <th className="px-4 py-3">
+                                            <button
+                                                type="button"
+                                                className="font-semibold hover:text-white"
+                                                onClick={() => handleSort("email")}
+                                            >
+                                                {renderSortLabel("E-Mail", "email")}
+                                            </button>
+                                        </th>
+                                        <th className="px-4 py-3">
+                                            <button
+                                                type="button"
+                                                className="font-semibold hover:text-white"
+                                                onClick={() => handleSort("website")}
+                                            >
+                                                {renderSortLabel("Webseite", "website")}
+                                            </button>
+                                        </th>
+                                        <th className="px-4 py-3">
+                                            <button
+                                                type="button"
+                                                className="font-semibold hover:text-white"
+                                                onClick={() => handleSort("locale")}
+                                            >
+                                                {renderSortLabel("Sprache / Land", "locale")}
+                                            </button>
+                                        </th>
+                                        <th className="px-4 py-3 text-right">Aktionen</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {isCreatingBroker && (
+                                        <tr className="border-t border-gray-700/60 bg-gray-900/20">
+                                            <td className="px-4 py-3 align-top">
+                                                <InputComp
+                                                    placeholder="Broker-Name *"
+                                                    value={draftBroker.name}
+                                                    onChange={(event) => setDraftBrokerField("name", event.target.value)}
+                                                    className="h-[34px] px-3 text-xs"
+                                                />
+                                            </td>
+                                            <td className="px-4 py-3 align-top">
+                                                <InputComp
+                                                    type="email"
+                                                    placeholder="E-Mail *"
+                                                    value={draftBroker.email}
+                                                    onChange={(event) => setDraftBrokerField("email", event.target.value)}
+                                                    className="h-[34px] px-3 text-xs"
+                                                />
+                                            </td>
+                                            <td className="px-4 py-3 align-top">
+                                                <InputComp
+                                                    type="url"
+                                                    placeholder="https://..."
+                                                    value={draftBroker.website}
+                                                    onChange={(event) => setDraftBrokerField("website", event.target.value)}
+                                                    className="h-[34px] px-3 text-xs"
+                                                />
+                                            </td>
+                                            <td className="px-4 py-3 align-top">
+                                                <InputComp
+                                                    placeholder="Sprache / Land"
+                                                    value={draftBroker.locale}
+                                                    onChange={(event) => setDraftBrokerField("locale", event.target.value)}
+                                                    className="h-[34px] px-3 text-xs"
+                                                />
+                                            </td>
+                                            <td className="px-4 py-3 text-right align-top">
+                                                <div className="flex justify-end gap-2">
+                                                    <button
+                                                        type="button"
+                                                        className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                                                            isDraftComplete
+                                                                ? "bg-emerald-700 text-white hover:bg-emerald-600"
+                                                                : "cursor-not-allowed bg-emerald-900/40 text-emerald-200/50"
+                                                        }`}
+                                                        onClick={handleSaveDraftBroker}
+                                                        disabled={!isDraftComplete}
+                                                    >
+                                                        Speichern
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="rounded-full bg-gray-700 px-3 py-1 text-xs font-semibold text-white hover:bg-gray-600"
+                                                        onClick={closeDraftBrokerRow}
+                                                    >
+                                                        Abbrechen
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {displayedBrokers.map((broker) => (
+                                        <tr key={broker.id} className="border-t border-gray-700/60">
+                                            <td className="px-4 py-3 font-medium text-white">{broker.name}</td>
+                                            <td className="px-4 py-3 text-gray-300">{broker.email}</td>
+                                            <td className="px-4 py-3">
+                                                <a
+                                                    className="text-blue-300 underline-offset-2 hover:underline"
+                                                    href={broker.website}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                >
+                                                    {broker.website}
+                                                </a>
+                                            </td>
+                                            <td className="px-4 py-3 text-gray-300">{broker.locale}</td>
+                                            <td className="px-4 py-3 text-right">
+                                                <button
+                                                    type="button"
+                                                    className="rounded-full bg-red-800/70 px-3 py-1 text-xs font-semibold text-white hover:bg-red-700"
+                                                    onClick={() => handleRemoveBroker(broker.id)}
+                                                >
+                                                    Entfernen
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {displayedBrokers.length === 0 && (
+                                        <tr className="border-t border-gray-700/60">
+                                            <td colSpan={5} className="px-4 py-8 text-center text-sm text-gray-400">
+                                                Keine Broker gefunden.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </GlassComp>
+            </div>
         </div>
-    )
+    );
 };
 
 export default BrokerListComp;
