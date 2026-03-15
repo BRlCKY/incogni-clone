@@ -167,24 +167,37 @@ const BrokerListComp = () => {
                                 Zeige {displayedBrokers.length} von {brokers.length} Brokern
                             </div>
                             <div className="flex min-w-[560px] items-center justify-end gap-3">
-                                <button
-                                    type="button"
-                                    className={`h-[40px] rounded-full px-4 text-sm font-semibold transition-colors ${
+                                <GlassComp
+                                    width={128}
+                                    height={40}
+                                    borderRadius={999}
+                                    tintOpacity={0.52}
+                                    className={`border border-gray-700 ${
                                         isCreatingBroker
-                                            ? "cursor-not-allowed bg-gray-700 text-gray-400"
-                                            : "bg-gray-900 text-white hover:bg-gray-800"
+                                            ? "cursor-not-allowed opacity-60"
+                                            : "cursor-pointer hover:bg-gray-800/50"
                                     }`}
-                                    onClick={openDraftBrokerRow}
-                                    disabled={isCreatingBroker}
+                                    onClick={isCreatingBroker ? undefined : openDraftBrokerRow}
+                                    role="button"
+                                    aria-disabled={isCreatingBroker}
                                 >
-                                    + Broker
-                                </button>
-                                <SearchbarComp
-                                    value={searchQuery}
-                                    onChange={(event) => setSearchQuery(event.target.value)}
-                                    placeholder="Broker suchen"
-                                    containerClassName="max-w-[380px]"
-                                />
+                                    <p className="text-sm font-semibold text-white">+ Broker</p>
+                                </GlassComp>
+                                <GlassComp
+                                    width={380}
+                                    height={40}
+                                    borderRadius={999}
+                                    tintOpacity={0.52}
+                                    className="border border-gray-700"
+                                >
+                                    <SearchbarComp
+                                        value={searchQuery}
+                                        onChange={(event) => setSearchQuery(event.target.value)}
+                                        placeholder="Broker suchen"
+                                        containerClassName="h-full w-full bg-transparent px-2"
+                                        inputClassName="bg-transparent"
+                                    />
+                                </GlassComp>
                             </div>
                         </div>
 
