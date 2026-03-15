@@ -139,10 +139,10 @@ const MailComp = () => {
                             height={74}
                             tintOpacity={0.52}
                             borderRadius={999}
-                            className="cursor-pointer rounded-full border border-blue-400/70 bg-blue-900/40 px-4 shadow-[0_0_0_1px_rgba(96,165,250,0.25)] hover:bg-blue-900/55"
+                            className="cursor-pointer rounded-full border border-gray-700 px-4 hover:bg-gray-800/50"
                             onClick={() => setOpenedMailId(null)}
                         >
-                            <p className="w-full px-3 text-left text-2xl font-semibold leading-7 text-white">E-Mail schreiben</p>
+                            <p className="w-full px-3 text-left text-2xl leading-7 text-white">E-Mail schreiben</p>
                         </GlassComp>
 
                         <GlassComp
