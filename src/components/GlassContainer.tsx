@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState, useId } from 'react';
 
-export interface GlassSurfaceProps {
-  children?: React.ReactNode;
+export interface GlassSurfaceProps extends React.HTMLAttributes<HTMLDivElement> {
   width?: number | string;
   height?: number | string;
   borderRadius?: number;
@@ -37,7 +36,6 @@ export interface GlassSurfaceProps {
     | 'luminosity'
     | 'plus-darker'
     | 'plus-lighter';
-  className?: string;
   style?: React.CSSProperties;
 }
 
@@ -78,7 +76,8 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   yChannel = 'G',
   mixBlendMode = 'difference',
   className = '',
-  style = {}
+  style = {},
+  ...rest
 }) => {
   const uniqueId = useId().replace(/:/g, '-');
   const filterId = `glass-filter-${uniqueId}`;
@@ -314,6 +313,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
       ref={containerRef}
       className={`${glassSurfaceClasses} ${focusVisibleClasses} ${className}`}
       style={getContainerStyles()}
+      {...rest}
     >
       <svg
         className="w-full h-full pointer-events-none absolute inset-0 opacity-0 -z-10"
