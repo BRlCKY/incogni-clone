@@ -42,35 +42,6 @@ const MailViewComp = ({ mail, onBack, onReply }: MailViewCompProps) => {
     return (
         <div className="h-[calc(100vh-70px)] w-full overflow-hidden p-6">
             <div className="mx-auto flex h-full w-full max-w-6xl flex-col gap-4">
-                <div className="grid w-full max-w-[460px] grid-cols-2 gap-3">
-                    <div>
-                        <GlassComp
-                            width="100%"
-                            height={52}
-                            tintOpacity={0.52}
-                            borderRadius={999}
-                            className="cursor-pointer rounded-full border border-gray-700 hover:bg-gray-800/50"
-                            onClick={onBack}
-                            role="button"
-                        >
-                            <p className="text-sm font-semibold text-white">Zurück zum Postfach</p>
-                        </GlassComp>
-                    </div>
-                    <div>
-                        <GlassComp
-                            width="100%"
-                            height={52}
-                            tintOpacity={0.52}
-                            borderRadius={999}
-                            className="cursor-pointer rounded-full border border-blue-400/60 bg-blue-900/25 hover:bg-blue-900/45"
-                            onClick={onReply}
-                            role="button"
-                        >
-                            <p className="text-sm font-semibold text-white">Antworten</p>
-                        </GlassComp>
-                    </div>
-                </div>
-
                 <GlassComp
                     width="100%"
                     height="100%"
@@ -103,6 +74,35 @@ const MailViewComp = ({ mail, onBack, onReply }: MailViewCompProps) => {
                         </div>
                     </div>
                 </GlassComp>
+
+                <div className="flex w-full justify-end gap-3">
+                    <div className="w-[200px]">
+                        <GlassComp
+                            width="100%"
+                            height={52}
+                            tintOpacity={0.52}
+                            borderRadius={999}
+                            className="cursor-pointer rounded-full border border-gray-700 hover:bg-gray-800/50"
+                            onClick={onBack}
+                            role="button"
+                        >
+                            <p className="text-sm font-semibold text-white">Zurück zum Postfach</p>
+                        </GlassComp>
+                    </div>
+                    <div className="w-[180px]">
+                        <GlassComp
+                            width="100%"
+                            height={52}
+                            tintOpacity={0.52}
+                            borderRadius={999}
+                            className="cursor-pointer rounded-full border border-blue-400/60 bg-blue-900/25 hover:bg-blue-900/45"
+                            onClick={onReply}
+                            role="button"
+                        >
+                            <p className="text-sm font-semibold text-white">Antworten</p>
+                        </GlassComp>
+                    </div>
+                </div>
             </div>
         </div>
     );
