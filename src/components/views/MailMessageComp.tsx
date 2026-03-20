@@ -25,18 +25,18 @@ const MailMessageComp = ({ contacts, onBack, onSend }: MailMessageCompProps) => 
                 <GlassComp
                     width="100%"
                     height="100%"
-                    tintOpacity={0.52}
+                    tintOpacity={0.5}
                     className="rounded-3xl border border-gray-700 p-8"
                 >
                     <div className="flex h-full w-full flex-col justify-start">
                         <div className="flex w-full flex-col gap-4">
                             <div className="relative flex items-center gap-4 border-b border-gray-700 pb-2">
-                                <span className="text-sm font-semibold text-gray-400">An:</span>
+                                <span className="text-sm font-semibold text-white">An:</span>
                                 <div
                                     className="w-full cursor-pointer bg-transparent text-lg font-semibold text-white outline-none"
                                     onClick={() => setShowContacts(!showContacts)}
                                 >
-                                    {to ? to : <span className="text-gray-600">Empfänger auswählen...</span>}
+                                    {to ? to : <span className="text-gray-400">Empfänger auswählen...</span>}
                                 </div>
 
                                 {showContacts && (
@@ -55,7 +55,7 @@ const MailMessageComp = ({ contacts, onBack, onSend }: MailMessageCompProps) => 
                                                 </div>
                                             ))}
                                             {contacts.length === 0 && (
-                                                <div className="px-5 py-3 text-base font-normal text-gray-500">Keine Kontakte vorhanden</div>
+                                                <div className="px-5 py-3 text-base font-normal text-gray-300">Keine Kontakte vorhanden</div>
                                             )}
                                         </div>
                                     </div>
@@ -63,13 +63,13 @@ const MailMessageComp = ({ contacts, onBack, onSend }: MailMessageCompProps) => 
                             </div>
 
                             <div className="flex items-center gap-4 border-b border-gray-700 pb-2">
-                                <span className="text-sm font-semibold text-gray-400">Betreff:</span>
+                                <span className="text-sm font-semibold text-white">Betreff:</span>
                                 <input
                                     type="text"
                                     value={subject}
                                     onChange={(e) => setSubject(e.target.value)}
                                     placeholder="Worum geht es?"
-                                    className="w-full bg-transparent text-lg font-semibold text-white outline-none placeholder:text-gray-600"
+                                    className="w-full bg-transparent text-lg font-semibold text-white outline-none placeholder:text-gray-400"
                                 />
                             </div>
                         </div>
@@ -79,7 +79,7 @@ const MailMessageComp = ({ contacts, onBack, onSend }: MailMessageCompProps) => 
                                 value={body}
                                 onChange={(e) => setBody(e.target.value)}
                                 placeholder="Schreibe deine Nachricht hier..."
-                                className="h-full w-full resize-none bg-transparent text-base leading-relaxed text-gray-200 outline-none placeholder:text-gray-600 no-scrollbar"
+                                className="h-full w-full resize-none bg-transparent text-base leading-relaxed text-gray-200 outline-none placeholder:text-gray-300 no-scrollbar"
                             />
                         </div>
                     </div>
@@ -89,13 +89,12 @@ const MailMessageComp = ({ contacts, onBack, onSend }: MailMessageCompProps) => 
                     <div className="w-[180px]">
                         <GlassComp
                             width="100%"
-                            height={52}
-                            tintOpacity={abort}
+                            height={50}
+                            tintOpacity={.5}
                             borderRadius={999}
-                            className="cursor-pointer rounded-full border border-gray-700 hover:bg-gray-700"
+                            className="cursor-pointer"
                             onClick={onBack}
-                            onMouseEnter={() => setAbort(0.8)}
-                            onMouseLeave={() => setAbort(0.4)}
+                            isHoverable={true}
                         >
                             <p className="flex h-full w-full items-center justify-center text-sm font-semibold text-white">Abbrechen</p>
                         </GlassComp>
@@ -103,13 +102,12 @@ const MailMessageComp = ({ contacts, onBack, onSend }: MailMessageCompProps) => 
                     <div className="w-[180px]">
                         <GlassComp
                             width="100%"
-                            height={52}
-                            tintOpacity={send}
+                            height={50}
+                            tintOpacity={.5}
                             borderRadius={999}
-                            className="cursor-pointer rounded-full border border-blue-400/60 bg-blue-900/25 hover:bg-blue-900/45"
+                            className="cursor-pointer"
                             onClick={handleSend}
-                            onMouseEnter={() => setSend(0.8)}
-                            onMouseLeave={() => setSend(0.4)}
+                            isHoverable={true}
                         >
                             <p className="flex h-full w-full items-center justify-center text-sm font-semibold text-white">Senden</p>
                         </GlassComp>
