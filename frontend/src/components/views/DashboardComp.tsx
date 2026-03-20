@@ -1,10 +1,20 @@
+import { useEffect, useState } from "react";
 import GlassComp from "../GlassComp";
 
-// TODO: API
-const summaryData = [
-    { label: "Broker angeschrieben", value: 41, colorClass: "text-yellow-400" },
-    { label: "Broker haben geantwortet", value: 18, colorClass: "text-green-400" },
-    { label: "Cases aktuell offen", value: 12, colorClass: "text-red-400" },
+type DashboardSummary = {
+    brokersMessaged: number;
+    brokersReplied: number;
+    casesOpen: number;
+};
+
+const summaryUiConfig: Array<{
+    key: keyof DashboardSummary;
+    label: string;
+    colorClass: string;
+}> = [
+    { key: "brokersMessaged", label: "Broker angeschrieben", colorClass: "text-yellow-400" },
+    { key: "brokersReplied", label: "Broker haben geantwortet", colorClass: "text-green-400" },
+    { key: "casesOpen", label: "Cases aktuell offen", colorClass: "text-red-400" },
 ];
 
 // TODO: API
@@ -62,6 +72,25 @@ const getTileInteractionProps = (onClick: () => void) => ({
 });
 
 const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
+    const [summary, setSummary] = useState<DashboardSummary>({
+        brokersMessaged: 0,
+        brokersReplied: 0,
+        casesOpen: 0,
+    });
+
+    useEffect(() => {
+        fetch("http://localhost:3000/dashboard/summary")
+            .then((response) => response.json())
+            .then((data: DashboardSummary) => setSummary(data))
+            .catch((error) => console.error("Error fetching dashboard summary:", error));
+    }, []);
+
+    const summaryData = summaryUiConfig.map((item) => ({
+        label: item.label,
+        value: summary[item.key],
+        colorClass: item.colorClass,
+    }));
+
     return (
         <div className="h-[calc(100dvh-100px)] w-full overflow-y-auto px-4 py-4 md:px-6 md:py-6">
             <div className="grid h-full w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[1fr_1.5fr] lg:grid-rows-2">

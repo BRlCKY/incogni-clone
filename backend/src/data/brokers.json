@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Acme Data Brokers",
+    "email": "privacy@acme-brokers.com",
+    "website": "https://acme-brokers.com",
+    "locale": "Englisch / USA"
+  },
+  {
+    "id": 2,
+    "name": "Nordic Insight",
+    "email": "contact@nordic-insight.eu",
+    "website": "https://nordic-insight.eu",
+    "locale": "Englisch / Deutschland"
+  },
+  {
+    "id": 4,
+    "name": "Example Broker",
+    "email": "contact@example.com",
+    "website": "https://example.com",
+    "locale": "en-US"
+  },
+  {
+    "id": 5,
+    "name": "Example Broker",
+    "email": "contact@example.com",
+    "website": "https://exampleddddd.com",
+    "locale": "en-US"
+  }
+]

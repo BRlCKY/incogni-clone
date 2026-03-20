@@ -2,14 +2,7 @@ import { useMemo, useState } from "react";
 import GlassComp from "../GlassComp";
 import InputComp from "../InputComp";
 import SearchbarComp from "../SearchbarComp";
-
-type Broker = {
-    id: number;
-    name: string;
-    email: string;
-    website: string;
-    locale: string;
-};
+import { Broker } from "../../../../shared/types";
 
 type SortKey = "name" | "email" | "website" | "locale";
 type SortDirection = "asc" | "desc";

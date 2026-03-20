@@ -1,0 +1,77 @@
+[
+  {
+    "title": "Deletion request submitted to Acme Data Brokers",
+    "description": "Initial request sent for profile cleanup and marketing suppression.",
+    "timestamp": "2026-03-20T08:15:00Z"
+  },
+  {
+    "title": "Acme Data Brokers confirmed request received",
+    "description": "Broker acknowledged the request and started internal verification.",
+    "timestamp": "2026-03-20T09:42:00Z"
+  },
+  {
+    "title": "Verification email sent by Nordic Insight",
+    "description": "Broker requested identity verification before processing deletion.",
+    "timestamp": "2026-03-19T13:05:00Z"
+  },
+  {
+    "title": "Verification completed for Nordic Insight",
+    "description": "User confirmation link was validated successfully.",
+    "timestamp": "2026-03-19T14:18:00Z"
+  },
+  {
+    "title": "Deletion request submitted to Example Broker (example.com)",
+    "description": "Request includes data deletion and future data processing opt-out.",
+    "timestamp": "2026-03-18T10:22:00Z"
+  },
+  {
+    "title": "Follow-up reminder sent to Example Broker (exampleddddd.com)",
+    "description": "No response after 7 days; automated reminder was dispatched.",
+    "timestamp": "2026-03-17T11:55:00Z"
+  },
+  {
+    "title": "Deletion completed by Acme Data Brokers",
+    "description": "Broker confirmed user profile removed from active systems.",
+    "timestamp": "2026-03-16T16:40:00Z"
+  },
+  {
+    "title": "Suppression list update confirmed by Acme Data Brokers",
+    "description": "Email and phone identifiers were added to suppression records.",
+    "timestamp": "2026-03-16T17:10:00Z"
+  },
+  {
+    "title": "Deletion request submitted to Nordic Insight",
+    "description": "Initial outreach sent to privacy contact endpoint.",
+    "timestamp": "2026-03-15T09:20:00Z"
+  },
+  {
+    "title": "Nordic Insight requested additional account identifier",
+    "description": "Broker asked for an optional customer reference to locate records faster.",
+    "timestamp": "2026-03-14T12:08:00Z"
+  },
+  {
+    "title": "Additional identifier provided to Nordic Insight",
+    "description": "Customer reference shared through secure reply channel.",
+    "timestamp": "2026-03-14T12:46:00Z"
+  },
+  {
+    "title": "Deletion request submitted to Example Broker (exampleddddd.com)",
+    "description": "New broker record detected and deletion request queued immediately.",
+    "timestamp": "2026-03-13T08:31:00Z"
+  },
+  {
+    "title": "No data found response from Example Broker (example.com)",
+    "description": "Broker reported no matching profile for provided identity details.",
+    "timestamp": "2026-03-12T15:03:00Z"
+  },
+  {
+    "title": "Case re-opened after fresh data match at Example Broker (example.com)",
+    "description": "Monitoring detected a new listing and automatically re-opened the case.",
+    "timestamp": "2026-03-11T10:27:00Z"
+  },
+  {
+    "title": "Final confirmation pending from Nordic Insight",
+    "description": "Broker indicates deletion completed; waiting for signed confirmation.",
+    "timestamp": "2026-03-10T18:12:00Z"
+  }
+]
