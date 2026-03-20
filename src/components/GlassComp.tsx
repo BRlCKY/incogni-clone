@@ -4,7 +4,7 @@ export interface GlassCompProps extends HTMLAttributes<HTMLDivElement> {
     width?: number | string;
     height?: number | string;
     borderRadius?: number;
-    tintOpacity?: number;
+    backgroundOpacity?: number;
     saturation?: number;
     style?: CSSProperties;
 }
@@ -45,7 +45,7 @@ const GlassComp = ({
     width = 200,
     height = 80,
     borderRadius = 20,
-    tintOpacity,
+    backgroundOpacity,
     saturation = 1.8,
     className = "",
     style,
@@ -53,10 +53,6 @@ const GlassComp = ({
 }: GlassCompProps) => {
     const isDarkMode = useDarkMode();
     const [hasBackdropFilter, setHasBackdropFilter] = useState(false);
-    const normalizedTintOpacity =
-        typeof tintOpacity === "number" && Number.isFinite(tintOpacity)
-            ? Math.min(1, Math.max(0, tintOpacity))
-            : undefined;
 
     useEffect(() => {
         setHasBackdropFilter(supportsBackdropFilter());
@@ -73,7 +69,7 @@ const GlassComp = ({
         ? hasBackdropFilter
             ? {
                   ...baseStyles,
-                  background: `rgba(0, 0, 0, ${normalizedTintOpacity ?? 0.1})`,
+                  background: "rgba(255, 255, 255, 0.1)",
                   backdropFilter: `blur(12px) saturate(${saturation}) brightness(1.2)`,
                   WebkitBackdropFilter: `blur(12px) saturate(${saturation}) brightness(1.2)`,
                   border: "1px solid rgba(255, 255, 255, 0.2)",
@@ -82,7 +78,7 @@ const GlassComp = ({
               }
             : {
                   ...baseStyles,
-                  background: `rgba(0, 0, 0, ${normalizedTintOpacity ?? 0.4})`,
+                  background: "rgba(0, 0, 0, 0.4)",
                   border: "1px solid rgba(255, 255, 255, 0.2)",
                   boxShadow: `inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
                         inset 0 -1px 0 0 rgba(255, 255, 255, 0.1)`,
@@ -90,7 +86,7 @@ const GlassComp = ({
         : hasBackdropFilter
           ? {
                 ...baseStyles,
-                background: `rgba(255, 255, 255, ${normalizedTintOpacity ?? 0.25})`,
+                background: "rgba(255, 255, 255, 0.25)",
                 backdropFilter: `blur(12px) saturate(${saturation}) brightness(1.1)`,
                 WebkitBackdropFilter: `blur(12px) saturate(${saturation}) brightness(1.1)`,
                 border: "1px solid rgba(255, 255, 255, 0.3)",
@@ -101,7 +97,7 @@ const GlassComp = ({
             }
           : {
                 ...baseStyles,
-                background: `rgba(255, 255, 255, ${normalizedTintOpacity ?? 0.4})`,
+                background: "rgba(255, 255, 255, 0.4)",
                 border: "1px solid rgba(255, 255, 255, 0.3)",
                 boxShadow: `inset 0 1px 0 0 rgba(255, 255, 255, 0.5),
                         inset 0 -1px 0 0 rgba(255, 255, 255, 0.3)`,

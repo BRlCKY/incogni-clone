@@ -28,8 +28,11 @@ const ListComp = (props: ListCompProps) => {
             width="100%"
             height={props.height}
             borderRadius={9999}
-            tintOpacity={isHovered ? 0.8 : 0.3}
             className="w-full flex items-center cursor-pointer"
+            style={{
+                filter: isHovered ? "contrast(1.5) brightness(0.7)" : "none",
+                transition: "filter 180ms ease-out",
+            }}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave} >
             <div
