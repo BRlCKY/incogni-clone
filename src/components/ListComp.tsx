@@ -1,4 +1,3 @@
-import { useState } from "react";
 import GlassComp from "./GlassComp";
 
 interface ListCompProps {
@@ -13,28 +12,15 @@ interface ListCompProps {
 
 const ListComp = (props: ListCompProps) => {
     const diameter = props.height - 6;
-    const [isHovered, setIsHovered] = useState(false);
-
-    const handleMouseEnter = () => {
-        setIsHovered(true);
-    };
-
-    const handleMouseLeave = () => {
-        setIsHovered(false);
-    };
 
     return (
         <GlassComp
             width="100%"
             height={props.height}
             borderRadius={9999}
+            isHoverable={true}
             className="w-full flex items-center cursor-pointer"
-            style={{
-                filter: isHovered ? "contrast(1.5) brightness(0.7)" : "none",
-                transition: "filter 180ms ease-out",
-            }}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave} >
+        >
             <div
                 className={`${props.circleColorClass ? props.circleColorClass : "bg-white"} rounded-full relative left-[-6px] flex-shrink-0`}
                 style={{ width: `${diameter}px`, height: `${diameter}px` }}
