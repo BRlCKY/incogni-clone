@@ -1,114 +1,82 @@
 [
   {
+    "id": 1,
+    "title": "Broker Alpha",
+    "date": "24.01.2026",
     "time": "14:32",
-    "message": "Broker A hat der Datenloeschung zugestimmt"
+    "message": "Broker confirmed data deletion request.",
+    "colorClass": "bg-green-600"
   },
   {
+    "id": 2,
+    "title": "Broker Beta",
+    "date": "24.01.2026",
     "time": "13:45",
-    "message": "Broker B hat um mehr Zeit gebeten"
+    "message": "Broker requested more time for review.",
+    "colorClass": "bg-yellow-500"
   },
   {
+    "id": 3,
+    "title": "Broker Gamma",
+    "date": "24.01.2026",
     "time": "13:12",
-    "message": "Fall mit Broker C abgeschlossen"
+    "message": "Case was marked as rejected.",
+    "colorClass": "bg-red-700"
   },
   {
+    "id": 4,
+    "title": "Broker Delta",
+    "date": "24.01.2026",
     "time": "12:58",
-    "message": "Broker D hat eine Bestaetigung gesendet"
+    "message": "Received signed confirmation letter.",
+    "colorClass": "bg-green-600"
   },
   {
+    "id": 5,
+    "title": "Broker Epsilon",
+    "date": "24.01.2026",
     "time": "12:20",
-    "message": "Neue Anfrage an Broker E"
+    "message": "Initial request email sent.",
+    "colorClass": "bg-blue-500"
   },
   {
+    "id": 6,
+    "title": "Broker Zeta",
+    "date": "24.01.2026",
     "time": "11:45",
-    "message": "Broker F hat mit Rueckfragen geantwortet"
+    "message": "Broker asked follow-up questions.",
+    "colorClass": "bg-yellow-500"
   },
   {
+    "id": 7,
+    "title": "Broker Eta",
+    "date": "24.01.2026",
     "time": "11:00",
-    "message": "Erinnerung an Broker G gesendet"
+    "message": "Reminder sent automatically.",
+    "colorClass": "bg-blue-500"
   },
   {
-    "time": "14:32",
-    "message": "Broker A hat der Datenloeschung zugestimmt"
+    "id": 8,
+    "title": "Broker Theta",
+    "date": "23.01.2026",
+    "time": "16:41",
+    "message": "Case status changed to stalled.",
+    "colorClass": "bg-yellow-500"
   },
   {
-    "time": "13:45",
-    "message": "Broker B hat um mehr Zeit gebeten"
+    "id": 9,
+    "title": "Broker Iota",
+    "date": "23.01.2026",
+    "time": "15:30",
+    "message": "Broker rejected the request due to incomplete data.",
+    "colorClass": "bg-red-700"
   },
   {
-    "time": "13:12",
-    "message": "Fall mit Broker C abgeschlossen"
-  },
-  {
-    "time": "12:58",
-    "message": "Broker D hat eine Bestaetigung gesendet"
-  },
-  {
-    "time": "12:20",
-    "message": "Neue Anfrage an Broker E"
-  },
-  {
-    "time": "11:45",
-    "message": "Broker F hat mit Rueckfragen geantwortet"
-  },
-  {
-    "time": "11:00",
-    "message": "Erinnerung an Broker G gesendet"
-  },
-  {
-    "time": "14:32",
-    "message": "Broker A hat der Datenloeschung zugestimmt"
-  },
-  {
-    "time": "13:45",
-    "message": "Broker B hat um mehr Zeit gebeten"
-  },
-  {
-    "time": "13:12",
-    "message": "Fall mit Broker C abgeschlossen"
-  },
-  {
-    "time": "12:58",
-    "message": "Broker D hat eine Bestaetigung gesendet"
-  },
-  {
-    "time": "12:20",
-    "message": "Neue Anfrage an Broker E"
-  },
-  {
-    "time": "11:45",
-    "message": "Broker F hat mit Rueckfragen geantwortet"
-  },
-  {
-    "time": "11:00",
-    "message": "Erinnerung an Broker G gesendet"
-  },
-  {
-    "time": "14:32",
-    "message": "Broker A hat der Datenloeschung zugestimmt"
-  },
-  {
-    "time": "13:45",
-    "message": "Broker B hat um mehr Zeit gebeten"
-  },
-  {
-    "time": "13:12",
-    "message": "Fall mit Broker C abgeschlossen"
-  },
-  {
-    "time": "12:58",
-    "message": "Broker D hat eine Bestaetigung gesendet"
-  },
-  {
-    "time": "12:20",
-    "message": "Neue Anfrage an Broker E"
-  },
-  {
-    "time": "11:45",
-    "message": "Broker F hat mit Rueckfragen geantwortet"
-  },
-  {
-    "time": "11:00",
-    "message": "Erinnerung an Broker G gesendet"
+    "id": 10,
+    "title": "System",
+    "date": "23.01.2026",
+    "time": "10:15",
+    "message": "Daily status synchronization completed.",
+    "colorClass": "bg-blue-500"
   }
 ]

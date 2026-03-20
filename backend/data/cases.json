@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "brokerName": "Broker Alpha",
+    "latestUpdate": "Request accepted and processing started",
+    "status": "done"
+  },
+  {
+    "id": 2,
+    "brokerName": "Broker Beta",
+    "latestUpdate": "Waiting for legal confirmation",
+    "status": "stalled"
+  },
+  {
+    "id": 3,
+    "brokerName": "Broker Gamma",
+    "latestUpdate": "Request rejected due to missing account proof",
+    "status": "rejected"
+  },
+  {
+    "id": 4,
+    "brokerName": "Broker Delta",
+    "latestUpdate": "Deletion confirmed",
+    "status": "done"
+  },
+  {
+    "id": 5,
+    "brokerName": "Broker Epsilon",
+    "latestUpdate": "No response after reminder",
+    "status": "stalled"
+  },
+  {
+    "id": 6,
+    "brokerName": "Broker Zeta",
+    "latestUpdate": "Rejected because request was out of scope",
+    "status": "rejected"
+  },
+  {
+    "id": 7,
+    "brokerName": "Broker Eta",
+    "latestUpdate": "Request completed successfully",
+    "status": "done"
+  },
+  {
+    "id": 8,
+    "brokerName": "Broker Theta",
+    "latestUpdate": "Awaiting internal review",
+    "status": "stalled"
+  },
+  {
+    "id": 9,
+    "brokerName": "Broker Iota",
+    "latestUpdate": "Rejected due to incomplete identity data",
+    "status": "rejected"
+  },
+  {
+    "id": 10,
+    "brokerName": "Broker Kappa",
+    "latestUpdate": "Data removal verified",
+    "status": "done"
+  }
+]
