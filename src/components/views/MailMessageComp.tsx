@@ -12,6 +12,8 @@ const MailMessageComp = ({ contacts, onBack, onSend }: MailMessageCompProps) => 
     const [subject, setSubject] = useState("");
     const [body, setBody] = useState("");
     const [showContacts, setShowContacts] = useState(false);
+    const [abort, setAbort] = useState(0.4);
+    const [send, setSend] = useState(0.4);
 
     const handleSend = () => {
         onSend({ to, subject, body });
@@ -88,11 +90,12 @@ const MailMessageComp = ({ contacts, onBack, onSend }: MailMessageCompProps) => 
                         <GlassComp
                             width="100%"
                             height={52}
-                            tintOpacity={0.52}
+                            tintOpacity={abort}
                             borderRadius={999}
-                            className="cursor-pointer rounded-full border border-gray-700 hover:bg-gray-800/50"
+                            className="cursor-pointer rounded-full border border-gray-700 hover:bg-gray-700"
                             onClick={onBack}
-                            role="button"
+                            onMouseEnter={() => setAbort(0.8)}
+                            onMouseLeave={() => setAbort(0.4)}
                         >
                             <p className="flex h-full w-full items-center justify-center text-sm font-semibold text-white">Abbrechen</p>
                         </GlassComp>
@@ -101,11 +104,12 @@ const MailMessageComp = ({ contacts, onBack, onSend }: MailMessageCompProps) => 
                         <GlassComp
                             width="100%"
                             height={52}
-                            tintOpacity={0.52}
+                            tintOpacity={send}
                             borderRadius={999}
                             className="cursor-pointer rounded-full border border-blue-400/60 bg-blue-900/25 hover:bg-blue-900/45"
                             onClick={handleSend}
-                            role="button"
+                            onMouseEnter={() => setSend(0.8)}
+                            onMouseLeave={() => setSend(0.4)}
                         >
                             <p className="flex h-full w-full items-center justify-center text-sm font-semibold text-white">Senden</p>
                         </GlassComp>
