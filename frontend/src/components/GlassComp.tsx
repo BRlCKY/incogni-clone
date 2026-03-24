@@ -1,4 +1,10 @@
-import { type CSSProperties, type HTMLAttributes, useEffect, useState } from "react";
+import {
+    type CSSProperties,
+    type HTMLAttributes,
+    type MouseEvent,
+    useEffect,
+    useState,
+} from "react";
 
 export interface GlassCompProps extends HTMLAttributes<HTMLDivElement> {
     width?: number | string;
@@ -7,6 +13,7 @@ export interface GlassCompProps extends HTMLAttributes<HTMLDivElement> {
     tintOpacity?: number;
     saturation?: number;
     style?: CSSProperties;
+    isHoverable?: boolean;
 }
 
 const useDarkMode = () => {
@@ -49,25 +56,43 @@ const GlassComp = ({
     saturation = 1.8,
     className = "",
     style,
+    isHoverable = false,
+    onMouseEnter,
+    onMouseLeave,
     ...rest
 }: GlassCompProps) => {
     const isDarkMode = useDarkMode();
     const [hasBackdropFilter, setHasBackdropFilter] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
     const normalizedTintOpacity =
         typeof tintOpacity === "number" && Number.isFinite(tintOpacity)
             ? Math.min(1, Math.max(0, tintOpacity))
             : undefined;
+    const {
+        filter: customFilter,
+        transition: customTransition,
+        ...styleWithoutHoverEffects
+    } = style ?? {};
 
     useEffect(() => {
         setHasBackdropFilter(supportsBackdropFilter());
     }, []);
 
     const baseStyles: CSSProperties = {
-        ...style,
+        ...styleWithoutHoverEffects,
         width: typeof width === "number" ? `${width}px` : width,
         height: typeof height === "number" ? `${height}px` : height,
         borderRadius: `${borderRadius}px`,
     };
+    const normalizedCustomFilter =
+        typeof customFilter === "string" && customFilter !== "none" ? customFilter : undefined;
+    const hoverFilter = [normalizedCustomFilter, "contrast(.8) brightness(1.1)"]
+        .filter(Boolean)
+        .join(" ");
+    const resolvedFilter = isHoverable ? (isHovered ? hoverFilter : customFilter ?? "none") : customFilter;
+    const resolvedTransition = isHoverable
+        ? [customTransition, "filter 180ms ease-out"].filter(Boolean).join(", ")
+        : customTransition;
 
     const containerStyles: CSSProperties = isDarkMode
         ? hasBackdropFilter
@@ -106,11 +131,29 @@ const GlassComp = ({
                 boxShadow: `inset 0 1px 0 0 rgba(255, 255, 255, 0.5),
                         inset 0 -1px 0 0 rgba(255, 255, 255, 0.3)`,
             };
+    containerStyles.filter = resolvedFilter;
+    containerStyles.transition = resolvedTransition;
+
+    const handleMouseEnter = (event: MouseEvent<HTMLDivElement>) => {
+        if (isHoverable) {
+            setIsHovered(true);
+        }
+        onMouseEnter?.(event);
+    };
+
+    const handleMouseLeave = (event: MouseEvent<HTMLDivElement>) => {
+        if (isHoverable) {
+            setIsHovered(false);
+        }
+        onMouseLeave?.(event);
+    };
 
     return (
         <div
             className={`relative flex items-center justify-center overflow-hidden transition-opacity duration-[260ms] ease-out ${className}`}
             style={containerStyles}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
             {...rest}
         >
             <div className="relative z-10 flex h-full w-full items-center justify-center rounded-[inherit] p-2">

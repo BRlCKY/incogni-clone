@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import GlassComp from "../GlassComp";
 import SearchbarComp from "../SearchbarComp";
 import MailViewComp from "./MailViewComp";
+import MailMessageComp from "./MailMessageComp";
 
 type MailFolder = "posteingang" | "gesendet";
 
@@ -96,14 +97,16 @@ const getAvatarColorClass = (name: string) =>
 const getAvatarInitial = (name: string) => name.trim().charAt(0).toUpperCase() || "?";
 
 const MailComp = () => {
+    const [mails, setMails] = useState<MailItem[]>(mailboxItems);
     const [searchQuery, setSearchQuery] = useState("");
     const [activeFolder, setActiveFolder] = useState<MailFolder>("posteingang");
     const [openedMailId, setOpenedMailId] = useState<number | null>(null);
+    const [isComposing, setIsComposing] = useState(false);
 
     const filteredItems = useMemo(() => {
         const normalizedQuery = searchQuery.trim().toLowerCase();
 
-        return mailboxItems.filter((item) => {
+        return mails.filter((item) => {
             const matchesFilter = item.folder === activeFolder;
             const matchesSearch = normalizedQuery
                 ? `${item.subject} ${item.body} ${item.date}`.toLowerCase().includes(normalizedQuery)
@@ -111,19 +114,50 @@ const MailComp = () => {
 
             return matchesFilter && matchesSearch;
         });
-    }, [activeFolder, searchQuery]);
+    }, [activeFolder, searchQuery, mails]);
 
     const openedMail = useMemo(
-        () => mailboxItems.find((item) => item.id === openedMailId) ?? null,
-        [openedMailId],
+        () => mails.find((item) => item.id === openedMailId) ?? null,
+        [openedMailId, mails],
     );
+
+    const uniqueContacts = useMemo(() => {
+        const allContacts = mails.map((item) => item.counterparty);
+        return Array.from(new Set(allContacts));
+    }, [mails]);
+
+    if (isComposing) {
+        return (
+            <MailMessageComp
+                contacts={uniqueContacts}
+                onBack={() => setIsComposing(false)}
+                onSend={(mailData) => {
+                    const newMail: MailItem = {
+                        id: Date.now(),
+                        subject: mailData.subject || "(Kein Betreff)",
+                        body: mailData.body,
+                        counterparty: mailData.to || "(Unbekannt)",
+                        folder: "gesendet",
+                        date: "Gerade eben",
+                    };
+                    
+                    setMails((prevMails) => [newMail, ...prevMails]);
+                    setIsComposing(false);
+                    setActiveFolder("gesendet");
+                }}
+            />
+        );
+    }
 
     if (openedMail) {
         return (
             <MailViewComp
                 mail={openedMail}
                 onBack={() => setOpenedMailId(null)}
-                onReply={() => setOpenedMailId(null)}
+                onReply={() => {
+                    setOpenedMailId(null);
+                    setIsComposing(true);
+                }}
             />
         );
     }
@@ -140,7 +174,7 @@ const MailComp = () => {
                             tintOpacity={0.52}
                             borderRadius={999}
                             className="cursor-pointer rounded-full border border-gray-700 px-4 hover:bg-gray-800/50"
-                            onClick={() => setOpenedMailId(null)}
+                            onClick={() => setIsComposing(true)}
                         >
                             <p className="w-full px-3 text-left text-2xl leading-7 text-white">E-Mail schreiben</p>
                         </GlassComp>
@@ -261,7 +295,7 @@ const MailComp = () => {
                                 borderRadius={999}
                                 className="rounded-full border border-gray-700"
                             >
-                                <p className="text-sm text-gray-400">Keine Nachrichten gefunden.</p>
+                                <p className="flex h-full items-center justify-center text-sm text-gray-400">Keine Nachrichten gefunden.</p>
                             </GlassComp>
                         )}
                     </div>
