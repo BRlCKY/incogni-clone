@@ -7,10 +7,47 @@ const app = express();
 app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cors()); // Middleware to enable CORS
 const port = 3000;
+const authDataPath = "./src/data/auth.json";
+
+type AuthState = {
+  password: string | null;
+};
+
+const respondNotImplemented = (
+  res: any,
+  endpoint: string,
+  todo: string,
+  expectedBody: Record<string, unknown> | null = null,
+  expectedQuery: Record<string, unknown> | null = null,
+) => {
+  res.status(501).json({
+    message: "Endpoint planned but not implemented yet",
+    endpoint,
+    todo,
+    expectedBody,
+    expectedQuery,
+  });
+};
 
 app.get("/hello", (req: any, res: any) => {
   res.send("Hello World!");
 });
+
+const readAuthState = (): AuthState => {
+  if (!fs.existsSync(authDataPath)) {
+    const initialAuthState: AuthState = { password: null };
+    fs.writeFileSync(authDataPath, JSON.stringify(initialAuthState, null, 2));
+    return initialAuthState;
+  }
+  const rawState = JSON.parse(fs.readFileSync(authDataPath, "utf8"));
+  return {
+    password: rawState.password ?? null,
+  };
+};
+
+const writeAuthState = (state: AuthState) => {
+  fs.writeFileSync(authDataPath, JSON.stringify(state, null, 2));
+};
 
 // Broker endpoints
 
@@ -114,6 +151,174 @@ app.get("/dashboard/summary", (req: any, res: any) => {
   }
   res.json(data);
 });
+
+app.get("/dashboard/broker-performance", (req: any, res: any) => {
+  respondNotImplemented(
+    res,
+    "GET /dashboard/broker-performance",
+    "Return broker response-time ranking for DashboardComp 'Antwortzeiten' card.",
+  );
+});
+
+app.get("/dashboard/activity", (req: any, res: any) => {
+  respondNotImplemented(
+    res,
+    "GET /dashboard/activity",
+    "Return latest timeline entries for DashboardComp 'Aktuell' card.",
+  );
+});
+
+// Cases endpoints (planned)
+
+app.get("/cases", (req: any, res: any) => {
+  respondNotImplemented(
+    res,
+    "GET /cases",
+    "Return case list for CasesComp with optional filters and search.",
+    null,
+    {
+      status: "open | done | rejected | stalled",
+      search: "string",
+      limit: 50,
+      offset: 0,
+    },
+  );
+});
+
+app.delete("/cases/bulk", (req: any, res: any) => {
+  respondNotImplemented(
+    res,
+    "DELETE /cases/bulk",
+    "Delete selected cases from CasesComp bulk action.",
+    {
+      ids: [1, 2, 3],
+    },
+  );
+});
+
+app.post("/cases/bulk-contact", (req: any, res: any) => {
+  respondNotImplemented(
+    res,
+    "POST /cases/bulk-contact",
+    "Trigger messaging workflow for selected cases in CasesComp.",
+    {
+      ids: [1, 2, 3],
+      template: "follow-up-1",
+    },
+  );
+});
+
+// Auth and onboarding endpoints (planned)
+
+app.get("/auth/status", (req: any, res: any) => {
+  const authState = readAuthState();
+  const passwordSet = Boolean(authState.password && authState.password.length > 0);
+
+  res.json({
+    passwordSet,
+    canProceed: !passwordSet,
+  });
+});
+
+app.post("/auth/login", (req: any, res: any) => {
+  const authState = readAuthState();
+  const passwordSet = Boolean(authState.password && authState.password.length > 0);
+  const submittedPassword = String(req.body?.password ?? "");
+
+  if (!passwordSet) {
+    return res.json({
+      success: true,
+      message: "No password configured. Login granted.",
+      canProceed: true,
+    });
+  }
+
+  if (submittedPassword !== authState.password) {
+    return res.status(401).json({
+      success: false,
+      message: "Invalid password",
+      canProceed: false,
+    });
+  }
+
+  res.json({
+    success: true,
+    message: "Login successful",
+    canProceed: true,
+  });
+});
+
+app.post("/auth/setup-password", (req: any, res: any) => {
+  const password = String(req.body?.password ?? "");
+  const trimmedPassword = password.trim();
+
+  if (!trimmedPassword) {
+    return res.status(400).json({ message: "Password is required" });
+  }
+
+  const authState = readAuthState();
+  authState.password = trimmedPassword;
+  writeAuthState(authState);
+
+  res.status(201).json({
+    success: true,
+    message: "Password saved",
+    passwordSet: true,
+    canProceed: true,
+  });
+});
+
+app.get("/profile/removal-data", (req: any, res: any) => {
+  respondNotImplemented(
+    res,
+    "GET /profile/removal-data",
+    "Load saved profile/removal-data fields for onboarding and settings forms.",
+  );
+});
+
+app.put("/profile/removal-data", (req: any, res: any) => {
+  respondNotImplemented(
+    res,
+    "PUT /profile/removal-data",
+    "Save or update removal-data profile fields from OnboardingDataComp.",
+    {
+      firstName: "string",
+      lastName: "string",
+      email: "string",
+      address: "string",
+      city: "string",
+      zipCode: "string",
+      country: "string",
+      phone: "string",
+    },
+  );
+});
+
+// Settings endpoints (planned)
+
+app.get("/settings", (req: any, res: any) => {
+  respondNotImplemented(
+    res,
+    "GET /settings",
+    "Return settings page values once SettingsComp is implemented.",
+  );
+});
+
+app.put("/settings", (req: any, res: any) => {
+  respondNotImplemented(
+    res,
+    "PUT /settings",
+    "Save settings page updates once SettingsComp is implemented.",
+    {
+      notificationsEnabled: true,
+      preferredLocale: "de-DE",
+      timezone: "Europe/Berlin",
+    },
+  );
+});
+
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
