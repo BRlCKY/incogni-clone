@@ -7,6 +7,7 @@ import Log from "./views/LogComp";
 import Mail from "./views/MailComp";
 import BrokerList from "./views/BrokerListComp";
 import Settings from "./views/SettingsComp";
+import OldSettings from "./views/SettingsCompOld";
 import ColorBlendBackground from "./backgrounds/ColorBlendBackground";
 
 const view_data = {
@@ -36,7 +37,7 @@ const Wrapper = () => {
             {active_view === 'HELPCENTER' && <HelpCenter />}
             {active_view === 'LOG' && <Log />}
             {active_view === 'MAIL' && <Mail />}
-            {active_view === 'BROKERLIST' && <BrokerList />}
+            {active_view === 'BROKERLIST' && <OldSettings />}
             {active_view === 'SETTINGS' && <Settings />}
             <div className="fixed w-full h-full -z-50 top-0 left-0">
                 <ColorBlendBackground />
