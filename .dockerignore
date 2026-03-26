@@ -1,0 +1,9 @@
+.git
+node_modules
+target
+build
+dist
+.cache
+*.log
+.env
+.DS_Store
