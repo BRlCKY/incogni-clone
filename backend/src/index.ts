@@ -1,54 +1,51 @@
-import fs from "node:fs";
-import express from "express";
 import cors from "cors";
-import type { Broker, MailItem } from "../../shared/types";
+import express, { json } from "express";
+import fs from "node:fs";
+import { BrokerStatus, type Broker, type LogEntry, type MailItem } from "../../shared/types";
 
 const app = express();
-app.use(express.json()); // Middleware to parse JSON bodies
-app.use(cors()); // Middleware to enable CORS
+app.use(express.json());
+app.use(cors());
 const port = 3000;
-const authDataPath = "./src/data/auth.json";
 
-type AuthState = {
-  password: string | null;
-};
+const getBrokerById = (id: number): Broker | null => {
+  const data: Broker[] = JSON.parse(fs.readFileSync("./src/data/brokers.json", "utf8"));
+  return data.find((b) => b.id === id) || null;
+}
 
-const respondNotImplemented = (
-  res: any,
-  endpoint: string,
-  todo: string,
-  expectedBody: Record<string, unknown> | null = null,
-  expectedQuery: Record<string, unknown> | null = null,
-) => {
-  res.status(501).json({
-    message: "Endpoint planned but not implemented yet",
-    endpoint,
-    todo,
-    expectedBody,
-    expectedQuery,
-  });
-};
+const getBrokerByName = (name: string): Broker | null => {
+  const data: Broker[] = JSON.parse(fs.readFileSync("./src/data/brokers.json", "utf8"));
+  return data.find((b) => b.name === name) || null;
+}
 
-app.get("/hello", (req: any, res: any) => {
-  res.send("Hello World!");
-});
+const log = (title: string, description = "", brokerId: number) => {
+  const data = JSON.parse(fs.readFileSync("./src/data/logs.json", "utf8"));
+  const newLogEntry = { title, description, timestamp: new Date().toISOString(), brokerId };
+  data.push(newLogEntry);
+  fs.writeFileSync("./src/data/logs.json", JSON.stringify(data, null, 2));
 
-const readAuthState = (): AuthState => {
-  if (!fs.existsSync(authDataPath)) {
-    const initialAuthState: AuthState = { password: null };
-    fs.writeFileSync(authDataPath, JSON.stringify(initialAuthState, null, 2));
-    return initialAuthState;
+  // update latestLog of broker
+
+  const broker = getBrokerById(brokerId);
+  if (broker) {
+    const brokers: Broker[] = JSON.parse(fs.readFileSync("./src/data/brokers.json", "utf8"));
+    const brokerIndex = brokers.findIndex((b) => b.id === brokerId);
+    if (brokerIndex !== -1) {
+      brokers[brokerIndex].latestLog = description;
+      brokers[brokerIndex].latestLogTimestamp = newLogEntry.timestamp;
+      fs.writeFileSync("./src/data/brokers.json", JSON.stringify(brokers, null, 2));
+    }
   }
-  const rawState = JSON.parse(fs.readFileSync(authDataPath, "utf8"));
-  return {
-    password: rawState.password ?? null,
-  };
 };
 
-const writeAuthState = (state: AuthState) => {
-  fs.writeFileSync(authDataPath, JSON.stringify(state, null, 2));
+const updateBrokerStatus = (brokerId: number, newStatus: Broker["status"]) => {
+  const brokers: Broker[] = JSON.parse(fs.readFileSync("./src/data/brokers.json", "utf8"));
+  const brokerIndex = brokers.findIndex((b) => b.id === brokerId);
+  if (brokerIndex !== -1) {
+    brokers[brokerIndex].status = newStatus;
+    fs.writeFileSync("./src/data/brokers.json", JSON.stringify(brokers, null, 2));
+  }
 };
-
 // Broker endpoints
 
 app.get("/brokers", (req: any, res: any) => {
@@ -83,10 +80,11 @@ app.post("/brokers/add", (req: any, res: any) => {
   }
 
   const nextId = data.length > 0 ? Math.max(...data.map((b) => b.id)) + 1 : 1; 
-  const newBroker: Broker = { id: nextId, ...brokerPayload };
+  const newBroker: Broker = { id: nextId, ...brokerPayload, status: BrokerStatus.NEW, latestLog: "", latestLogTimestamp: new Date(0).toISOString() };
   data.push(newBroker);
   fs.writeFileSync("./src/data/brokers.json", JSON.stringify(data, null, 2));
   res.status(201).json(newBroker);
+  log(newBroker.name, "Broker hinzugefügt", newBroker.id);
 });
 
 app.delete("/brokers/:id", (req: any, res: any) => {
@@ -96,6 +94,7 @@ app.delete("/brokers/:id", (req: any, res: any) => {
     const deletedBroker = data.splice(brokerIndex, 1)[0];
     fs.writeFileSync("./src/data/brokers.json", JSON.stringify(data, null, 2));
     res.json(deletedBroker);
+    log(deletedBroker.name, "Broker entfernt", deletedBroker.id);
   } else {
     res.status(404).json({ message: "Broker not found" });
   }
@@ -104,16 +103,8 @@ app.delete("/brokers/:id", (req: any, res: any) => {
 // Log endpoints
 
 app.get("/logs", (req: any, res: any) => {
-  const data = JSON.parse(fs.readFileSync("./src/data/logs.json", "utf8"));
+  const data = JSON.parse(fs.readFileSync("./src/data/logs.json", "utf8")).sort((a: LogEntry, b: LogEntry) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   res.json(data);
-});
-
-app.post("/logs/add", (req: any, res: any) => {
-  const data = JSON.parse(fs.readFileSync("./src/data/logs.json", "utf8"));
-  const newLogEntry = req.body;
-  data.push(newLogEntry);
-  fs.writeFileSync("./src/data/logs.json", JSON.stringify(data, null, 2));
-  res.status(201).json(newLogEntry);
 });
 
 // FAQ endpoints
@@ -138,117 +129,96 @@ app.post("/mails/send", (req: any, res: any) => {
   const newMail = { id: nextId, ...mailPayload };
   data.push(newMail);
   fs.writeFileSync("./src/data/mails.json", JSON.stringify(data, null, 2));
+  log(mailPayload.counterparty, "Mail gesendet: " + mailPayload.subject, getBrokerByName(mailPayload.counterparty)?.id ?? -1);
+
+  updateBrokerStatus(getBrokerByName(mailPayload.counterparty)?.id ?? -1, BrokerStatus.PENDING);
+
   res.status(201).json(newMail);
 });
 
 // Dashboard endpoints
 
 app.get("/dashboard/summary", (req: any, res: any) => {
+  const brokers: Broker[] = JSON.parse(fs.readFileSync("./src/data/brokers.json", "utf8"));
   const data = {
-    brokersMessaged: 42,
-    brokersReplied: 27,
-    casesOpen: 15,
+    brokersMessaged: brokers.filter((b) => b.status !== BrokerStatus.NEW).length,
+    brokersPending: brokers.filter((b) => b.status === BrokerStatus.PENDING).length,
+    brokersAccepted: brokers.filter((b) => b.status === BrokerStatus.DONE).length,
+    brokersRejected: brokers.filter((b) => b.status === BrokerStatus.REJECTED).length,
+    brokersToDo: brokers.filter((b) => b.status === BrokerStatus.NEW).length
   }
   res.json(data);
 });
 
-app.get("/dashboard/broker-performance", (req: any, res: any) => {
-  respondNotImplemented(
-    res,
-    "GET /dashboard/broker-performance",
-    "Return broker response-time ranking for DashboardComp 'Antwortzeiten' card.",
-  );
+app.get("/dashboard/waitingtime", (req: any, res: any) => {
+  const eligibleBrokers: Broker[] = JSON.parse(fs.readFileSync("./src/data/brokers.json", "utf8")).filter((b: Broker) => b.status === BrokerStatus.PENDING && b.latestLogTimestamp);
+  const data = eligibleBrokers.map((b) => {
+    const waitingTimeMs = new Date().getTime() - new Date(b.latestLogTimestamp).getTime();
+    return {
+      name: b.name,
+      waitingTimeMs,
+    };
+  });
+  res.status(200).json(data);
 });
 
-app.get("/dashboard/activity", (req: any, res: any) => {
-  respondNotImplemented(
-    res,
-    "GET /dashboard/activity",
-    "Return latest timeline entries for DashboardComp 'Aktuell' card.",
-  );
-});
-
-// Cases endpoints (planned)
+// Cases endpoints
 
 app.get("/cases", (req: any, res: any) => {
-  respondNotImplemented(
-    res,
-    "GET /cases",
-    "Return case list for CasesComp with optional filters and search.",
-    null,
-    {
-      status: "open | done | rejected | stalled",
-      search: "string",
-      limit: 50,
-      offset: 0,
-    },
-  );
+  const brokers: Broker[] = JSON.parse(fs.readFileSync("./src/data/brokers.json", "utf8"));
+  const cases = brokers.map((b) => ({
+    brokerName: b.name,
+    brokerStatus: b.status,
+    latestLogDescription: b.latestLog,
+    latestLogTimestamp: b.latestLogTimestamp
+  })).sort((a, b) => new Date(b.latestLogTimestamp).getTime() - new Date(a.latestLogTimestamp).getTime());
+
+  res.status(200).json(cases);
 });
 
-app.delete("/cases/bulk", (req: any, res: any) => {
-  respondNotImplemented(
-    res,
-    "DELETE /cases/bulk",
-    "Delete selected cases from CasesComp bulk action.",
-    {
-      ids: [1, 2, 3],
-    },
-  );
-});
+// Auth and onboarding endpoints
 
-app.post("/cases/bulk-contact", (req: any, res: any) => {
-  respondNotImplemented(
-    res,
-    "POST /cases/bulk-contact",
-    "Trigger messaging workflow for selected cases in CasesComp.",
-    {
-      ids: [1, 2, 3],
-      template: "follow-up-1",
-    },
-  );
-});
+// this should tell the frontend if it needs to show the login screen but idk yet
+// app.get("/auth/status", (req: any, res: any) => {
+//   const authState = readAuthState();
+//   const passwordSet = Boolean(authState.password && authState.password.length > 0);
 
-// Auth and onboarding endpoints (planned)
-
-app.get("/auth/status", (req: any, res: any) => {
-  const authState = readAuthState();
-  const passwordSet = Boolean(authState.password && authState.password.length > 0);
-
-  res.json({
-    passwordSet,
-    canProceed: !passwordSet,
-  });
-});
+//   res.json({
+//     passwordSet,
+//     canProceed: !passwordSet,
+//   });
+// });
 
 app.post("/auth/login", (req: any, res: any) => {
-  const authState = readAuthState();
-  const passwordSet = Boolean(authState.password && authState.password.length > 0);
+  const password = JSON.parse(fs.readFileSync('./src/data/auth.json', "utf8")).password;
+
+  if (!password) {
+    res.status(200).json({
+      message: "No password configured. Login granted.",
+    });
+    return;
+  }
+
+  if (!req.body || typeof req.body.password !== "string") {
+    return res.status(400).json({
+      message: "No password provided in request body",
+    });
+  }
+    
   const submittedPassword = String(req.body?.password ?? "");
 
-  if (!passwordSet) {
-    return res.json({
-      success: true,
-      message: "No password configured. Login granted.",
-      canProceed: true,
-    });
-  }
-
-  if (submittedPassword !== authState.password) {
+  if (submittedPassword !== password) {
     return res.status(401).json({
-      success: false,
       message: "Invalid password",
-      canProceed: false,
     });
   }
 
-  res.json({
-    success: true,
+  res.status(200).json({
     message: "Login successful",
-    canProceed: true,
   });
 });
 
-app.post("/auth/setup-password", (req: any, res: any) => {
+app.post("/auth/setpassword", (req: any, res: any) => {
   const password = String(req.body?.password ?? "");
   const trimmedPassword = password.trim();
 
@@ -256,69 +226,36 @@ app.post("/auth/setup-password", (req: any, res: any) => {
     return res.status(400).json({ message: "Password is required" });
   }
 
-  const authState = readAuthState();
-  authState.password = trimmedPassword;
-  writeAuthState(authState);
+  fs.writeFileSync('./src/data/auth.json', JSON.stringify({ password: trimmedPassword }, null, 2));
 
   res.status(201).json({
-    success: true,
     message: "Password saved",
-    passwordSet: true,
-    canProceed: true,
   });
 });
 
-app.get("/profile/removal-data", (req: any, res: any) => {
-  respondNotImplemented(
-    res,
-    "GET /profile/removal-data",
-    "Load saved profile/removal-data fields for onboarding and settings forms.",
-  );
+// Profile endpoints
+
+app.get("/profile/data", (req: any, res: any) => {
+  const profileData = JSON.parse(fs.readFileSync('./src/data/profile.json', "utf8"));
+  res.json(profileData);
 });
 
-app.put("/profile/removal-data", (req: any, res: any) => {
-  respondNotImplemented(
-    res,
-    "PUT /profile/removal-data",
-    "Save or update removal-data profile fields from OnboardingDataComp.",
-    {
-      firstName: "string",
-      lastName: "string",
-      email: "string",
-      address: "string",
-      city: "string",
-      zipCode: "string",
-      country: "string",
-      phone: "string",
-    },
-  );
+app.put("/profile/data", (req: any, res: any) => {
+  const profilePayload = req.body;
+
+  // type check at runtime
+
+  fs.writeFileSync('./src/data/profile.json', JSON.stringify(profilePayload, null, 2));
+  res.json({ success: true, message: "Profile updated successfully" });
 });
 
 // Settings endpoints (planned)
 
 app.get("/settings", (req: any, res: any) => {
-  respondNotImplemented(
-    res,
-    "GET /settings",
-    "Return settings page values once SettingsComp is implemented.",
-  );
 });
 
 app.put("/settings", (req: any, res: any) => {
-  respondNotImplemented(
-    res,
-    "PUT /settings",
-    "Save settings page updates once SettingsComp is implemented.",
-    {
-      notificationsEnabled: true,
-      preferredLocale: "de-DE",
-      timezone: "Europe/Berlin",
-    },
-  );
 });
-
-
-
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

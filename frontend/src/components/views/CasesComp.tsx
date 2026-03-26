@@ -1,35 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ButtonComp from "../ButtonComp";
 import ListComp from "../ListComp";
+import { BrokerStatus, type CaseItem } from "../../../../shared/types";
 
 const CasesComp = () => {
-    const statusColorMap = {
-        rejected: "bg-red-700",
-        stalled: "bg-yellow-500",
-        done: "bg-green-600",
-    } as const;
-    const selectedColor = "bg-blue-500";
-    const statuses = Object.keys(statusColorMap) as Array<keyof typeof statusColorMap>;
-    const [items, setItems] = useState<number[]>([...Array(100)].map((_, i) => i));
+    const statusColorMap: Record<BrokerStatus, string> = {
+        [BrokerStatus.REJECTED]: "bg-red-700",
+        [BrokerStatus.PENDING]: "bg-yellow-500",
+        [BrokerStatus.DONE]: "bg-green-600",
+        [BrokerStatus.NEW]: "bg-blue-500",
+    };
+
+    const [items, setItems] = useState<CaseItem[]>([]);
     const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
 
-    const handleSelectAll = () => {
-        setSelectedItems(new Set(items));
-    };
+    useEffect(() => {
+        fetch("http://localhost:3000/cases")
+            .then((response) => response.json())
+            .then((data) => setItems(data))
+            .catch((error) => console.error("Error fetching cases:", error));
+    }, []);
 
-    const handleDeselectAll = () => {
-        setSelectedItems(new Set());
-    };
 
-    const handleSelectRed = () => {
-        setSelectedItems(new Set(items.filter(item => statuses[item % statuses.length] === "rejected")));
-    };
 
-    const handleDeleteSelected = () => {
-        const newItems = items.filter(item => !selectedItems.has(item));
-        setItems(newItems);
-        setSelectedItems(new Set());
-    };
+    // const handleSelectAll = () => {
+    //     setSelectedItems(new Set(items));
+    // };
 
     const handleToggleItem = (index: number) => {
         const newSelected = new Set(selectedItems);
@@ -42,12 +38,13 @@ const CasesComp = () => {
     };
 
     const buttonActions: Array<{ label: string; onClick?: () => void }> = [
-        { label: "Alle auswählen", onClick: handleSelectAll },
-        { label: "Alle abwählen", onClick: handleDeselectAll },
-        { label: "Rote auswählen", onClick: handleSelectRed },
-        { label: "Filtern" },
-        { label: "Ausgewählte anschreiben" },
-        { label: "Ausgewählte löschen", onClick: handleDeleteSelected },
+        // { label: "Alle anzeigen", handleSelectAll },
+        // { label: "Ausgewählte anschreiben" },
+        // { label: "Ausgewählte löschen", onClick: handleDeleteSelected },
+        { label: "Abgelehnte anzeigen"},
+        { label: "Bestätigte anzeigen"},
+        { label: "Offene anzeigen"},
+        { label: "Neue anzeigen"}
     ];
 
     return (
@@ -60,14 +57,19 @@ const CasesComp = () => {
             <div className="h-full-respect-nav p-4">
 
                 <div className="mt-16"> {/* mt-16, to respect the buttons on top */}
-                    {items.map((index) => (
-                        <div className="mb-1" key={index}>
+                    {
+                    
+                    
+                    items.map((item) => (
+                        <div className="mb-1" key={item.brokerName}>
                             <ListComp
                                 height={50}
-                                title={`Broker Number ${index + 1}`}
-                                text1="Latest update: Request accepted/stalled/rejected"
-                                circleColorClass={selectedItems.has(index) ? selectedColor : statusColorMap[statuses[index % statuses.length]]}
-                                onItemClick={() => handleToggleItem(index)} />
+                                title={item.brokerName}
+                                text1={item.latestLogDescription}
+                                text2={new Date(item.latestLogTimestamp).getDate().toString().padStart(2, '0') + "." + (new Date(item.latestLogTimestamp).getMonth() + 1).toString().padStart(2, '0') + "." + new Date(item.latestLogTimestamp).getFullYear()}
+                                text3={new Date(item.latestLogTimestamp).getHours().toString().padStart(2, '0') + ':' + new Date(item.latestLogTimestamp).getMinutes().toString().padStart(2, '0')}
+                                circleColorClass={statusColorMap[item.brokerStatus]}
+                            />
                         </div>
                     ))}
                 </div>

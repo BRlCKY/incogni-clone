@@ -73,5 +73,65 @@
     "title": "Final confirmation pending from Nordic Insight",
     "description": "Broker indicates deletion completed; waiting for signed confirmation.",
     "timestamp": "2026-03-10T18:12:00Z"
+  },
+  {
+    "title": "Acme Data Brokers",
+    "description": "Mail gesendet: dafs",
+    "timestamp": "2026-03-26T17:57:57.694Z",
+    "brokerId": 1
+  },
+  {
+    "title": "test",
+    "description": "Broker hinzugefügt",
+    "timestamp": "2026-03-26T18:37:10.017Z",
+    "brokerId": 3
+  },
+  {
+    "title": "test",
+    "description": "Broker hinzugefügt",
+    "timestamp": "2026-03-26T18:57:02.728Z",
+    "brokerId": 3
+  },
+  {
+    "title": "a",
+    "description": "Broker hinzugefügt",
+    "timestamp": "2026-03-26T19:23:37.891Z",
+    "brokerId": 4
+  },
+  {
+    "title": "Nordic Insight",
+    "description": "Mail gesendet: asfdsa",
+    "timestamp": "2026-03-26T19:24:31.685Z",
+    "brokerId": 2
+  },
+  {
+    "title": "a",
+    "description": "Broker hinzugefügt",
+    "timestamp": "2026-03-26T19:26:30.191Z",
+    "brokerId": 4
+  },
+  {
+    "title": "a",
+    "description": "Broker gelöscht",
+    "timestamp": "2026-03-26T19:26:39.410Z",
+    "brokerId": 4
+  },
+  {
+    "title": "test",
+    "description": "Mail gesendet: testset",
+    "timestamp": "2026-03-26T21:07:18.463Z",
+    "brokerId": 3
+  },
+  {
+    "title": "asdasdf",
+    "description": "Broker hinzugefügt",
+    "timestamp": "2026-03-26T21:08:13.819Z",
+    "brokerId": 4
+  },
+  {
+    "title": "asdasdf",
+    "description": "Broker entfernt",
+    "timestamp": "2026-03-26T21:10:05.914Z",
+    "brokerId": 4
   }
 ]

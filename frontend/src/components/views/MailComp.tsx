@@ -3,7 +3,7 @@ import GlassComp from "../GlassComp";
 import SearchbarComp from "../SearchbarComp";
 import MailViewComp from "./MailViewComp";
 import MailMessageComp from "./MailMessageComp";
-import { MailFolder, MailItem } from "../../../../shared/types";
+import { Broker, MailFolder, MailItem } from "../../../../shared/types";
 
 const folderLabel: Record<MailFolder, string> = {
     posteingang: "Empfangen",
@@ -33,12 +33,23 @@ const MailComp = () => {
     const [activeFolder, setActiveFolder] = useState<MailFolder>("posteingang");
     const [openedMailId, setOpenedMailId] = useState<number | null>(null);
     const [isComposing, setIsComposing] = useState(false);
+    const [brokerContacts, setBrokerContacts] = useState<string[]>([]);
 
     useEffect(() => {
         fetch("http://localhost:3000/mails")
             .then((response) => response.json())
             .then((data) => setMails(data))
             .catch((error) => console.error("Error fetching mails:", error));
+    }, []);
+
+    useEffect(() => {
+        fetch("http://localhost:3000/brokers")
+            .then((response) => response.json())
+            .then((data: Broker[]) => setBrokerContacts(data.map((broker) => broker.name)))
+            .catch((error) => {
+                console.error("Error fetching brokers:", error);
+                setBrokerContacts([]);
+            });
     }, []);
 
     const filteredItems = useMemo(() => {
@@ -59,15 +70,10 @@ const MailComp = () => {
         [openedMailId, mails],
     );
 
-    const uniqueContacts = useMemo(() => {
-        const allContacts = mails.map((item) => item.counterparty);
-        return Array.from(new Set(allContacts));
-    }, [mails]);
-
     if (isComposing) {
         return (
             <MailMessageComp
-                contacts={uniqueContacts}
+                contacts={brokerContacts}
                 onBack={() => setIsComposing(false)}
                 onSend={(mailData) => {
                     const newMail: MailItem = {
@@ -114,7 +120,7 @@ const MailComp = () => {
     }
 
     return (
-        <div className="h-[calc(100vh-70px)] w-full overflow-hidden p-6">
+        <div className="h-full-respect-nav w-full overflow-hidden p-6">
             <div className="grid h-full w-full grid-cols-[300px_minmax(0,1fr)] gap-6">
                 <div className="flex h-full flex-col">
                     <div className="mb-4 h-[56px]" />

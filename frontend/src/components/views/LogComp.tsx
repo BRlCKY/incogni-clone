@@ -23,8 +23,8 @@ const LogComp = () => {
                     <div className="mb-1">
                         <ListComp
                             height={30}
-                            title={log.title}
-                            text1={log.description}
+                            title={log.title} // SHOULD BE BROKER NAME
+                            text1={log.description} 
                             text2={new Date(log.timestamp).getDate().toString().padStart(2, '0') + "." + (new Date(log.timestamp).getMonth() + 1).toString().padStart(2, '0') + "." + new Date(log.timestamp).getFullYear()}
                             text3={new Date(log.timestamp).getHours().toString().padStart(2, '0') + ':' + new Date(log.timestamp).getMinutes().toString().padStart(2, '0')}
                             circleColorClass="bg-blue-500" />

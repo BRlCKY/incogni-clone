@@ -12,15 +12,13 @@ const MailMessageComp = ({ contacts, onBack, onSend }: MailMessageCompProps) => 
     const [subject, setSubject] = useState("");
     const [body, setBody] = useState("");
     const [showContacts, setShowContacts] = useState(false);
-    const [abort, setAbort] = useState(0.4);
-    const [send, setSend] = useState(0.4);
 
     const handleSend = () => {
         onSend({ to, subject, body });
     };
 
     return (
-        <div className="h-[calc(100vh-70px)] w-full overflow-hidden p-6">
+        <div className="h-full-respect-nav w-full overflow-hidden p-6">
             <div className="mx-auto flex h-full w-full max-w-6xl flex-col gap-4">
                 <GlassComp
                     width="100%"
