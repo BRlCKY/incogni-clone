@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import GlassComp from "../GlassComp";
 import SearchbarComp from "../SearchbarComp";
 import MailViewComp from "./MailViewComp";
+import PresetComp, { Template } from "./PresetComp"; 
 
 type MailFolder = "posteingang" | "gesendet";
 
@@ -99,6 +100,8 @@ const MailComp = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [activeFolder, setActiveFolder] = useState<MailFolder>("posteingang");
     const [openedMailId, setOpenedMailId] = useState<number | null>(null);
+    const [isComposing, setIsComposing] = useState(false);
+    const [savedTemplate, setSavedTemplate] = useState<Template | undefined>(undefined);
 
     const filteredItems = useMemo(() => {
         const normalizedQuery = searchQuery.trim().toLowerCase();
@@ -118,6 +121,19 @@ const MailComp = () => {
         [openedMailId],
     );
 
+    if (isComposing) {
+        return (
+            <PresetComp 
+                initialTemplate={savedTemplate}
+                onBack={() => setIsComposing(false)} 
+                onSave={(newTemplate) => {
+                    setSavedTemplate(newTemplate); 
+                    setIsComposing(false); 
+                }} 
+            />
+        );
+    }
+
     if (openedMail) {
         return (
             <MailViewComp
@@ -127,22 +143,21 @@ const MailComp = () => {
             />
         );
     }
-
     return (
         <div className="h-[calc(100vh-70px)] w-full overflow-hidden p-6">
             <div className="grid h-full w-full grid-cols-[300px_minmax(0,1fr)] gap-6">
                 <div className="flex h-full flex-col">
                     <div className="mb-4 h-[56px]" />
-                    <div className="space-y-3">
+                    <div className="space-y-3">              
                         <GlassComp
                             width="100%"
                             height={74}
                             tintOpacity={0.52}
                             borderRadius={999}
                             className="cursor-pointer rounded-full border border-gray-700 px-4 hover:bg-gray-800/50"
-                            onClick={() => setOpenedMailId(null)}
+                            onClick={() => setIsComposing(true)}
                         >
-                            <p className="w-full px-3 text-left text-2xl leading-7 text-white">E-Mail schreiben</p>
+                            <p className="w-full px-3 text-left text-2xl leading-7 text-white">E-Mail Vorlage</p>
                         </GlassComp>
 
                         <GlassComp
