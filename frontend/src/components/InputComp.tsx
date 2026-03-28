@@ -6,6 +6,7 @@ interface InputCompProps {
     placeholder?: string;
     min?: number;
     max?: number;
+    value?: string | number;
 }
 
 const InputComp = (props: InputCompProps) => {
@@ -23,11 +24,21 @@ const InputComp = (props: InputCompProps) => {
                 : props.height
             : "50px";
 
+    const type = props.type !== undefined ? props.type : "text";
+    const placeholder = props.placeholder !== undefined ? props.placeholder : "";
+    const min = props.min !== undefined ? props.min : undefined;
+    const max = props.max !== undefined ? props.max : undefined;
+    const value = props.value !== undefined ? props.value : undefined;
+
     return (
         <input 
-          className={`bg-transparent rounded-full outline-white outline-[1.5px] focus-visible:outline-[3px] text-right p-2 ${props.className}`.trim()}
+          className={`rounded-full bg-transparent px-2 outline outline-[1.5px] outline-white transition-[outline-width] duration-75 focus:outline-[3px] focus:outline-white ${props.className}`.trim()}
           style={{ width, height }}
-          {...props} />
+          type={type}
+          placeholder={placeholder}
+          min={min}
+          max={max} 
+          value={value}/>
     );
 };
 
