@@ -1,7 +1,12 @@
 import cors from "cors";
 import express, { json } from "express";
 import fs from "node:fs";
-import { BrokerStatus, type Broker, type LogEntry, type MailItem } from "../../shared/types";
+import {
+  BrokerStatus,
+  type Broker,
+  type LogEntry,
+  type MailItem,
+} from "../../shared/types";
 
 const app = express();
 app.use(express.json());
@@ -65,7 +70,34 @@ app.get("/brokers/:id", (req: any, res: any) => {
 
 app.post("/brokers/add", (req: any, res: any) => {
   const data: Broker[] = JSON.parse(fs.readFileSync("./src/data/brokers.json", "utf8"));
-  const { id: _ignoredId, ...brokerPayload } = req.body ?? {};
+  const body = req.body as unknown;
+  const allowedBrokerKeys = ["name", "email", "website", "locale"] as const;
+
+  if (typeof body !== "object" || body === null) {
+    return res.status(400).json({ message: "Invalid broker payload" });
+  }
+
+  const payloadKeys = Object.keys(body as Record<string, unknown>);
+  const hasOnlyAllowedKeys = payloadKeys.every((key) =>
+    allowedBrokerKeys.includes(key as (typeof allowedBrokerKeys)[number]),
+  );
+
+  if (!hasOnlyAllowedKeys || payloadKeys.length !== allowedBrokerKeys.length) {
+    return res.status(400).json({ message: "Invalid broker payload" });
+  }
+
+  const { name, email, website, locale } = body as Record<string, unknown>;
+
+  if (
+    typeof name !== "string" ||
+    typeof email !== "string" ||
+    typeof website !== "string" ||
+    typeof locale !== "string"
+  ) {
+    return res.status(400).json({ message: "Invalid broker payload" });
+  }
+
+  const brokerPayload = { name, email, website, locale };
 
   const duplicateBroker = data.find(
     (broker) =>
@@ -123,10 +155,38 @@ app.get("/mails", (req: any, res: any) => {
 
 app.post("/mails/send", (req: any, res: any) => {
   const data: MailItem[] = JSON.parse(fs.readFileSync("./src/data/mails.json", "utf8"));
-  const { id: _ignoredId, ...mailPayload } = req.body ?? {};
+  const body = req.body as unknown;
+  const allowedMailKeys = ["subject", "body", "counterparty", "folder", "date"] as const;
+
+  if (typeof body !== "object" || body === null) {
+    return res.status(400).json({ message: "Invalid mail payload" });
+  }
+
+  const payloadKeys = Object.keys(body as Record<string, unknown>);
+  const hasOnlyAllowedKeys = payloadKeys.every((key) =>
+    allowedMailKeys.includes(key as (typeof allowedMailKeys)[number]),
+  );
+
+  if (!hasOnlyAllowedKeys || payloadKeys.length !== allowedMailKeys.length) {
+    return res.status(400).json({ message: "Invalid mail payload" });
+  }
+
+  const { subject, body: mailBody, counterparty, folder, date } = body as Record<string, unknown>;
+
+  if (
+    typeof subject !== "string" ||
+    typeof mailBody !== "string" ||
+    typeof counterparty !== "string" ||
+    typeof folder !== "string" ||
+    typeof date !== "string"
+  ) {
+    return res.status(400).json({ message: "Invalid mail payload" });
+  }
+
+  const mailPayload = { subject, body: mailBody, counterparty, folder, date };
 
   const nextId = data.length > 0 ? Math.max(...data.map((m) => m.id)) + 1 : 1;
-  const newMail = { id: nextId, ...mailPayload };
+  const newMail: MailItem = { id: nextId, ...mailPayload } as MailItem;
   data.push(newMail);
   fs.writeFileSync("./src/data/mails.json", JSON.stringify(data, null, 2));
   log(mailPayload.counterparty, "Mail gesendet: " + mailPayload.subject, getBrokerByName(mailPayload.counterparty)?.id ?? -1);
@@ -190,6 +250,28 @@ app.get("/cases", (req: any, res: any) => {
 // });
 
 app.post("/auth/login", (req: any, res: any) => {
+  const body = req.body as unknown;
+  const allowedLoginKeys = ["password"] as const;
+
+  if (typeof body !== "object" || body === null) {
+    return res.status(400).json({ message: "Invalid login payload" });
+  }
+
+  const payloadKeys = Object.keys(body as Record<string, unknown>);
+  const hasOnlyAllowedKeys = payloadKeys.every((key) =>
+    allowedLoginKeys.includes(key as (typeof allowedLoginKeys)[number]),
+  );
+
+  if (!hasOnlyAllowedKeys || payloadKeys.length !== allowedLoginKeys.length) {
+    return res.status(400).json({ message: "Invalid login payload" });
+  }
+
+  const { password: submittedPassword } = body as Record<string, unknown>;
+
+  if (typeof submittedPassword !== "string") {
+    return res.status(400).json({ message: "Invalid login payload" });
+  }
+
   const password = JSON.parse(fs.readFileSync('./src/data/auth.json', "utf8")).password;
 
   if (!password) {
@@ -198,14 +280,6 @@ app.post("/auth/login", (req: any, res: any) => {
     });
     return;
   }
-
-  if (!req.body || typeof req.body.password !== "string") {
-    return res.status(400).json({
-      message: "No password provided in request body",
-    });
-  }
-    
-  const submittedPassword = String(req.body?.password ?? "");
 
   if (submittedPassword !== password) {
     return res.status(401).json({
@@ -219,7 +293,28 @@ app.post("/auth/login", (req: any, res: any) => {
 });
 
 app.post("/auth/setpassword", (req: any, res: any) => {
-  const password = String(req.body?.password ?? "");
+  const body = req.body as unknown;
+  const allowedSetPasswordKeys = ["password"] as const;
+
+  if (typeof body !== "object" || body === null) {
+    return res.status(400).json({ message: "Invalid payload" });
+  }
+
+  const payloadKeys = Object.keys(body as Record<string, unknown>);
+  const hasOnlyAllowedKeys = payloadKeys.every((key) =>
+    allowedSetPasswordKeys.includes(key as (typeof allowedSetPasswordKeys)[number]),
+  );
+
+  if (!hasOnlyAllowedKeys || payloadKeys.length !== allowedSetPasswordKeys.length) {
+    return res.status(400).json({ message: "Invalid payload" });
+  }
+
+  const { password } = body as Record<string, unknown>;
+
+  if (typeof password !== "string") {
+    return res.status(400).json({ message: "Invalid payload" });
+  }
+
   const trimmedPassword = password.trim();
 
   if (!trimmedPassword) {
@@ -241,9 +336,29 @@ app.get("/profile/data", (req: any, res: any) => {
 });
 
 app.put("/profile/data", (req: any, res: any) => {
-  const profilePayload = req.body;
+  const body = req.body as unknown;
+  const allowedProfileKeys = ["firstName", "lastName", "email", "address", "city", "zipCode", "country", "phone"] as const;
 
-  // type check at runtime
+  if (typeof body !== "object" || body === null) {
+    return res.status(400).json({ message: "Invalid profile payload" });
+  }
+
+  const payloadKeys = Object.keys(body as Record<string, unknown>);
+  const hasOnlyAllowedKeys = payloadKeys.every((key) =>
+    allowedProfileKeys.includes(key as (typeof allowedProfileKeys)[number]),
+  );
+
+  if (!hasOnlyAllowedKeys) {
+    return res.status(400).json({ message: "Invalid profile payload" });
+  }
+
+  const profilePayload = body as Record<string, unknown>;
+
+  for (const key of payloadKeys) {
+    if (typeof profilePayload[key] !== "string") {
+      return res.status(400).json({ message: "Invalid profile payload" });
+    }
+  }
 
   fs.writeFileSync('./src/data/profile.json', JSON.stringify(profilePayload, null, 2));
   res.json({ success: true, message: "Profile updated successfully" });

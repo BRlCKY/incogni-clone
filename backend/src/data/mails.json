@@ -102,5 +102,13 @@
     "counterparty": "test",
     "folder": "gesendet",
     "date": "26.03.2026, 22:07"
+  },
+  {
+    "id": 14,
+    "subject": "Test",
+    "body": "Hello",
+    "counterparty": "Broker Inc",
+    "folder": "gesendet",
+    "date": "2026-03-28T10:00:00Z"
   }
 ]
