@@ -92,10 +92,10 @@ const PresetComp = ({ initialTemplate, onBack, onSave }: PresetCompProps) => {
     };
 
     return (
-        <div className="h-full-respect-nav w-full overflow-y-auto p-6 no-scrollbar">
-            <div className="flex h-full w-full flex-col gap-6 pb-24">
+        <div className="h-full-respect-nav w-full overflow-hidden p-6">
+            <div className="flex h-full w-full min-h-0 flex-col gap-6">
                 <div className="grid min-h-0 flex-1 grid-cols-1 gap-6 lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] 2xl:grid-cols-[minmax(320px,420px)_minmax(0,1fr)]">
-                    <div className="flex min-h-0 flex-col gap-4">
+                    <div className="flex h-full min-h-0 flex-col gap-4">
                         <GlassComp
                           width="100%"
                           height="auto"
@@ -107,7 +107,7 @@ const PresetComp = ({ initialTemplate, onBack, onSave }: PresetCompProps) => {
                             </div>
                         </GlassComp>
 
-                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                        <div className="grid flex-1 grid-cols-1 gap-3 overflow-y-auto pr-1 no-scrollbar sm:grid-cols-2 lg:grid-cols-1">
                             {placeholders.map((placeholder) => (
                                 <button
                                   key={placeholder.tag}
@@ -137,11 +137,11 @@ const PresetComp = ({ initialTemplate, onBack, onSave }: PresetCompProps) => {
 
                     <GlassComp
                       width="100%"
-                      height="auto"
+                      height="100%"
                       tintOpacity={0.5}
-                      className="rounded-3xl border border-gray-700 p-6"
+                      className="h-full min-h-0 rounded-3xl border border-gray-700 p-6"
                     >
-                        <div className="flex h-full w-full flex-col gap-6">
+                        <div className="flex h-full w-full min-h-0 flex-col gap-6">
                             <div className="w-full">
                                 <h2 className="text-2xl font-semibold text-white">E-Mail Vorlage</h2>
                             </div>
@@ -163,14 +163,14 @@ const PresetComp = ({ initialTemplate, onBack, onSave }: PresetCompProps) => {
                                 />
                             </div>
 
-                            <div className="flex min-h-[420px] w-full flex-1 flex-col">
+                            <div className="flex min-h-0 w-full flex-1 flex-col">
                                 <p className="mb-2 text-sm text-white/80">Nachricht</p>
                                 <GlassComp
                                   width="100%"
                                   height="100%"
                                   tintOpacity={0.5}
                                   borderRadius={24}
-                                  className="min-h-[420px] rounded-3xl border border-gray-700 transition-colors focus-within:border-gray-500"
+                                  className="h-full min-h-0 rounded-3xl border border-gray-700 transition-colors focus-within:border-gray-500"
                                 >
                                     <textarea
                                       ref={textareaRef}
@@ -185,7 +185,7 @@ const PresetComp = ({ initialTemplate, onBack, onSave }: PresetCompProps) => {
                                       onKeyUp={updateSelection}
                                       onSelect={updateSelection}
                                       placeholder="Schreibe hier deinen Vorlagentext..."
-                                      className="h-full w-full resize-none bg-transparent p-4 text-base leading-relaxed text-white placeholder-gray-500 focus:outline-none no-scrollbar"
+                                      className="h-full w-full resize-none overflow-y-auto bg-transparent p-4 text-base leading-relaxed text-white placeholder-gray-500 focus:outline-none no-scrollbar"
                                     />
                                 </GlassComp>
                             </div>
@@ -193,7 +193,7 @@ const PresetComp = ({ initialTemplate, onBack, onSave }: PresetCompProps) => {
                     </GlassComp>
                 </div>
 
-                <div className="flex w-full flex-wrap items-center justify-end gap-3">
+                <div className="flex w-full flex-shrink-0 flex-wrap items-center justify-end gap-3">
                     <div className="h-[52px] w-full sm:w-[160px]">
                         <GlassComp
                           width="100%"
