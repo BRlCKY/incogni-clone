@@ -127,8 +127,8 @@ const MailComp = () => {
                     <div className="space-y-3">
                         <GlassComp
                             width="100%"
-                            height={74}
-                            tintOpacity={0.52}
+                            height={70}
+                            tintOpacity={0.5}
                             borderRadius={999}
                             className="cursor-pointer rounded-full border border-gray-700 px-4 hover:bg-gray-800/50"
                             onClick={() => setIsComposing(true)}
@@ -138,8 +138,8 @@ const MailComp = () => {
 
                         <GlassComp
                           width="100%"
-                          height={74}
-                          tintOpacity={0.52}
+                          height={70}
+                          tintOpacity={0.5}
                           borderRadius={999}
                           className={`cursor-pointer rounded-full border px-4 transition-colors ${
                               activeFolder === "posteingang"
@@ -163,8 +163,8 @@ const MailComp = () => {
 
                         <GlassComp
                           width="100%"
-                          height={74}
-                          tintOpacity={0.52}
+                          height={70}
+                          tintOpacity={0.5}
                           borderRadius={999}
                           className={`cursor-pointer rounded-full border px-4 transition-colors ${
                               activeFolder === "gesendet"
@@ -190,21 +190,13 @@ const MailComp = () => {
 
                 <div className="flex h-full flex-col">
                     <div className="mb-4">
-                        <GlassComp
-                            width="100%"
-                            height={56}
-                            tintOpacity={0.52}
-                            borderRadius={999}
-                            className="border border-gray-700"
-                        >
-                            <SearchbarComp
-                                value={searchQuery}
-                                onChange={(event) => setSearchQuery(event.target.value)}
-                                placeholder="Suche"
-                                containerClassName="h-full bg-transparent px-2"
-                                inputClassName="bg-transparent"
-                            />
-                        </GlassComp>
+                        <SearchbarComp
+                            value={searchQuery}
+                            onChange={(event) => setSearchQuery(event.target.value)}
+                            placeholder="Suche"
+                            containerClassName="w-full"
+                            height={50}
+                        />
                     </div>
 
                     <div className="mb-3 flex items-center gap-2 text-sm text-gray-300">
@@ -219,8 +211,8 @@ const MailComp = () => {
                             <GlassComp
                               key={item.id}
                               width="100%"
-                              height={74}
-                              tintOpacity={0.52}
+                              height={70}
+                              tintOpacity={0.5}
                               borderRadius={999}
                               className="cursor-pointer rounded-full border border-gray-700 pl-2 pr-3 transition-colors hover:bg-gray-800/50"
                               onClick={() => setOpenedMailId(item.id)}
@@ -250,8 +242,8 @@ const MailComp = () => {
                         {filteredItems.length === 0 && (
                             <GlassComp
                               width="100%"
-                              height={74}
-                              tintOpacity={0.52}
+                              height={70}
+                              tintOpacity={0.5}
                               borderRadius={999}
                               className="rounded-full border border-gray-700"
                             >

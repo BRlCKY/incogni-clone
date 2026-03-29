@@ -16,7 +16,8 @@ const LogComp = () => {
     return (
         <div className="h-full-respect-nav p-4">
             <div className="fixed pl-8 top-4 right-4 z-50 max-w-[425px] w-full"> {/* 425 px is mobile L width */}
-                <SearchbarComp />
+                <SearchbarComp 
+                height={40} />
             </div>
             <div className="mt-12">
                 {logs.map((log, index) => (

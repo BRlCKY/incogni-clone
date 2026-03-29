@@ -1,5 +1,9 @@
+import type { CSSProperties } from "react";
+import GlassComp from "./GlassComp";
+
 type SearchbarCompProps = Omit<React.ComponentProps<"input">, "type"> & {
     containerClassName?: string;
+    height?: CSSProperties["height"];
     inputClassName?: string;
 };
 
@@ -7,27 +11,40 @@ const SearchbarComp = ({
     placeholder = "Suchen",
     maxLength = 30,
     containerClassName = "",
+    height = 50,
     inputClassName = "",
     ...inputProps
 }: SearchbarCompProps) => {
     return (
-        <div className={`h-[40px] w-full bg-gray-900 rounded-full flex items-center px-3 ${containerClassName}`.trim()}>
-            <svg width="20px" 
-                 height="20px" 
-                 viewBox="0 0 20 20" 
-                 xmlns="http://www.w3.org/2000/svg"
-                 className="fill-white" >
-                <path d="M17.545 15.467l-3.779-3.779a6.15 6.15 0 0 0 .898-3.21c0-3.417-2.961-6.377-6.378-6.377A6.185 6.185 0 0 0 2.1 8.287c0 3.416 2.961 6.377 6.377 6.377a6.15 6.15 0 0 0 3.115-.844l3.799 3.801a.953.953 0 0 0 1.346 0l.943-.943c.371-.371.236-.84-.135-1.211zM4.004 8.287a4.282 4.282 0 0 1 4.282-4.283c2.366 0 4.474 2.107 4.474 4.474a4.284 4.284 0 0 1-4.283 4.283c-2.366-.001-4.473-2.109-4.473-4.474z" />
-            </svg>
+        <GlassComp
+            width="100%"
+            height={height}
+            tintOpacity={0.5}
+            borderRadius={999}
+            className={`border border-gray-700 px-3 ${containerClassName}`.trim()}
+        >
+            <div className="flex h-full w-full items-center gap-3">
+                <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 flex-shrink-0 fill-gray-300"
+                    aria-hidden="true"
+                >
+                    <path d="M17.545 15.467l-3.779-3.779a6.15 6.15 0 0 0 .898-3.21c0-3.417-2.961-6.377-6.378-6.377A6.185 6.185 0 0 0 2.1 8.287c0 3.416 2.961 6.377 6.377 6.377a6.15 6.15 0 0 0 3.115-.844l3.799 3.801a.953.953 0 0 0 1.346 0l.943-.943c.371-.371.236-.84-.135-1.211zM4.004 8.287a4.282 4.282 0 0 1 4.282-4.283c2.366 0 4.474 2.107 4.474 4.474a4.284 4.284 0 0 1-4.283 4.283c-2.366-.001-4.473-2.109-4.473-4.474z" />
+                </svg>
 
-            <input
-                type="text"
-                placeholder={placeholder}
-                maxLength={maxLength}
-                className={`rounded-full pl-3 bg-gray-900 text-white outline-none w-full min-w-0 overflow-hidden text-ellipsis whitespace-nowrap ${inputClassName}`.trim()}
-                {...inputProps} />
-        </div>
-    )
-}
+                <input
+                    type="text"
+                    placeholder={placeholder}
+                    maxLength={maxLength}
+                    className={`w-full min-w-0 bg-transparent text-sm text-white outline-none placeholder:text-gray-400 ${inputClassName}`.trim()}
+                    {...inputProps}
+                />
+            </div>
+        </GlassComp>
+    );
+};
 
 export default SearchbarComp;

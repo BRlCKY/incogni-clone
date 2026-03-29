@@ -197,21 +197,15 @@ const BrokerListComp = () => {
                                 >
                                     <p className="text-sm font-semibold text-white">+ Broker</p>
                                 </GlassComp>
-                                <GlassComp
-                                    width={380}
-                                    height={40}
-                                    borderRadius={999}
-                                    tintOpacity={0.52}
-                                    className="border border-gray-700"
-                                >
+                                <div className="w-[380px]">
                                     <SearchbarComp
-                                        value={searchQuery}
-                                        onChange={(event) => setSearchQuery(event.target.value)}
-                                        placeholder="Broker suchen"
-                                        containerClassName="h-full w-full bg-transparent px-2"
-                                        inputClassName="bg-transparent"
+                                      value={searchQuery}
+                                      onChange={(event) => setSearchQuery(event.target.value)}
+                                      placeholder="Broker suchen"
+                                      containerClassName="w-full"
+                                      height={40}
                                     />
-                                </GlassComp>
+                                </div>
                             </div>
                         </div>
 

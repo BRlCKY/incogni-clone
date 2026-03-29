@@ -22,10 +22,10 @@ const HelpCenterComp = () => {
             <div className="h-full-respect-nav w-full overflow-y-auto p-6 no-scrollbar">
                 <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 pb-24">
                     <GlassComp
-                        width="100%"
-                        height="auto"
-                        tintOpacity={0.5}
-                        className="rounded-3xl border border-gray-700 p-6"
+                      width="100%"
+                      height="auto"
+                      tintOpacity={0.5}
+                      className="rounded-3xl border border-gray-700 p-6"
                     >
                         <div className="w-full">
                             <span className="rounded-full bg-blue-400/15 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-200">
@@ -43,21 +43,18 @@ const HelpCenterComp = () => {
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                         {questions.map((question, index) => (
                             <Topic
-                                key={`${question.text}-${index}`}
-                                text={question.text}
-                                onClick={() => handleClick(question)}
-                                isExternal={Boolean(question.url)}
-                            />
+                              key={`${question.text}-${index}`}
+                              text={question.text}
+                              onClick={() => handleClick(question)}
+                              isExternal={Boolean(question.url)} />
                         ))}
-
                         {questions.length === 0 && (
                             <GlassComp
-                                width="100%"
-                                height={120}
-                                tintOpacity={0.5}
-                                borderRadius={24}
-                                className="rounded-3xl border border-gray-700 sm:col-span-2 lg:col-span-3 xl:col-span-4"
-                            >
+                              width="100%"
+                              height={120}
+                              tintOpacity={0.5}
+                              borderRadius={24}
+                              className="rounded-3xl border border-gray-700 sm:col-span-2 lg:col-span-3 xl:col-span-4" >
                                 <p className="text-sm text-gray-400">
                                     Es sind aktuell keine Hilfe-Themen verfuegbar.
                                 </p>
@@ -66,7 +63,6 @@ const HelpCenterComp = () => {
                     </div>
                 </div>
             </div>
-
             <QuestionModal question={selectedQuestion} onClose={() => setSelectedQuestion(null)} />
         </>
     );
