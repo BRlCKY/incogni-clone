@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import CaseComp from "./CaseComp";
 import ButtonComp from "../ButtonComp";
 import ListComp from "../ListComp";
 import { BrokerStatus, type CaseItem } from "../../../../shared/types";
+
+type CaseFilter = "all" | BrokerStatus;
 
 const CasesComp = () => {
     const statusColorMap: Record<BrokerStatus, string> = {
@@ -12,7 +15,8 @@ const CasesComp = () => {
     };
 
     const [items, setItems] = useState<CaseItem[]>([]);
-    const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
+    const [selectedCase, setSelectedCase] = useState<CaseItem | null>(null);
+    const [activeFilter, setActiveFilter] = useState<CaseFilter>("all");
 
     useEffect(() => {
         fetch("http://localhost:3000/cases")
@@ -21,61 +25,63 @@ const CasesComp = () => {
             .catch((error) => console.error("Error fetching cases:", error));
     }, []);
 
-
-
-    // const handleSelectAll = () => {
-    //     setSelectedItems(new Set(items));
-    // };
-
-    const handleToggleItem = (index: number) => {
-        const newSelected = new Set(selectedItems);
-        if (newSelected.has(index)) {
-            newSelected.delete(index);
-        } else {
-            newSelected.add(index);
+    const filteredItems = useMemo(() => {
+        if (activeFilter === "all") {
+            return items;
         }
-        setSelectedItems(newSelected);
-    };
 
-    const buttonActions: Array<{ label: string; onClick?: () => void }> = [
-        // { label: "Alle anzeigen", handleSelectAll },
-        // { label: "Ausgewählte anschreiben" },
-        // { label: "Ausgewählte löschen", onClick: handleDeleteSelected },
-        { label: "Abgelehnte anzeigen"},
-        { label: "Bestätigte anzeigen"},
-        { label: "Offene anzeigen"},
-        { label: "Neue anzeigen"}
+        return items.filter((item) => item.brokerStatus === activeFilter);
+    }, [activeFilter, items]);
+
+    const buttonActions: Array<{ label: string; filter: CaseFilter }> = [
+        { label: "Alle anzeigen", filter: "all" },
+        { label: "Abgelehnte anzeigen", filter: BrokerStatus.REJECTED },
+        { label: "Bestätigte anzeigen", filter: BrokerStatus.DONE },
+        { label: "Offene anzeigen", filter: BrokerStatus.PENDING },
+        { label: "Neue anzeigen", filter: BrokerStatus.NEW },
     ];
+
+    if (selectedCase) {
+        return <CaseComp item={selectedCase} onBack={() => setSelectedCase(null)} />;
+    }
 
     return (
         <>
             <div className="fixed flex justify-evenly pl-8 top-4 right-4 z-50 w-full h-[50px]">
-                {buttonActions.map(({ label, onClick }) => (
-                    <ButtonComp key={label} label={label} onClick={onClick} />
+                {buttonActions.map(({ label, filter }) => (
+                    <ButtonComp
+                        key={label}
+                        label={label}
+                        onClick={() => setActiveFilter(filter)}
+                        isActive={activeFilter === filter}
+                    />
                 ))}
             </div>
             <div className="h-full-respect-nav p-4">
-
-                <div className="mt-16"> {/* mt-16, to respect the buttons on top */}
-                    {
-                    
-                    
-                    items.map((item) => (
-                        <div className="mb-1" key={item.brokerName}>
-                            <ListComp
-                                height={50}
-                                title={item.brokerName}
-                                text1={item.latestLogDescription}
-                                text2={new Date(item.latestLogTimestamp).getDate().toString().padStart(2, '0') + "." + (new Date(item.latestLogTimestamp).getMonth() + 1).toString().padStart(2, '0') + "." + new Date(item.latestLogTimestamp).getFullYear()}
-                                text3={new Date(item.latestLogTimestamp).getHours().toString().padStart(2, '0') + ':' + new Date(item.latestLogTimestamp).getMinutes().toString().padStart(2, '0')}
-                                circleColorClass={statusColorMap[item.brokerStatus]}
-                            />
+                <div className="mt-16">
+                    {filteredItems.length > 0 ? (
+                        filteredItems.map((item) => (
+                            <div className="mb-1" key={item.brokerId}>
+                                <ListComp
+                                    height={50}
+                                    title={item.brokerName}
+                                    text1={item.latestLogDescription}
+                                    text2={new Date(item.latestLogTimestamp).getDate().toString().padStart(2, "0") + "." + (new Date(item.latestLogTimestamp).getMonth() + 1).toString().padStart(2, "0") + "." + new Date(item.latestLogTimestamp).getFullYear()}
+                                    text3={new Date(item.latestLogTimestamp).getHours().toString().padStart(2, "0") + ":" + new Date(item.latestLogTimestamp).getMinutes().toString().padStart(2, "0")}
+                                    circleColorClass={statusColorMap[item.brokerStatus]}
+                                    onItemClick={() => setSelectedCase(item)}
+                                />
+                            </div>
+                        ))
+                    ) : (
+                        <div className="rounded-3xl border border-dashed border-gray-700 bg-black/10 px-4 py-6 text-sm text-gray-400">
+                            Für diesen Filter wurden keine Fälle gefunden.
                         </div>
-                    ))}
+                    )}
                 </div>
             </div>
         </>
-    )
+    );
 };
 
 export default CasesComp;

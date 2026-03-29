@@ -43,10 +43,10 @@ const MailViewComp = ({ mail, onBack, onReply }: MailViewCompProps) => {
         <div className="h-[calc(100vh-70px)] w-full overflow-hidden p-6">
             <div className="mx-auto flex h-full w-full max-w-6xl flex-col gap-4">
                 <GlassComp
-                    width="100%"
-                    height="100%"
-                    tintOpacity={0.52}
-                    className="rounded-3xl border border-gray-700 p-8"
+                  width="100%"
+                  height="100%"
+                  tintOpacity={0.5}
+                  className="rounded-3xl border border-gray-700 p-8"
                 >
                     <div className="flex h-full w-full flex-col">
                         <div className="mb-5 flex items-start justify-between gap-4">
@@ -78,26 +78,28 @@ const MailViewComp = ({ mail, onBack, onReply }: MailViewCompProps) => {
                 <div className="flex w-full justify-end gap-3">
                     <div className="w-[200px]">
                         <GlassComp
-                            width="100%"
-                            height={52}
-                            tintOpacity={0.52}
-                            borderRadius={999}
-                            className="cursor-pointer rounded-full border border-gray-700 hover:bg-gray-800/50"
-                            onClick={onBack}
-                            role="button"
+                          width="100%"
+                          height={50}
+                          tintOpacity={0.5}
+                          borderRadius={999}
+                          className="cursor-pointer rounded-full border border-gray-700 hover:bg-gray-800/50"
+                          onClick={onBack}
+                          role="button"
+                          isHoverable={true}
                         >
                             <p className="text-sm font-semibold text-white">Zurück zum Postfach</p>
                         </GlassComp>
                     </div>
                     <div className="w-[180px]">
                         <GlassComp
-                            width="100%"
-                            height={52}
-                            tintOpacity={0.52}
-                            borderRadius={999}
-                            className="cursor-pointer rounded-full border border-blue-400/60 bg-blue-900/25 hover:bg-blue-900/45"
-                            onClick={onReply}
-                            role="button"
+                          width="100%"
+                          height={50}
+                          tintOpacity={0.5}
+                          borderRadius={999}
+                          className="cursor-pointer rounded-full border border-blue-400/60 bg-blue-900/25 hover:bg-blue-900/45"
+                          onClick={onReply}
+                          role="button"
+                          isHoverable={true}
                         >
                             <p className="text-sm font-semibold text-white">Antworten</p>
                         </GlassComp>

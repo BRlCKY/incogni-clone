@@ -181,36 +181,31 @@ const BrokerListComp = () => {
                             </div>
                             <div className="flex min-w-[560px] items-center justify-end gap-3">
                                 <GlassComp
-                                    width={128}
-                                    height={40}
-                                    borderRadius={999}
-                                    tintOpacity={0.52}
-                                    className={`border border-gray-700 ${
-                                        isCreatingBroker
-                                            ? "cursor-not-allowed opacity-60"
-                                            : "cursor-pointer hover:bg-gray-800/50"
-                                    }`}
-                                    onClick={isCreatingBroker ? undefined : openDraftBrokerRow}
-                                    role="button"
-                                    aria-disabled={isCreatingBroker}
+                                  width={128}
+                                  height={40}
+                                  borderRadius={999}
+                                  tintOpacity={0.52}
+                                  className={`border border-gray-700 ${
+                                      isCreatingBroker
+                                          ? "cursor-not-allowed opacity-60"
+                                          : "cursor-pointer hover:bg-gray-800/50"
+                                  }`}
+                                  onClick={isCreatingBroker ? undefined : openDraftBrokerRow}
+                                  role="button"
+                                  aria-disabled={isCreatingBroker}
+                                  isHoverable={isCreatingBroker ? false : true}
                                 >
                                     <p className="text-sm font-semibold text-white">+ Broker</p>
                                 </GlassComp>
-                                <GlassComp
-                                    width={380}
-                                    height={40}
-                                    borderRadius={999}
-                                    tintOpacity={0.52}
-                                    className="border border-gray-700"
-                                >
+                                <div className="w-[380px]">
                                     <SearchbarComp
-                                        value={searchQuery}
-                                        onChange={(event) => setSearchQuery(event.target.value)}
-                                        placeholder="Broker suchen"
-                                        containerClassName="h-full w-full bg-transparent px-2"
-                                        inputClassName="bg-transparent"
+                                      value={searchQuery}
+                                      onChange={(event) => setSearchQuery(event.target.value)}
+                                      placeholder="Broker suchen"
+                                      containerClassName="w-full"
+                                      height={40}
                                     />
-                                </GlassComp>
+                                </div>
                             </div>
                         </div>
 
@@ -262,56 +257,60 @@ const BrokerListComp = () => {
                                         <tr className="border-t border-gray-700/60 bg-gray-900/20">
                                             <td className="px-4 py-3 align-top">
                                                 <InputComp
-                                                    placeholder="Broker-Name *"
-                                                    value={draftBroker.name}
-                                                    onChange={(event) => setDraftBrokerField("name", event.target.value)}
-                                                    className="h-[34px] px-3 text-xs"
+                                                  height={30}
+                                                  placeholder="Broker-Name *"
+                                                  value={draftBroker.name}
+                                                  onChange={(event) => setDraftBrokerField("name", event.target.value)}
+                                                  className="h-[34px] px-3 text-xs"
                                                 />
                                             </td>
                                             <td className="px-4 py-3 align-top">
                                                 <InputComp
-                                                    type="email"
-                                                    placeholder="E-Mail *"
-                                                    value={draftBroker.email}
-                                                    onChange={(event) => setDraftBrokerField("email", event.target.value)}
-                                                    className="h-[34px] px-3 text-xs"
+                                                  height={30}
+                                                  type="email"
+                                                  placeholder="E-Mail *"
+                                                  value={draftBroker.email}
+                                                  onChange={(event) => setDraftBrokerField("email", event.target.value)}
+                                                  className="h-[34px] px-3 text-xs"
                                                 />
                                             </td>
                                             <td className="px-4 py-3 align-top">
                                                 <InputComp
-                                                    type="url"
-                                                    placeholder="https://..."
-                                                    value={draftBroker.website}
-                                                    onChange={(event) => setDraftBrokerField("website", event.target.value)}
-                                                    className="h-[34px] px-3 text-xs"
+                                                  height={30}
+                                                  type="url"
+                                                  placeholder="https://..."
+                                                  value={draftBroker.website}
+                                                  onChange={(event) => setDraftBrokerField("website", event.target.value)}
+                                                  className="h-[34px] px-3 text-xs"
                                                 />
                                             </td>
                                             <td className="px-4 py-3 align-top">
                                                 <InputComp
-                                                    placeholder="Sprache / Land"
-                                                    value={draftBroker.locale}
-                                                    onChange={(event) => setDraftBrokerField("locale", event.target.value)}
-                                                    className="h-[34px] px-3 text-xs"
+                                                  height={30}
+                                                  placeholder="Sprache / Land"
+                                                  value={draftBroker.locale}
+                                                  onChange={(event) => setDraftBrokerField("locale", event.target.value)}
+                                                  className="h-[34px] px-3 text-xs"
                                                 />
                                             </td>
-                                            <td className="px-4 py-3 text-right align-top">
+                                            <td className="px-4 py-3 text-right align-center">
                                                 <div className="flex justify-end gap-2">
                                                     <button
-                                                        type="button"
-                                                        className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-                                                            isDraftComplete
-                                                                ? "bg-emerald-700 text-white hover:bg-emerald-600"
-                                                                : "cursor-not-allowed bg-emerald-900/40 text-emerald-200/50"
-                                                        }`}
-                                                        onClick={handleSaveDraftBroker}
-                                                        disabled={!isDraftComplete}
+                                                      type="button"
+                                                      className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                                                          isDraftComplete
+                                                              ? "bg-emerald-700 text-white hover:bg-emerald-600"
+                                                              : "cursor-not-allowed bg-emerald-900/40 text-emerald-200/50"
+                                                      }`}
+                                                      onClick={handleSaveDraftBroker}
+                                                      disabled={!isDraftComplete}
                                                     >
                                                         Speichern
                                                     </button>
                                                     <button
-                                                        type="button"
-                                                        className="rounded-full bg-gray-700 px-3 py-1 text-xs font-semibold text-white hover:bg-gray-600"
-                                                        onClick={closeDraftBrokerRow}
+                                                      type="button"
+                                                      className="rounded-full bg-gray-700 px-3 py-1 text-xs font-semibold text-white hover:bg-gray-600"
+                                                      onClick={closeDraftBrokerRow}
                                                     >
                                                         Abbrechen
                                                     </button>

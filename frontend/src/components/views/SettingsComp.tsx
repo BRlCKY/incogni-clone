@@ -137,13 +137,16 @@ interface PanelDefinition {
     content: ReactNode;
 }
 
-const SettingsComp = () => {
+type SettingsCompProps = {
+    onOpenPreset: () => void;
+};
+
+const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
     const [settingsData, setSettingsData] = useState<SettingsData>(defaultSettings);
     const [isTwoColumnLayout, setIsTwoColumnLayout] = useState(() => {
         if (typeof window === "undefined") {
             return false;
         }
-
         return window.matchMedia("(min-width: 640px)").matches;
     });
     const [panelHeights, setPanelHeights] = useState<Record<string, number>>({});
@@ -544,7 +547,42 @@ const SettingsComp = () => {
                       onChange={(event) =>
                           updateBrokerField("auto_start_when_added", event.target.checked)
                       } />
-                    {/*TODO: connect to mail preset */}
+                    <div className="mt-6 flex flex-wrap items-center gap-3">
+                        <p className="whitespace-nowrap">Antwortfrist</p>
+                        <div className="w-[90px]">
+                            <InputComp
+                              width="100%"
+                              height={30}
+                              type="number"
+                              min={1}
+                              step={1}
+                              value={settingsData.broker.response_deadline_days}
+                              onChange={(event) => {
+                                  const nextValue = Number.parseInt(event.target.value, 10);
+                                  updateBrokerField("response_deadline_days", Number.isFinite(nextValue) ? Math.max(1, nextValue) : 1);
+                              }}
+                              className="text-right" />
+                        </div>
+                        <p className="whitespace-nowrap">Tage</p>
+                    </div>
+
+                    <div className="mt-6 h-[44px] w-full">
+                        <GlassComp
+                          width="100%"
+                          height="100%"
+                          tintOpacity={0.5}
+                          borderRadius={999}
+                          className="cursor-pointer border border-gray-700 transition-colors hover:bg-gray-800/50"
+                          isHoverable
+                          onClick={onOpenPreset}
+                          role="button">
+                            <div className="flex h-full w-full items-center justify-center px-4 text-center">
+                                <p className="text-sm font-semibold text-white">
+                                    Automatische Nachricht bearbeiten
+                                </p>
+                            </div>
+                        </GlassComp>
+                    </div>
                 </>
             ),
         },
@@ -562,6 +600,16 @@ const SettingsComp = () => {
                               placeholder="Max Mustermann"
                               value={settingsData.user.name}
                               onChange={(event) => updateUserField("name", event.target.value)} />
+                        </div>
+
+                        <div>
+                            <p className="mb-2 text-sm text-white/80">Aliase</p>
+                            <InputComp
+                              width="100%"
+                              height={30}
+                              placeholder="Frühere Namen oder Schreibweisen, kommagetrennt"
+                              value={settingsData.user.aliases}
+                              onChange={(event) => updateUserField("aliases", event.target.value)} />
                         </div>
 
                         <div>

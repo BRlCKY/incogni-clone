@@ -63,7 +63,11 @@ export type ProfileRemovalData = {
 };
 
 export type CaseItem = {
+    brokerId: number;
     brokerName: string;
+    brokerEmail: string;
+    brokerWebsite: string;
+    brokerLocale: string;
     brokerStatus: BrokerStatus;
     latestLogDescription: string;
     latestLogTimestamp: string;
