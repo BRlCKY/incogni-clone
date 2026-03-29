@@ -10,6 +10,7 @@ const SettingCheckboxComp = ({ text, ...inputProps }: SettingCheckboxCompProps) 
             <span className="relative flex h-6 w-6 shrink-0 items-center justify-center">
                 <input
                     type="checkbox"
+                    aria-label={inputProps["aria-label"] ?? text}
                     className="peer absolute inset-0 h-full w-full cursor-pointer appearance-none rounded-full bg-transparent outline outline-[1.5px] outline-white transition-[outline-width,background-color] duration-75 checked:bg-white/15 focus:outline-[3px] focus:outline-white"
                     {...inputProps} />
                 <svg

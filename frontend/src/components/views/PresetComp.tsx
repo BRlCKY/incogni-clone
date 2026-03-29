@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import GlassComp from "../GlassComp";
 import InputComp from "../InputComp";
+import { getAccessibleClickProps } from "../../utils/accessibility";
 
 const placeholders = [
     { tag: "%%VOLLER_NAME%%", label: "Vollstaendiger Name" },
@@ -113,6 +114,7 @@ const PresetComp = ({ initialTemplate, onBack, onSave }: PresetCompProps) => {
                                   key={placeholder.tag}
                                   type="button"
                                   onClick={() => insertPlaceholder(placeholder.tag)}
+                                  aria-label={`Platzhalter einfuegen: ${placeholder.label}`}
                                   className="w-full min-w-0 bg-transparent text-left"
                                 >
                                     <GlassComp
@@ -151,6 +153,7 @@ const PresetComp = ({ initialTemplate, onBack, onSave }: PresetCompProps) => {
                                 <InputComp
                                   width="100%"
                                   height={44}
+                                  aria-label="Betreff der Vorlage"
                                   value={template.subject}
                                   onChange={(event) =>
                                       setTemplate((currentTemplate) => ({
@@ -184,6 +187,7 @@ const PresetComp = ({ initialTemplate, onBack, onSave }: PresetCompProps) => {
                                       onClick={updateSelection}
                                       onKeyUp={updateSelection}
                                       onSelect={updateSelection}
+                                      aria-label="Nachrichtentext der Vorlage"
                                       placeholder="Schreibe hier deinen Vorlagentext..."
                                       className="h-full w-full resize-none overflow-y-auto bg-transparent p-4 text-base leading-relaxed text-white placeholder-gray-500 focus:outline-none no-scrollbar"
                                     />
@@ -200,10 +204,10 @@ const PresetComp = ({ initialTemplate, onBack, onSave }: PresetCompProps) => {
                           height="100%"
                           tintOpacity={0.5}
                           borderRadius={999}
-                          className="cursor-pointer border border-gray-700 transition-colors hover:bg-gray-800/50"
+                          className="cursor-pointer border border-gray-700 transition-colors hover:bg-gray-800/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                           onClick={onBack}
-                          role="button"
                           isHoverable
+                          {...getAccessibleClickProps(onBack, { label: "Vorlagenbearbeitung abbrechen" })}
                         >
                             <div className="flex h-full w-full items-center justify-center">
                                 <p className="text-sm font-semibold text-white">Abbrechen</p>
@@ -217,10 +221,10 @@ const PresetComp = ({ initialTemplate, onBack, onSave }: PresetCompProps) => {
                           height="100%"
                           tintOpacity={0.5}
                           borderRadius={999}
-                          className="cursor-pointer border border-emerald-400/60 bg-emerald-900/25 transition-colors hover:bg-emerald-900/45"
+                          className="cursor-pointer border border-emerald-400/60 bg-emerald-900/25 transition-colors hover:bg-emerald-900/45 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                           onClick={handleSave}
-                          role="button"
                           isHoverable
+                          {...getAccessibleClickProps(handleSave, { label: "Vorlage speichern" })}
                         >
                             <div className="flex h-full w-full items-center justify-center">
                                 <p className="text-sm font-semibold text-white">Vorlage speichern</p>

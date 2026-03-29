@@ -3,6 +3,7 @@ import GlassComp from "../GlassComp";
 import SearchbarComp from "../SearchbarComp";
 import MailViewComp from "./MailViewComp";
 import MailMessageComp from "./MailMessageComp";
+import { getAccessibleClickProps } from "../../utils/accessibility";
 import { Broker, MailFolder, MailItem } from "../../../../shared/types";
 
 const folderLabel: Record<MailFolder, string> = {
@@ -81,9 +82,9 @@ const MailComp = () => {
                         body: mailData.body,
                         counterparty: mailData.to || "(Unbekannt)",
                         folder: "gesendet" as const,
-                        date: new Date().toLocaleString("de-DE", {  day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }),
+                        date: new Date().toLocaleString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }),
                     };
-                    
+
                     fetch("http://localhost:3000/mails/send", {
                         method: "POST",
                         headers: {
@@ -140,9 +141,11 @@ const MailComp = () => {
                             height={70}
                             tintOpacity={0.5}
                             borderRadius={999}
-                            className="cursor-pointer rounded-full border border-gray-700 px-4 hover:bg-gray-800/50"
+                            className="cursor-pointer rounded-full border border-gray-700 px-4 hover:bg-gray-800/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                             onClick={() => setIsComposing(true)}
-                            isHoverable={true} >
+                            isHoverable={true}
+                            {...getAccessibleClickProps(() => setIsComposing(true), { label: "Neue E-Mail schreiben" })}
+                        >
                             <p className="w-full px-3 text-left text-2xl leading-7 text-white">E-Mail schreiben</p>
                         </GlassComp>
 
@@ -151,15 +154,17 @@ const MailComp = () => {
                           height={70}
                           tintOpacity={0.5}
                           borderRadius={999}
-                          className={`cursor-pointer rounded-full border px-4 transition-colors ${
+                          className={`cursor-pointer rounded-full border px-4 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
                               activeFolder === "posteingang"
                                   ? "border-blue-400/70 bg-blue-900/35"
                                   : "border-gray-700 hover:bg-gray-800/50"
                           }`}
                           onClick={() => setActiveFolder("posteingang")}
-                          role="button"
-                          aria-pressed={activeFolder === "posteingang"}
                           isHoverable={true}
+                          {...getAccessibleClickProps(() => setActiveFolder("posteingang"), {
+                              label: "Posteingang anzeigen",
+                              pressed: activeFolder === "posteingang",
+                          })}
                         >
                             <div className="flex w-full items-center justify-between px-3">
                                 <p className="text-left text-2xl leading-7 text-white">Posteingang</p>
@@ -176,15 +181,17 @@ const MailComp = () => {
                           height={70}
                           tintOpacity={0.5}
                           borderRadius={999}
-                          className={`cursor-pointer rounded-full border px-4 transition-colors ${
+                          className={`cursor-pointer rounded-full border px-4 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
                               activeFolder === "gesendet"
                                   ? "border-blue-400/70 bg-blue-900/35"
                                   : "border-gray-700 hover:bg-gray-800/50"
                           }`}
                           onClick={() => setActiveFolder("gesendet")}
-                          role="button"
-                          aria-pressed={activeFolder === "gesendet"}
                           isHoverable={true}
+                          {...getAccessibleClickProps(() => setActiveFolder("gesendet"), {
+                              label: "Gesendete E-Mails anzeigen",
+                              pressed: activeFolder === "gesendet",
+                          })}
                         >
                             <div className="flex w-full items-center justify-between px-3">
                                 <p className="text-left text-2xl leading-7 text-white">Gesendet</p>
@@ -204,6 +211,7 @@ const MailComp = () => {
                             value={searchQuery}
                             onChange={(event) => setSearchQuery(event.target.value)}
                             placeholder="Suche"
+                            aria-label="E-Mails durchsuchen"
                             containerClassName="w-full"
                             height={50}
                         />
@@ -224,11 +232,12 @@ const MailComp = () => {
                               height={70}
                               tintOpacity={0.5}
                               borderRadius={999}
-                              className="cursor-pointer rounded-full border border-gray-700 pl-2 pr-3 transition-colors hover:bg-gray-800/50"
+                              className="cursor-pointer rounded-full border border-gray-700 pl-2 pr-3 transition-colors hover:bg-gray-800/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                               onClick={() => setOpenedMailId(item.id)}
-                              role="button"
-                              aria-label={`E-Mail oeffnen: ${item.subject}`}
                               isHoverable={true}
+                              {...getAccessibleClickProps(() => setOpenedMailId(item.id), {
+                                  label: `E-Mail oeffnen: ${item.subject}`,
+                              })}
                             >
                                 <div className="flex w-full items-center justify-between">
                                     <div className="flex min-w-0 items-center gap-2">

@@ -1,4 +1,5 @@
 import GlassComp from "./GlassComp";
+import { getAccessibleClickProps } from "../utils/accessibility";
 
 interface ListCompProps {
   height: number;
@@ -8,21 +9,27 @@ interface ListCompProps {
   text3?: string;
   circleColorClass?: string;
   onItemClick?: () => void;
+  ariaLabel?: string;
 }
 
 const ListComp = (props: ListCompProps) => {
     const diameter = props.height - 6;
+    const isClickable = typeof props.onItemClick === "function";
 
     return (
         <GlassComp
             width="100%"
             height={props.height}
             borderRadius={9999}
-            isHoverable={true}
+            isHoverable={isClickable}
             tintOpacity={0.5}
-            className={`w-full flex items-center cursor-pointer `.trim()}
+            className={`w-full flex items-center ${isClickable ? "cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" : ""}`.trim()}
             onClick={props.onItemClick}
-            role={props.onItemClick ? "button" : undefined}
+            {...(isClickable
+                ? getAccessibleClickProps(props.onItemClick, {
+                      label: props.ariaLabel ?? `Eintrag oeffnen: ${props.title}`,
+                  })
+                : {})}
         >
             <div
                 className={`${props.circleColorClass ? props.circleColorClass : "bg-white"} rounded-full relative left-[-6px] flex-shrink-0`}

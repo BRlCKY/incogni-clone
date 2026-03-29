@@ -44,8 +44,8 @@ const LoginComp = ({ onLoginSuccess }: LoginCompProps) => {
 
     return (
         <div className="min-h-screen w-full flex justify-center items-center">
-            <GlassContainer 
-              width={450} 
+            <GlassContainer
+              width={450}
               height={280}
               tintOpacity={0.5}>
                 <div className="w-full h-full flex flex-col justify-center items-center px-8">
@@ -58,12 +58,14 @@ const LoginComp = ({ onLoginSuccess }: LoginCompProps) => {
                         <InputComp
                           type="password"
                           placeholder="Password"
+                          aria-label="Passwort"
                           value={password}
                           onChange={(event) => setPassword(event.target.value)}
                         />
                         {errorMessage ? <p className="text-sm text-red-400">{errorMessage}</p> : null}
                         <button
                           type="submit"
+                          aria-label="Login abschicken"
                           disabled={isLoggingIn}
                           className="h-[50px] w-full bg-transparent rounded-full items-center justify-center flex font-bold hover:bg-[rgba(255,255,255,0.2)] cursor-pointer transition-colors duration-200">
                           {isLoggingIn ? "Prüfe..." : "Login"}

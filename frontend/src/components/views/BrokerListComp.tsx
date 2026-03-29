@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import GlassComp from "../GlassComp";
 import InputComp from "../InputComp";
 import SearchbarComp from "../SearchbarComp";
+import { getAccessibleClickProps } from "../../utils/accessibility";
 import { Broker, BrokerStatus } from "../../../../shared/types";
 
 type SortKey = "name" | "email" | "website" | "locale";
@@ -80,9 +81,6 @@ const BrokerListComp = () => {
         const email = draftBroker.email.trim();
         const website = draftBroker.website.trim();
         const locale = draftBroker.locale.trim();
-        const status = BrokerStatus.NEW;
-        const latestLog = "";
-        const latestLogTimestamp = new Date(0).toISOString();
 
         if (!name || !email) {
             return;
@@ -156,6 +154,9 @@ const BrokerListComp = () => {
         return `${label} ${sortDirection === "asc" ? "↑" : "↓"}`;
     };
 
+    const getAriaSort = (key: SortKey) =>
+        sortKey === key ? (sortDirection === "asc" ? "ascending" : "descending") : "none";
+
     const isDraftComplete = draftBroker.name.trim().length > 0 && draftBroker.email.trim().length > 0;
 
     return (
@@ -185,15 +186,17 @@ const BrokerListComp = () => {
                                   height={40}
                                   borderRadius={999}
                                   tintOpacity={0.52}
-                                  className={`border border-gray-700 ${
+                                  className={`border border-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
                                       isCreatingBroker
                                           ? "cursor-not-allowed opacity-60"
                                           : "cursor-pointer hover:bg-gray-800/50"
                                   }`}
                                   onClick={isCreatingBroker ? undefined : openDraftBrokerRow}
-                                  role="button"
-                                  aria-disabled={isCreatingBroker}
                                   isHoverable={isCreatingBroker ? false : true}
+                                  {...getAccessibleClickProps(isCreatingBroker ? undefined : openDraftBrokerRow, {
+                                      label: "Neuen Broker hinzufuegen",
+                                      disabled: isCreatingBroker,
+                                  })}
                                 >
                                     <p className="text-sm font-semibold text-white">+ Broker</p>
                                 </GlassComp>
@@ -202,6 +205,7 @@ const BrokerListComp = () => {
                                       value={searchQuery}
                                       onChange={(event) => setSearchQuery(event.target.value)}
                                       placeholder="Broker suchen"
+                                      aria-label="Broker suchen"
                                       containerClassName="w-full"
                                       height={40}
                                     />
@@ -213,38 +217,42 @@ const BrokerListComp = () => {
                             <table className="min-w-full text-left text-sm text-gray-200">
                                 <thead className="bg-gray-900/80 text-xs uppercase tracking-wide text-gray-400">
                                     <tr>
-                                        <th className="px-4 py-3">
+                                        <th className="px-4 py-3" aria-sort={getAriaSort("name")}>
                                             <button
                                                 type="button"
                                                 className="font-semibold hover:text-white"
                                                 onClick={() => handleSort("name")}
+                                                aria-label="Broker nach Name sortieren"
                                             >
                                                 {renderSortLabel("Name", "name")}
                                             </button>
                                         </th>
-                                        <th className="px-4 py-3">
+                                        <th className="px-4 py-3" aria-sort={getAriaSort("email")}>
                                             <button
                                                 type="button"
                                                 className="font-semibold hover:text-white"
                                                 onClick={() => handleSort("email")}
+                                                aria-label="Broker nach E-Mail sortieren"
                                             >
                                                 {renderSortLabel("E-Mail", "email")}
                                             </button>
                                         </th>
-                                        <th className="px-4 py-3">
+                                        <th className="px-4 py-3" aria-sort={getAriaSort("website")}>
                                             <button
                                                 type="button"
                                                 className="font-semibold hover:text-white"
                                                 onClick={() => handleSort("website")}
+                                                aria-label="Broker nach Webseite sortieren"
                                             >
                                                 {renderSortLabel("Webseite", "website")}
                                             </button>
                                         </th>
-                                        <th className="px-4 py-3">
+                                        <th className="px-4 py-3" aria-sort={getAriaSort("locale")}>
                                             <button
                                                 type="button"
                                                 className="font-semibold hover:text-white"
                                                 onClick={() => handleSort("locale")}
+                                                aria-label="Broker nach Sprache oder Land sortieren"
                                             >
                                                 {renderSortLabel("Sprache / Land", "locale")}
                                             </button>
@@ -259,6 +267,7 @@ const BrokerListComp = () => {
                                                 <InputComp
                                                   height={30}
                                                   placeholder="Broker-Name *"
+                                                  aria-label="Broker-Name"
                                                   value={draftBroker.name}
                                                   onChange={(event) => setDraftBrokerField("name", event.target.value)}
                                                   className="h-[34px] px-3 text-xs"
@@ -269,6 +278,7 @@ const BrokerListComp = () => {
                                                   height={30}
                                                   type="email"
                                                   placeholder="E-Mail *"
+                                                  aria-label="Broker E-Mail"
                                                   value={draftBroker.email}
                                                   onChange={(event) => setDraftBrokerField("email", event.target.value)}
                                                   className="h-[34px] px-3 text-xs"
@@ -279,6 +289,7 @@ const BrokerListComp = () => {
                                                   height={30}
                                                   type="url"
                                                   placeholder="https://..."
+                                                  aria-label="Broker Webseite"
                                                   value={draftBroker.website}
                                                   onChange={(event) => setDraftBrokerField("website", event.target.value)}
                                                   className="h-[34px] px-3 text-xs"
@@ -288,6 +299,7 @@ const BrokerListComp = () => {
                                                 <InputComp
                                                   height={30}
                                                   placeholder="Sprache / Land"
+                                                  aria-label="Broker Sprache oder Land"
                                                   value={draftBroker.locale}
                                                   onChange={(event) => setDraftBrokerField("locale", event.target.value)}
                                                   className="h-[34px] px-3 text-xs"
@@ -304,6 +316,7 @@ const BrokerListComp = () => {
                                                       }`}
                                                       onClick={handleSaveDraftBroker}
                                                       disabled={!isDraftComplete}
+                                                      aria-label="Neuen Broker speichern"
                                                     >
                                                         Speichern
                                                     </button>
@@ -311,6 +324,7 @@ const BrokerListComp = () => {
                                                       type="button"
                                                       className="rounded-full bg-gray-700 px-3 py-1 text-xs font-semibold text-white hover:bg-gray-600"
                                                       onClick={closeDraftBrokerRow}
+                                                      aria-label="Neuen Broker verwerfen"
                                                     >
                                                         Abbrechen
                                                     </button>
@@ -328,6 +342,7 @@ const BrokerListComp = () => {
                                                     href={broker.website}
                                                     target="_blank"
                                                     rel="noreferrer"
+                                                    aria-label={`Broker-Webseite oeffnen: ${broker.name}`}
                                                 >
                                                     {broker.website}
                                                 </a>
@@ -338,6 +353,7 @@ const BrokerListComp = () => {
                                                     type="button"
                                                     className="rounded-full bg-red-800/70 px-3 py-1 text-xs font-semibold text-white hover:bg-red-700"
                                                     onClick={() => handleRemoveBroker(broker.id)}
+                                                    aria-label={`Broker entfernen: ${broker.name}`}
                                                 >
                                                     Entfernen
                                                 </button>

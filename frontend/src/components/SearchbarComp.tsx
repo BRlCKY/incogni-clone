@@ -15,6 +15,9 @@ const SearchbarComp = ({
     inputClassName = "",
     ...inputProps
 }: SearchbarCompProps) => {
+    const resolvedAriaLabel =
+        inputProps["aria-label"] ?? (typeof placeholder === "string" ? placeholder : undefined);
+
     return (
         <GlassComp
             width="100%"
@@ -39,6 +42,7 @@ const SearchbarComp = ({
                     type="text"
                     placeholder={placeholder}
                     maxLength={maxLength}
+                    aria-label={resolvedAriaLabel}
                     className={`w-full min-w-0 bg-transparent text-sm text-white outline-none placeholder:text-gray-400 ${inputClassName}`.trim()}
                     {...inputProps}
                 />

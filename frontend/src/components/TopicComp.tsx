@@ -11,6 +11,7 @@ const Topic = ({ text, onClick, isExternal = false }: TopicProps) => {
         <button
             type="button"
             onClick={onClick}
+            aria-label={`${isExternal ? "Externe Ressource oeffnen" : "FAQ oeffnen"}: ${text}`}
             className="group w-full min-w-0 bg-transparent text-left"
         >
             <GlassComp

@@ -43,6 +43,7 @@ const LogComp = () => {
                   value={searchQuery}
                   onChange={(event) => setSearchQuery(event.target.value)}
                   placeholder="Logs durchsuchen"
+                  aria-label="Logs durchsuchen"
                   height={40}
                 />
             </div>
