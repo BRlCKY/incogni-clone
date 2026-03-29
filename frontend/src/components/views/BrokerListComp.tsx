@@ -262,56 +262,60 @@ const BrokerListComp = () => {
                                         <tr className="border-t border-gray-700/60 bg-gray-900/20">
                                             <td className="px-4 py-3 align-top">
                                                 <InputComp
-                                                    placeholder="Broker-Name *"
-                                                    value={draftBroker.name}
-                                                    onChange={(event) => setDraftBrokerField("name", event.target.value)}
-                                                    className="h-[34px] px-3 text-xs"
+                                                  height={30}
+                                                  placeholder="Broker-Name *"
+                                                  value={draftBroker.name}
+                                                  onChange={(event) => setDraftBrokerField("name", event.target.value)}
+                                                  className="h-[34px] px-3 text-xs"
                                                 />
                                             </td>
                                             <td className="px-4 py-3 align-top">
                                                 <InputComp
-                                                    type="email"
-                                                    placeholder="E-Mail *"
-                                                    value={draftBroker.email}
-                                                    onChange={(event) => setDraftBrokerField("email", event.target.value)}
-                                                    className="h-[34px] px-3 text-xs"
+                                                  height={30}
+                                                  type="email"
+                                                  placeholder="E-Mail *"
+                                                  value={draftBroker.email}
+                                                  onChange={(event) => setDraftBrokerField("email", event.target.value)}
+                                                  className="h-[34px] px-3 text-xs"
                                                 />
                                             </td>
                                             <td className="px-4 py-3 align-top">
                                                 <InputComp
-                                                    type="url"
-                                                    placeholder="https://..."
-                                                    value={draftBroker.website}
-                                                    onChange={(event) => setDraftBrokerField("website", event.target.value)}
-                                                    className="h-[34px] px-3 text-xs"
+                                                  height={30}
+                                                  type="url"
+                                                  placeholder="https://..."
+                                                  value={draftBroker.website}
+                                                  onChange={(event) => setDraftBrokerField("website", event.target.value)}
+                                                  className="h-[34px] px-3 text-xs"
                                                 />
                                             </td>
                                             <td className="px-4 py-3 align-top">
                                                 <InputComp
-                                                    placeholder="Sprache / Land"
-                                                    value={draftBroker.locale}
-                                                    onChange={(event) => setDraftBrokerField("locale", event.target.value)}
-                                                    className="h-[34px] px-3 text-xs"
+                                                  height={30}
+                                                  placeholder="Sprache / Land"
+                                                  value={draftBroker.locale}
+                                                  onChange={(event) => setDraftBrokerField("locale", event.target.value)}
+                                                  className="h-[34px] px-3 text-xs"
                                                 />
                                             </td>
-                                            <td className="px-4 py-3 text-right align-top">
+                                            <td className="px-4 py-3 text-right align-center">
                                                 <div className="flex justify-end gap-2">
                                                     <button
-                                                        type="button"
-                                                        className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-                                                            isDraftComplete
-                                                                ? "bg-emerald-700 text-white hover:bg-emerald-600"
-                                                                : "cursor-not-allowed bg-emerald-900/40 text-emerald-200/50"
-                                                        }`}
-                                                        onClick={handleSaveDraftBroker}
-                                                        disabled={!isDraftComplete}
+                                                      type="button"
+                                                      className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                                                          isDraftComplete
+                                                              ? "bg-emerald-700 text-white hover:bg-emerald-600"
+                                                              : "cursor-not-allowed bg-emerald-900/40 text-emerald-200/50"
+                                                      }`}
+                                                      onClick={handleSaveDraftBroker}
+                                                      disabled={!isDraftComplete}
                                                     >
                                                         Speichern
                                                     </button>
                                                     <button
-                                                        type="button"
-                                                        className="rounded-full bg-gray-700 px-3 py-1 text-xs font-semibold text-white hover:bg-gray-600"
-                                                        onClick={closeDraftBrokerRow}
+                                                      type="button"
+                                                      className="rounded-full bg-gray-700 px-3 py-1 text-xs font-semibold text-white hover:bg-gray-600"
+                                                      onClick={closeDraftBrokerRow}
                                                     >
                                                         Abbrechen
                                                     </button>
