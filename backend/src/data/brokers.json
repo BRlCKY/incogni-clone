@@ -26,7 +26,17 @@
     "website": "tes",
     "locale": "tes",
     "status": "pending",
-    "latestLog": "Mail gesendet: testset",
-    "latestLogTimestamp": "2026-03-26T21:07:18.463Z"
+    "latestLog": "Mail gesendet: testadsfasdf",
+    "latestLogTimestamp": "2026-03-29T14:28:11.175Z"
+  },
+  {
+    "id": 4,
+    "name": "e",
+    "email": "e",
+    "website": "",
+    "locale": "",
+    "status": "new",
+    "latestLog": "Broker hinzugefügt",
+    "latestLogTimestamp": "2026-03-29T14:15:57.203Z"
   }
 ]

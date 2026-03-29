@@ -76,12 +76,11 @@ const MailComp = () => {
                 contacts={brokerContacts}
                 onBack={() => setIsComposing(false)}
                 onSend={(mailData) => {
-                    const newMail: MailItem = {
-                        id: Date.now(), // Temporary ID, will be replaced by backend-generated ID
+                    const mailPayload = {
                         subject: mailData.subject || "(Kein Betreff)",
                         body: mailData.body,
                         counterparty: mailData.to || "(Unbekannt)",
-                        folder: "gesendet",
+                        folder: "gesendet" as const,
                         date: new Date().toLocaleString("de-DE", {  day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }),
                     };
                     
@@ -90,9 +89,20 @@ const MailComp = () => {
                         headers: {
                             "Content-Type": "application/json",
                         },
-                        body: JSON.stringify(newMail),
+                        body: JSON.stringify(mailPayload),
                     })
-                    .then((response) => response.json())
+                    .then(async (response) => {
+                        const payload = await response.json().catch(() => null);
+
+                        if (!response.ok) {
+                            const message = payload && typeof payload === "object" && "message" in payload
+                                ? String((payload as { message: unknown }).message)
+                                : "Failed to send mail";
+                            throw new Error(message);
+                        }
+
+                        return payload as MailItem;
+                    })
                     .then((savedMail) => {
                         setMails((prevMails) => [savedMail, ...prevMails]);
                         setIsComposing(false);

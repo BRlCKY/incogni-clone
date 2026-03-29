@@ -2,14 +2,135 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 import GlassComp from "../GlassComp";
 import InputComp from "../InputComp";
 import CheckboxComp from "../SettingCheckboxComp";
-import {
-    defaultSettings,
-    loadSettings,
-    saveSettings,
-    type IntervalUnit,
-    type MailSecurityMode,
-    type SettingsData,
-} from "../../settings";
+import type { Settings } from "../../../../shared/types";
+
+type IntervalUnit = Settings["messages"]["auto_start_new_case"]["interval_unit"];
+type MailSecurityMode = Settings["mailserver"]["security"];
+type SettingsData = Settings;
+
+const defaultSettings: SettingsData = {
+    messages: {
+        auto_start_new_case: {
+            enabled: true,
+            interval: 3,
+            interval_unit: "days",
+        },
+        notifications: {
+            new_case: true,
+            broker_response: true,
+            data_deletion: true,
+        },
+        notification_email: "",
+    },
+    mailserver: {
+        smtp_host: "smtp.beispiel.de",
+        port: 587,
+        security: "STARTTLS",
+        username: "",
+        password: "",
+        sender_name: "",
+        sender_email: "",
+    },
+    broker: {
+        auto_start_when_added: true,
+    },
+    user: {
+        name: "",
+        email: "",
+        address: "",
+        phone: "",
+        birth_date: "",
+    },
+    security: {
+        password_required: true,
+        current_password: "",
+    },
+};
+
+const SETTINGS_ENDPOINT = "http://localhost:3000/settings";
+
+const cloneSettings = (settings: SettingsData): SettingsData =>
+    JSON.parse(JSON.stringify(settings)) as SettingsData;
+
+const isObjectRecord = (value: unknown): value is Record<string, unknown> =>
+    typeof value === "object" && value !== null && !Array.isArray(value);
+
+const mergeWithDefaults = (storedSettings: Partial<SettingsData>): SettingsData => ({
+    ...cloneSettings(defaultSettings),
+    ...storedSettings,
+    messages: {
+        ...defaultSettings.messages,
+        ...storedSettings.messages,
+        auto_start_new_case: {
+            ...defaultSettings.messages.auto_start_new_case,
+            ...storedSettings.messages?.auto_start_new_case,
+        },
+        notifications: {
+            ...defaultSettings.messages.notifications,
+            ...storedSettings.messages?.notifications,
+        },
+    },
+    mailserver: {
+        ...defaultSettings.mailserver,
+        ...storedSettings.mailserver,
+    },
+    broker: {
+        ...defaultSettings.broker,
+        ...storedSettings.broker,
+    },
+    user: {
+        ...defaultSettings.user,
+        ...storedSettings.user,
+    },
+    security: {
+        ...defaultSettings.security,
+        ...storedSettings.security,
+    },
+});
+
+const loadSettings = async (): Promise<SettingsData> => {
+    try {
+        const response = await fetch(SETTINGS_ENDPOINT, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to load settings: ${response.status}`);
+        }
+
+        const payload = (await response.json()) as unknown;
+
+        if (!isObjectRecord(payload)) {
+            throw new Error("Invalid settings response");
+        }
+
+        return mergeWithDefaults(payload as Partial<SettingsData>);
+    } catch (error) {
+        console.error("Error loading settings:", error);
+        return cloneSettings(defaultSettings);
+    }
+};
+
+const saveSettings = async (settings: SettingsData): Promise<void> => {
+    const response = await fetch(SETTINGS_ENDPOINT, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(settings),
+    });
+
+    if (!response.ok) {
+        const errorPayload = (await response.json().catch(() => null)) as
+            | { message?: string }
+            | null;
+        const message = errorPayload?.message ?? `Failed to save settings: ${response.status}`;
+        throw new Error(message);
+    }
+};
 
 interface PanelDefinition {
     id: string;
@@ -122,7 +243,9 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
             const nextSettings = updater(currentSettings);
 
             if (settingsLoadedRef.current) {
-                void saveSettings(nextSettings);
+                void saveSettings(nextSettings).catch((error: unknown) => {
+                    console.error("Error saving settings:", error);
+                });
             }
 
             return nextSettings;
