@@ -40,14 +40,16 @@ router.post("/login", (req: Request, res: Response) => {
   }
 
   const configuredPassword = readAuthState().password;
+  const normalizedConfiguredPassword =
+    typeof configuredPassword === "string" ? configuredPassword.trim() : "";
 
-  if (!configuredPassword) {
+  if (!normalizedConfiguredPassword) {
     return res.status(200).json({
       message: "No password configured. Login granted.",
     });
   }
 
-  if (submittedPassword !== configuredPassword) {
+  if (submittedPassword !== normalizedConfiguredPassword) {
     return res.status(401).json({
       message: "Passwort ist falsch",
     });
@@ -84,7 +86,11 @@ router.post("/setpassword", (req: Request, res: Response) => {
   const trimmedPassword = password.trim();
 
   if (!trimmedPassword) {
-    return res.status(400).json({ message: "Password is required" });
+    writeAuthState({ password: "" });
+
+    return res.status(200).json({
+      message: "Password cleared",
+    });
   }
 
   writeAuthState({ password: trimmedPassword });

@@ -8,7 +8,6 @@ import dashboardRoutes from "./routes/dashboardRoutes";
 import caseRoutes from "./routes/caseRoutes";
 import authRoutes from "./routes/authRoutes";
 import onboardingRoutes from "./routes/onboardingRoutes";
-import profileRoutes from "./routes/profileRoutes";
 import settingsRoutes from "./routes/settingsRoutes";
 
 const app = express();
@@ -28,7 +27,6 @@ app.use("/dashboard", dashboardRoutes);
 app.use("/cases", caseRoutes);
 app.use("/auth", authRoutes);
 app.use("/onboarding", onboardingRoutes);
-app.use("/profile", profileRoutes);
 app.use("/settings", settingsRoutes);
 
 const port = 3000;

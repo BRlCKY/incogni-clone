@@ -51,17 +51,6 @@ export type AuthState = {
     password: string | null;
 };
 
-export type ProfileRemovalData = {
-    firstName: string;
-    lastName: string;
-    email: string;
-    address: string;
-    city: string;
-    zipCode: string;
-    country: string;
-    phone: string;
-};
-
 export type CaseItem = {
     brokerName: string;
     brokerStatus: BrokerStatus;
@@ -102,7 +91,6 @@ export type Settings = {
     user: {
         name: string;
         email: string;
-        address: string;
         phone: string;
         birth_date: string;
     };
