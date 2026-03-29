@@ -238,17 +238,6 @@ app.get("/cases", (req: any, res: any) => {
 
 // Auth and onboarding endpoints
 
-// this should tell the frontend if it needs to show the login screen but idk yet
-// app.get("/auth/status", (req: any, res: any) => {
-//   const authState = readAuthState();
-//   const passwordSet = Boolean(authState.password && authState.password.length > 0);
-
-//   res.json({
-//     passwordSet,
-//     canProceed: !passwordSet,
-//   });
-// });
-
 app.post("/auth/login", (req: any, res: any) => {
   const body = req.body as unknown;
   const allowedLoginKeys = ["password"] as const;
