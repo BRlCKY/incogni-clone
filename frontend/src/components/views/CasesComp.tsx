@@ -21,12 +21,6 @@ const CasesComp = () => {
             .catch((error) => console.error("Error fetching cases:", error));
     }, []);
 
-
-
-    // const handleSelectAll = () => {
-    //     setSelectedItems(new Set(items));
-    // };
-
     const handleToggleItem = (index: number) => {
         const newSelected = new Set(selectedItems);
         if (newSelected.has(index)) {
@@ -38,13 +32,11 @@ const CasesComp = () => {
     };
 
     const buttonActions: Array<{ label: string; onClick?: () => void }> = [
-        // { label: "Alle anzeigen", handleSelectAll },
-        // { label: "Ausgewählte anschreiben" },
-        // { label: "Ausgewählte löschen", onClick: handleDeleteSelected },
-        { label: "Abgelehnte anzeigen"},
-        { label: "Bestätigte anzeigen"},
-        { label: "Offene anzeigen"},
-        { label: "Neue anzeigen"}
+        { label: "Alle anzeigen" },
+        { label: "Abgelehnte anzeigen" },
+        { label: "Bestätigte anzeigen" },
+        { label: "Offene anzeigen" },
+        { label: "Neue anzeigen" }
     ];
 
     return (
@@ -57,10 +49,7 @@ const CasesComp = () => {
             <div className="h-full-respect-nav p-4">
 
                 <div className="mt-16"> {/* mt-16, to respect the buttons on top */}
-                    {
-                    
-                    
-                    items.map((item) => (
+                    {items.map((item) => (
                         <div className="mb-1" key={item.brokerName}>
                             <ListComp
                                 height={50}
