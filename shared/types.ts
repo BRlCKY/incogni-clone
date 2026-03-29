@@ -68,3 +68,46 @@ export type CaseItem = {
     latestLogDescription: string;
     latestLogTimestamp: string;
 };
+
+export type SettingsIntervalUnit = "days" | "weeks" | "months";
+
+export type SettingsMailSecurityMode = "STARTTLS" | "SSL/TLS" | "Keine";
+
+export type Settings = {
+    messages: {
+        auto_start_new_case: {
+            enabled: boolean;
+            interval: number;
+            interval_unit: SettingsIntervalUnit;
+        };
+        notifications: {
+            new_case: boolean;
+            broker_response: boolean;
+            data_deletion: boolean;
+        };
+        notification_email: string;
+    };
+    mailserver: {
+        smtp_host: string;
+        port: number;
+        security: SettingsMailSecurityMode;
+        username: string;
+        password: string;
+        sender_name: string;
+        sender_email: string;
+    };
+    broker: {
+        auto_start_when_added: boolean;
+    };
+    user: {
+        name: string;
+        email: string;
+        address: string;
+        phone: string;
+        birth_date: string;
+    };
+    security: {
+        password_required: boolean;
+        current_password: string;
+    };
+};

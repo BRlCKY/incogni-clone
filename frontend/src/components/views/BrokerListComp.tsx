@@ -93,7 +93,7 @@ const BrokerListComp = () => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ name, email, website, locale, status, latestLog, latestLogTimestamp }),
+            body: JSON.stringify({ name, email, website, locale }),
         })
             .then((response) => {
                 if (!response.ok) {
