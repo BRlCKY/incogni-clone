@@ -181,18 +181,19 @@ const BrokerListComp = () => {
                             </div>
                             <div className="flex min-w-[560px] items-center justify-end gap-3">
                                 <GlassComp
-                                    width={128}
-                                    height={40}
-                                    borderRadius={999}
-                                    tintOpacity={0.52}
-                                    className={`border border-gray-700 ${
-                                        isCreatingBroker
-                                            ? "cursor-not-allowed opacity-60"
-                                            : "cursor-pointer hover:bg-gray-800/50"
-                                    }`}
-                                    onClick={isCreatingBroker ? undefined : openDraftBrokerRow}
-                                    role="button"
-                                    aria-disabled={isCreatingBroker}
+                                  width={128}
+                                  height={40}
+                                  borderRadius={999}
+                                  tintOpacity={0.52}
+                                  className={`border border-gray-700 ${
+                                      isCreatingBroker
+                                          ? "cursor-not-allowed opacity-60"
+                                          : "cursor-pointer hover:bg-gray-800/50"
+                                  }`}
+                                  onClick={isCreatingBroker ? undefined : openDraftBrokerRow}
+                                  role="button"
+                                  aria-disabled={isCreatingBroker}
+                                  isHoverable={isCreatingBroker ? false : true}
                                 >
                                     <p className="text-sm font-semibold text-white">+ Broker</p>
                                 </GlassComp>

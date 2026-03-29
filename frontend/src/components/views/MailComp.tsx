@@ -132,23 +132,24 @@ const MailComp = () => {
                             borderRadius={999}
                             className="cursor-pointer rounded-full border border-gray-700 px-4 hover:bg-gray-800/50"
                             onClick={() => setIsComposing(true)}
-                        >
+                            isHoverable={true} >
                             <p className="w-full px-3 text-left text-2xl leading-7 text-white">E-Mail schreiben</p>
                         </GlassComp>
 
                         <GlassComp
-                            width="100%"
-                            height={74}
-                            tintOpacity={0.52}
-                            borderRadius={999}
-                            className={`cursor-pointer rounded-full border px-4 transition-colors ${
-                                activeFolder === "posteingang"
-                                    ? "border-blue-400/70 bg-blue-900/35"
-                                    : "border-gray-700 hover:bg-gray-800/50"
-                            }`}
-                            onClick={() => setActiveFolder("posteingang")}
-                            role="button"
-                            aria-pressed={activeFolder === "posteingang"}
+                          width="100%"
+                          height={74}
+                          tintOpacity={0.52}
+                          borderRadius={999}
+                          className={`cursor-pointer rounded-full border px-4 transition-colors ${
+                              activeFolder === "posteingang"
+                                  ? "border-blue-400/70 bg-blue-900/35"
+                                  : "border-gray-700 hover:bg-gray-800/50"
+                          }`}
+                          onClick={() => setActiveFolder("posteingang")}
+                          role="button"
+                          aria-pressed={activeFolder === "posteingang"}
+                          isHoverable={true}
                         >
                             <div className="flex w-full items-center justify-between px-3">
                                 <p className="text-left text-2xl leading-7 text-white">Posteingang</p>
@@ -161,18 +162,19 @@ const MailComp = () => {
                         </GlassComp>
 
                         <GlassComp
-                            width="100%"
-                            height={74}
-                            tintOpacity={0.52}
-                            borderRadius={999}
-                            className={`cursor-pointer rounded-full border px-4 transition-colors ${
-                                activeFolder === "gesendet"
-                                    ? "border-blue-400/70 bg-blue-900/35"
-                                    : "border-gray-700 hover:bg-gray-800/50"
-                            }`}
-                            onClick={() => setActiveFolder("gesendet")}
-                            role="button"
-                            aria-pressed={activeFolder === "gesendet"}
+                          width="100%"
+                          height={74}
+                          tintOpacity={0.52}
+                          borderRadius={999}
+                          className={`cursor-pointer rounded-full border px-4 transition-colors ${
+                              activeFolder === "gesendet"
+                                  ? "border-blue-400/70 bg-blue-900/35"
+                                  : "border-gray-700 hover:bg-gray-800/50"
+                          }`}
+                          onClick={() => setActiveFolder("gesendet")}
+                          role="button"
+                          aria-pressed={activeFolder === "gesendet"}
+                          isHoverable={true}
                         >
                             <div className="flex w-full items-center justify-between px-3">
                                 <p className="text-left text-2xl leading-7 text-white">Gesendet</p>
@@ -215,15 +217,16 @@ const MailComp = () => {
                     <div className="flex-1 space-y-3 overflow-y-scroll pr-1 no-scrollbar">
                         {filteredItems.map((item) => (
                             <GlassComp
-                                key={item.id}
-                                width="100%"
-                                height={74}
-                                tintOpacity={0.52}
-                                borderRadius={999}
-                                className="cursor-pointer rounded-full border border-gray-700 pl-2 pr-3 transition-colors hover:bg-gray-800/50"
-                                onClick={() => setOpenedMailId(item.id)}
-                                role="button"
-                                aria-label={`E-Mail oeffnen: ${item.subject}`}
+                              key={item.id}
+                              width="100%"
+                              height={74}
+                              tintOpacity={0.52}
+                              borderRadius={999}
+                              className="cursor-pointer rounded-full border border-gray-700 pl-2 pr-3 transition-colors hover:bg-gray-800/50"
+                              onClick={() => setOpenedMailId(item.id)}
+                              role="button"
+                              aria-label={`E-Mail oeffnen: ${item.subject}`}
+                              isHoverable={true}
                             >
                                 <div className="flex w-full items-center justify-between">
                                     <div className="flex min-w-0 items-center gap-2">
@@ -246,11 +249,11 @@ const MailComp = () => {
 
                         {filteredItems.length === 0 && (
                             <GlassComp
-                                width="100%"
-                                height={74}
-                                tintOpacity={0.52}
-                                borderRadius={999}
-                                className="rounded-full border border-gray-700"
+                              width="100%"
+                              height={74}
+                              tintOpacity={0.52}
+                              borderRadius={999}
+                              className="rounded-full border border-gray-700"
                             >
                                 <p className="flex h-full items-center justify-center text-sm text-gray-400">Keine Nachrichten gefunden.</p>
                             </GlassComp>
