@@ -24,8 +24,8 @@ const PresetComp = ({ initialTemplate, onBack, onSave }: PresetCompProps) => {
     const [template, setTemplate] = useState<Template>(
         initialTemplate || {
             id: "tpl_" + Date.now(),
-            subject: "",
-            text: "Hallo %%ANREDE%% %%NACHNAME%%,\n\nvielen Dank für die Nachricht.\nWir werden das Anliegen bis zum %%DATUM%% bearbeiten.\n\nViele Grüße,\nDein Team",
+            subject: "Löschantrag nach Art. 17 DSGVO - %%VOLLER_NAME%%",
+            text: "Sehr geehrte Damen und Herren,\n\nhiermit fordere ich Sie auf, meine personenbezogenen Daten gemäß Art. 17 DSGVO unverzüglich zu löschen, soweit keine gesetzliche Aufbewahrungspflicht entgegensteht.\n\nZur Identifizierung meiner Person finden Sie nachfolgend die relevanten Angaben:\n\nVollständiger Name: %%VOLLER_NAME%%\nE-Mail-Adresse: %%E_MAIL%%\nTelefonnummer: %%TELEFONNUMMER%%\nGeburtsdatum: %%GEBURTSDATUM%%\nAnschrift: %%ANSCHRIFT%%\nFrühere Namen / Aliase: %%ALIASE%%\n\nIch fordere Sie insbesondere dazu auf,\n\n1. sämtliche personenbezogenen Daten zu meiner Person zu löschen,\n2. die Verarbeitung meiner Daten einzustellen,\n3. mich aus allen Datenbanken, Verzeichnissen und Marketingverteilern zu entfernen,\n4. etwaige Empfänger, an die meine Daten weitergegeben wurden, über die Löschung zu informieren,\n5. mir eine Bestätigung der vollständigen Löschung zukommen zu lassen.\n\nBitte teilen Sie mir außerdem mit, welche Daten Sie zu meiner Person gespeichert hatten und an welche Dritten diese Daten weitergegeben wurden, soweit dies erforderlich ist, um die Löschung nachvollziehbar zu bestätigen.\n\nIch setze Ihnen hierfür eine Frist von %%FRIST_TAGE%% Tagen ab Zugang dieser Nachricht. Sollte ich innerhalb dieser Frist keine vollständige und zufriedenstellende Rückmeldung erhalten, werde ich die Angelegenheit an einen Anwalt übergeben und weitere rechtliche Schritte prüfen.\n\nBitte senden Sie Ihre Antwort an: %%ANTWORT_E_MAIL%%\n\nMit freundlichen Grüßen\n\n%%VOLLER_NAME%%"
         }
     );
 

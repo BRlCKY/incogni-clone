@@ -26,9 +26,11 @@ export interface SettingsData {
     };
     broker: {
         auto_start_when_added: boolean;
+        response_deadline_days: number;
     };
     user: {
         name: string;
+        aliases: string;
         email: string;
         address: string;
         phone: string;
@@ -65,9 +67,11 @@ export const defaultSettings: SettingsData = {
     },
     broker: {
         auto_start_when_added: true,
+        response_deadline_days: 14,
     },
     user: {
         name: "",
+        aliases: "",
         email: "",
         address: "",
         phone: "",

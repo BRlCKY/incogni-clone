@@ -424,6 +424,25 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
                       onChange={(event) =>
                           updateBrokerField("auto_start_when_added", event.target.checked)
                       } />
+                    <div className="mt-6 flex flex-wrap items-center gap-3">
+                        <p className="whitespace-nowrap">Antwortfrist</p>
+                        <div className="w-[90px]">
+                            <InputComp
+                              width="100%"
+                              height={30}
+                              type="number"
+                              min={1}
+                              step={1}
+                              value={settingsData.broker.response_deadline_days}
+                              onChange={(event) => {
+                                  const nextValue = Number.parseInt(event.target.value, 10);
+                                  updateBrokerField("response_deadline_days", Number.isFinite(nextValue) ? Math.max(1, nextValue) : 1);
+                              }}
+                              className="text-right" />
+                        </div>
+                        <p className="whitespace-nowrap">Tage</p>
+                    </div>
+
                     <div className="mt-6 h-[44px] w-full">
                         <GlassComp
                           width="100%"
@@ -458,6 +477,16 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
                               placeholder="Max Mustermann"
                               value={settingsData.user.name}
                               onChange={(event) => updateUserField("name", event.target.value)} />
+                        </div>
+
+                        <div>
+                            <p className="mb-2 text-sm text-white/80">Aliase</p>
+                            <InputComp
+                              width="100%"
+                              height={30}
+                              placeholder="Frühere Namen oder Schreibweisen, kommagetrennt"
+                              value={settingsData.user.aliases}
+                              onChange={(event) => updateUserField("aliases", event.target.value)} />
                         </div>
 
                         <div>
