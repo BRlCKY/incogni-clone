@@ -3,19 +3,9 @@ import { useNavigate } from "react-router-dom";
 import ColorBlendBackground from "../backgrounds/ColorBlendBackground";
 import GlassContainer from "../GlassComp";
 import InputComp from "../InputComp";
+import type { ProfileRemovalData } from "../../../../shared/types";
 
-type RemovalData = {
-    firstName: string;
-    lastName: string;
-    email: string;
-    address: string;
-    city: string;
-    zipCode: string;
-    country: string;
-    phone: string;
-};
-
-const defaultRemovalData: RemovalData = {
+const defaultRemovalData: ProfileRemovalData = {
     firstName: "",
     lastName: "",
     email: "",
@@ -28,9 +18,9 @@ const defaultRemovalData: RemovalData = {
 
 const OnboardingDataComp = () => {
     const navigate = useNavigate();
-    const [removalData, setRemovalData] = useState<RemovalData>(defaultRemovalData);
+    const [removalData, setRemovalData] = useState<ProfileRemovalData>(defaultRemovalData);
 
-    const updateField = (key: keyof RemovalData, value: string) => {
+    const updateField = (key: keyof ProfileRemovalData, value: string) => {
         setRemovalData((prev) => ({ ...prev, [key]: value }));
     };
 

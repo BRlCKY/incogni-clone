@@ -1,78 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import GlassComp from "../GlassComp";
 import SearchbarComp from "../SearchbarComp";
 import MailViewComp from "./MailViewComp";
 import MailMessageComp from "./MailMessageComp";
-
-type MailFolder = "posteingang" | "gesendet";
-
-type MailItem = {
-    id: number;
-    subject: string;
-    body: string;
-    counterparty: string;
-    folder: MailFolder;
-    date: string;
-};
-
-const mailboxItems: MailItem[] = [
-    {
-        id: 1,
-        subject: "Rueckfrage zu Identitaetsnachweis",
-        body: "Danke fuer Ihre Anfrage. Bitte senden Sie uns einen gueltigen Ausweis zur Verifizierung.",
-        counterparty: "Acme Data Brokers",
-        folder: "posteingang",
-        date: "Heute, 14:10",
-    },
-    {
-        id: 2,
-        subject: "Datenauskunft angefordert",
-        body: "Wir haben den Broker kontaktiert und um vollstaendige Datenauskunft nach DSGVO gebeten.",
-        counterparty: "Nordic Insight",
-        folder: "gesendet",
-        date: "Heute, 12:32",
-    },
-    {
-        id: 3,
-        subject: "Erinnerung zur offenen Anfrage",
-        body: "Eine Erinnerung wurde versendet, da innerhalb von 14 Tagen keine Rueckmeldung eingegangen ist.",
-        counterparty: "Global Registry Services",
-        folder: "gesendet",
-        date: "Gestern, 18:05",
-    },
-    {
-        id: 4,
-        subject: "Loeschung personenbezogener Daten",
-        body: "Der Broker wurde zur vollstaendigen Loeschung aller gespeicherten personenbezogenen Daten aufgefordert.",
-        counterparty: "Data Harbor GmbH",
-        folder: "gesendet",
-        date: "Gestern, 11:48",
-    },
-    {
-        id: 5,
-        subject: "Loeschung bestaetigt",
-        body: "Der Broker hat die Loeschung bestaetigt. Der Fall kann nun abgeschlossen werden.",
-        counterparty: "Blue Point Markets",
-        folder: "posteingang",
-        date: "14.03.2026",
-    },
-    {
-        id: 6,
-        subject: "Follow-up in 7 Tagen geplant",
-        body: "Falls keine Antwort erfolgt, wird in sieben Tagen automatisch ein weiteres Follow-up versendet.",
-        counterparty: "Arbor Analytics",
-        folder: "gesendet",
-        date: "13.03.2026",
-    },
-    {
-        id: 7,
-        subject: "Finale Mahnung versendet",
-        body: "Eine letzte Mahnung mit Fristsetzung wurde versendet, bevor rechtliche Schritte eingeleitet werden.",
-        counterparty: "Zenith Audience Labs",
-        folder: "gesendet",
-        date: "11.03.2026",
-    },
-];
+import { Broker, MailFolder, MailItem } from "../../../../shared/types";
 
 const folderLabel: Record<MailFolder, string> = {
     posteingang: "Empfangen",
@@ -97,11 +28,29 @@ const getAvatarColorClass = (name: string) =>
 const getAvatarInitial = (name: string) => name.trim().charAt(0).toUpperCase() || "?";
 
 const MailComp = () => {
-    const [mails, setMails] = useState<MailItem[]>(mailboxItems);
+    const [mails, setMails] = useState<MailItem[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [activeFolder, setActiveFolder] = useState<MailFolder>("posteingang");
     const [openedMailId, setOpenedMailId] = useState<number | null>(null);
     const [isComposing, setIsComposing] = useState(false);
+    const [brokerContacts, setBrokerContacts] = useState<string[]>([]);
+
+    useEffect(() => {
+        fetch("http://localhost:3000/mails")
+            .then((response) => response.json())
+            .then((data) => setMails(data))
+            .catch((error) => console.error("Error fetching mails:", error));
+    }, []);
+
+    useEffect(() => {
+        fetch("http://localhost:3000/brokers")
+            .then((response) => response.json())
+            .then((data: Broker[]) => setBrokerContacts(data.map((broker) => broker.name)))
+            .catch((error) => {
+                console.error("Error fetching brokers:", error);
+                setBrokerContacts([]);
+            });
+    }, []);
 
     const filteredItems = useMemo(() => {
         const normalizedQuery = searchQuery.trim().toLowerCase();
@@ -121,29 +70,37 @@ const MailComp = () => {
         [openedMailId, mails],
     );
 
-    const uniqueContacts = useMemo(() => {
-        const allContacts = mails.map((item) => item.counterparty);
-        return Array.from(new Set(allContacts));
-    }, [mails]);
-
     if (isComposing) {
         return (
             <MailMessageComp
-                contacts={uniqueContacts}
+                contacts={brokerContacts}
                 onBack={() => setIsComposing(false)}
                 onSend={(mailData) => {
                     const newMail: MailItem = {
-                        id: Date.now(),
+                        id: Date.now(), // Temporary ID, will be replaced by backend-generated ID
                         subject: mailData.subject || "(Kein Betreff)",
                         body: mailData.body,
                         counterparty: mailData.to || "(Unbekannt)",
                         folder: "gesendet",
-                        date: "Gerade eben",
+                        date: new Date().toLocaleString("de-DE", {  day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }),
                     };
                     
-                    setMails((prevMails) => [newMail, ...prevMails]);
-                    setIsComposing(false);
-                    setActiveFolder("gesendet");
+                    fetch("http://localhost:3000/mails/send", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(newMail),
+                    })
+                    .then((response) => response.json())
+                    .then((savedMail) => {
+                        setMails((prevMails) => [savedMail, ...prevMails]);
+                        setIsComposing(false);
+                        setActiveFolder("gesendet");
+                    })
+                    .catch((error) => {
+                        console.error("Error sending mail:", error);
+                    });
                 }}
             />
         );
@@ -163,7 +120,7 @@ const MailComp = () => {
     }
 
     return (
-        <div className="h-[calc(100vh-70px)] w-full overflow-hidden p-6">
+        <div className="h-full-respect-nav w-full overflow-hidden p-6">
             <div className="grid h-full w-full grid-cols-[300px_minmax(0,1fr)] gap-6">
                 <div className="flex h-full flex-col">
                     <div className="mb-4 h-[56px]" />
