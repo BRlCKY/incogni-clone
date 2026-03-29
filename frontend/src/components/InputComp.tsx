@@ -6,7 +6,7 @@ interface InputCompProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "wi
 }
 
 const InputComp = ({
-    width = "100px",
+    width = "100%",
     height = "50px",
     type = "text",
     className = "",
