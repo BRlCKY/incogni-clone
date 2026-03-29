@@ -1,5 +1,4 @@
 import { FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import ColorBlendBackground from "../backgrounds/ColorBlendBackground";
 import GlassContainer from "../GlassComp";
 import InputComp from "../InputComp";
@@ -16,21 +15,84 @@ const defaultRemovalData: ProfileRemovalData = {
     phone: "",
 };
 
-const OnboardingDataComp = () => {
-    const navigate = useNavigate();
+type OnboardingDataCompProps = {
+    onOnboardingComplete: () => void;
+};
+
+const OnboardingDataComp = ({ onOnboardingComplete }: OnboardingDataCompProps) => {
     const [removalData, setRemovalData] = useState<ProfileRemovalData>(defaultRemovalData);
+    const [errorMessage, setErrorMessage] = useState("");
+    const [isSaving, setIsSaving] = useState(false);
 
     const updateField = (key: keyof ProfileRemovalData, value: string) => {
         setRemovalData((prev) => ({ ...prev, [key]: value }));
     };
 
-    const onSubmit = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        navigate("/");
+    const markOnboardingAsCompleted = async (): Promise<boolean> => {
+        try {
+            const response = await fetch("http://localhost:3000/onboarding/complete", {
+                method: "POST",
+            });
+
+            if (!response.ok) {
+                const payload = (await response.json().catch(() => null)) as { message?: string } | null;
+                setErrorMessage(payload?.message ?? "Onboarding-Status konnte nicht gespeichert werden.");
+                return false;
+            }
+
+            return true;
+        } catch (error) {
+            console.error("Failed to mark onboarding completed:", error);
+            setErrorMessage("Onboarding-Status konnte nicht gespeichert werden.");
+            return false;
+        }
     };
 
-    const onSkip = () => {
-        navigate("/");
+    const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        setIsSaving(true);
+        setErrorMessage("");
+
+        try {
+            const response = await fetch("http://localhost:3000/profile/data", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(removalData),
+            });
+
+            if (!response.ok) {
+                const payload = (await response.json().catch(() => null)) as { message?: string } | null;
+                setErrorMessage(payload?.message ?? "Profildaten konnten nicht gespeichert werden.");
+                return;
+            }
+
+            const completed = await markOnboardingAsCompleted();
+            if (!completed) {
+                return;
+            }
+
+            onOnboardingComplete();
+        } catch (error) {
+            console.error("Failed to save profile data:", error);
+            setErrorMessage("Profildaten konnten nicht gespeichert werden.");
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const onSkip = async () => {
+        setIsSaving(true);
+        setErrorMessage("");
+
+        const completed = await markOnboardingAsCompleted();
+        if (completed) {
+            onOnboardingComplete();
+        }
+
+        setIsSaving(false);
     };
 
     return (
@@ -98,15 +160,18 @@ const OnboardingDataComp = () => {
                             onChange={(event) => updateField("country", event.target.value)}
                             className="md:col-span-2"
                         />
+                        {errorMessage ? <p className="text-sm text-red-400 md:col-span-2">{errorMessage}</p> : null}
 
                         <button
                             type="submit"
+                            disabled={isSaving}
                             className="h-[50px] w-full bg-transparent rounded-full items-center justify-center flex font-bold hover:bg-[rgba(255,255,255,0.2)] cursor-pointer transition-colors duration-200 md:col-span-2">
-                            Daten speichern & weiter
+                            {isSaving ? "Speichert..." : "Daten speichern & weiter"}
                         </button>
                         <button
                             type="button"
                             onClick={onSkip}
+                            disabled={isSaving}
                             className="h-[50px] w-full bg-transparent rounded-full items-center justify-center flex font-bold hover:bg-[rgba(255,255,255,0.2)] cursor-pointer transition-colors duration-200 md:col-span-2">
                             Überspringen
                         </button>

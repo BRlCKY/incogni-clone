@@ -1,12 +1,45 @@
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import ColorBlendBackground from "../backgrounds/ColorBlendBackground";
 import GlassContainer from "../GlassComp";
 import InputComp from "../InputComp";
 
-const LoginComp = () => {
+type LoginCompProps = {
+    onLoginSuccess: () => void;
+};
 
-    const onLogin = (event: FormEvent<HTMLFormElement>, password: string) => {
+const LoginComp = ({ onLoginSuccess }: LoginCompProps) => {
+    const [password, setPassword] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+    const onLogin = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        setErrorMessage("");
+        setIsLoggingIn(true);
+
+        try {
+            const response = await fetch("http://localhost:3000/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ password }),
+            });
+
+            if (!response.ok) {
+                const payload = (await response.json().catch(() => null)) as { message?: string } | null;
+                setErrorMessage(payload?.message ?? "Login fehlgeschlagen.");
+                return;
+            }
+
+            onLoginSuccess();
+        } catch (error) {
+            console.error("Failed to login:", error);
+            setErrorMessage("Login fehlgeschlagen.");
+        } finally {
+            setIsLoggingIn(false);
+        }
     };
 
     return (
@@ -21,15 +54,19 @@ const LoginComp = () => {
 
                     <form
                         className="w-full max-w-[340px] flex flex-col gap-3"
-                        onSubmit={(event) => event.preventDefault()}>
+                        onSubmit={onLogin}>
                         <InputComp
                             type="password"
                             placeholder="Password"
+                            value={password}
+                            onChange={(event) => setPassword(event.target.value)}
                         />
+                        {errorMessage ? <p className="text-sm text-red-400">{errorMessage}</p> : null}
                         <button
                             type="submit"
+                            disabled={isLoggingIn}
                             className="h-[50px] w-full bg-transparent rounded-full items-center justify-center flex font-bold hover:bg-[rgba(255,255,255,0.2)] cursor-pointer transition-colors duration-200">
-                            Login
+                            {isLoggingIn ? "Prüfe..." : "Login"}
                         </button>
                     </form>
                 </div>
