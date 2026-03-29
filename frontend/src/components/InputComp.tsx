@@ -1,10 +1,28 @@
-type InputCompProps = React.ComponentProps<"input">;
+import type { InputHTMLAttributes } from "react";
 
-const baseInputClassName =
-    "h-[50px] w-full bg-transparent outline-[1.5px] outline-white focus-visible:outline-[3px] rounded-full px-5 text-white placeholder:text-gray-400 outline-none border-transparent transition-colors duration-200";
+interface InputCompProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "width" | "height"> {
+    width?: number | string;
+    height?: number | string;
+}
 
-const InputComp = ({ className = "", ...props }: InputCompProps) => {
-    return <input className={`${baseInputClassName} ${className}`.trim()} {...props} />;
+const InputComp = ({
+    width = "100px",
+    height = "50px",
+    type = "text",
+    className = "",
+    style,
+    ...inputProps
+}: InputCompProps) => {
+    const resolvedWidth = typeof width === "number" ? `${width}px` : width;
+    const resolvedHeight = typeof height === "number" ? `${height}px` : height;
+
+    return (
+        <input
+          className={`rounded-full bg-transparent px-2 outline outline-[1.5px] outline-white transition-[outline-width] duration-75 focus:outline-[3px] focus:outline-white ${className}`.trim()}
+          style={{ ...style, width: resolvedWidth, height: resolvedHeight }}
+          type={type}
+          {...inputProps} />
+    );
 };
 
 export default InputComp;

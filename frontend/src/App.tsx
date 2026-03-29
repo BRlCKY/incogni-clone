@@ -4,6 +4,7 @@ import Wrapper from "./components/Wrapper";
 import LoginComp from "./components/views/LoginComp";
 import OnboardingComp from "./components/views/OnboardingComp";
 import OnboardingDataComp from "./components/views/OnboardingDataComp";
+import SettingsComp from "./components/views/SettingsComp";
 
 const App = () => (
 	<BrowserRouter>
@@ -12,6 +13,7 @@ const App = () => (
 			<Route path="/login" element={<LoginComp />} />
 			<Route path="/onboarding" element={<OnboardingComp />} />
 			<Route path="/onboarding/data" element={<OnboardingDataComp />} />
+			<Route path="/settings" element={<SettingsComp />} />
 			<Route path="*" element={<NotFound />} />
 		</Routes>
 	</BrowserRouter>

@@ -17,5 +17,4 @@ const Topic = ({ text, onClick }: TopicProps) => {
   );
 };
 
-
 export default Topic;
