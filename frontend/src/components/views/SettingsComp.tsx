@@ -3,6 +3,88 @@ import GlassComp from "../GlassComp";
 import InputComp from "../InputComp";
 import CheckboxComp from "../SettingCheckboxComp";
 
+type IntervalUnit = "days" | "weeks" | "months";
+type MailSecurityMode = "STARTTLS" | "SSL/TLS" | "Keine";
+
+interface SettingsData {
+    messages: {
+        auto_start_new_case: {
+            enabled: boolean;
+            interval: number;
+            interval_unit: IntervalUnit;
+        };
+        notifications: {
+            new_case: boolean;
+            broker_response: boolean;
+            data_deletion: boolean;
+        };
+        notification_email: string;
+    };
+    mailserver: {
+        smtp_host: string;
+        port: number;
+        security: MailSecurityMode;
+        username: string;
+        password: string;
+        sender_name: string;
+        sender_email: string;
+    };
+    broker: {
+        auto_start_when_added: boolean;
+    };
+    user: {
+        name: string;
+        email: string;
+        address: string;
+        phone: string;
+        birth_date: string;
+    };
+    security: {
+        password_required: boolean;
+        current_password: string;
+    };
+}
+
+// TODO: remove current_password. help erkmaster erkin
+const settings: SettingsData = {
+    messages: {
+        auto_start_new_case: {
+            enabled: true,
+            interval: 3,
+            interval_unit: "days",
+        },
+        notifications: {
+            new_case: true,
+            broker_response: true,
+            data_deletion: true,
+        },
+        notification_email: "",
+    },
+    mailserver: {
+        smtp_host: "smtp.beispiel.de",
+        port: 587,
+        security: "STARTTLS",
+        username: "",
+        password: "",
+        sender_name: "",
+        sender_email: "",
+    },
+    broker: {
+        auto_start_when_added: true,
+    },
+    user: {
+        name: "",
+        email: "",
+        address: "",
+        phone: "",
+        birth_date: "",
+    },
+    security: {
+        password_required: true,
+        current_password: "",
+    },
+};
+
 interface PanelDefinition {
     id: string;
     content: ReactNode;
