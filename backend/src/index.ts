@@ -5,6 +5,7 @@ import {
   BrokerStatus,
   type AuthState,
   type Broker,
+  type CaseItem,
   type LogEntry,
   type MailItem,
 } from "../../shared/types";
@@ -81,6 +82,18 @@ const updateBrokerStatus = (brokerId: number, newStatus: Broker["status"]) => {
     fs.writeFileSync("./src/data/brokers.json", JSON.stringify(brokers, null, 2));
   }
 };
+
+const toCaseItem = (broker: Broker): CaseItem => ({
+  brokerId: broker.id,
+  brokerName: broker.name,
+  brokerEmail: broker.email,
+  brokerWebsite: broker.website,
+  brokerLocale: broker.locale,
+  brokerStatus: broker.status,
+  latestLogDescription: broker.latestLog,
+  latestLogTimestamp: broker.latestLogTimestamp,
+});
+
 // Broker endpoints
 
 app.get("/brokers", (req: any, res: any) => {
@@ -256,12 +269,9 @@ app.get("/dashboard/waitingtime", (req: any, res: any) => {
 
 app.get("/cases", (req: any, res: any) => {
   const brokers: Broker[] = JSON.parse(fs.readFileSync("./src/data/brokers.json", "utf8"));
-  const cases = brokers.map((b) => ({
-    brokerName: b.name,
-    brokerStatus: b.status,
-    latestLogDescription: b.latestLog,
-    latestLogTimestamp: b.latestLogTimestamp
-  })).sort((a, b) => new Date(b.latestLogTimestamp).getTime() - new Date(a.latestLogTimestamp).getTime());
+  const cases = brokers
+    .map(toCaseItem)
+    .sort((a, b) => new Date(b.latestLogTimestamp).getTime() - new Date(a.latestLogTimestamp).getTime());
 
   res.status(200).json(cases);
 });

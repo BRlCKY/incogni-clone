@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import CaseComp from "./CaseComp";
 import ButtonComp from "../ButtonComp";
 import ListComp from "../ListComp";
 import { BrokerStatus, type CaseItem } from "../../../../shared/types";
@@ -12,7 +13,7 @@ const CasesComp = () => {
     };
 
     const [items, setItems] = useState<CaseItem[]>([]);
-    const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
+    const [selectedCase, setSelectedCase] = useState<CaseItem | null>(null);
 
     useEffect(() => {
         fetch("http://localhost:3000/cases")
@@ -21,16 +22,6 @@ const CasesComp = () => {
             .catch((error) => console.error("Error fetching cases:", error));
     }, []);
 
-    const handleToggleItem = (index: number) => {
-        const newSelected = new Set(selectedItems);
-        if (newSelected.has(index)) {
-            newSelected.delete(index);
-        } else {
-            newSelected.add(index);
-        }
-        setSelectedItems(newSelected);
-    };
-
     const buttonActions: Array<{ label: string; onClick?: () => void }> = [
         { label: "Alle anzeigen" },
         { label: "Abgelehnte anzeigen" },
@@ -38,6 +29,10 @@ const CasesComp = () => {
         { label: "Offene anzeigen" },
         { label: "Neue anzeigen" }
     ];
+
+    if (selectedCase) {
+        return <CaseComp item={selectedCase} onBack={() => setSelectedCase(null)} />;
+    }
 
     return (
         <>
@@ -59,6 +54,7 @@ const CasesComp = () => {
                                 text2={new Date(item.latestLogTimestamp).getDate().toString().padStart(2, '0') + "." + (new Date(item.latestLogTimestamp).getMonth() + 1).toString().padStart(2, '0') + "." + new Date(item.latestLogTimestamp).getFullYear()}
                                 text3={new Date(item.latestLogTimestamp).getHours().toString().padStart(2, '0') + ':' + new Date(item.latestLogTimestamp).getMinutes().toString().padStart(2, '0')}
                                 circleColorClass={statusColorMap[item.brokerStatus]}
+                                onItemClick={() => setSelectedCase(item)}
                             />
                         </div>
                     ))}
