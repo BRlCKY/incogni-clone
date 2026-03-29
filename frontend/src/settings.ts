@@ -47,7 +47,7 @@ export const defaultSettings: SettingsData = {
         auto_start_new_case: {
             enabled: true,
             interval: 3,
-            interval_unit: "days",
+            interval_unit: "months",
         },
         notifications: {
             new_case: true,

@@ -94,7 +94,7 @@ const PresetComp = ({ initialTemplate, onBack, onSave }: PresetCompProps) => {
     return (
         <div className="h-full-respect-nav w-full overflow-hidden p-6">
             <div className="flex h-full w-full min-h-0 flex-col gap-6">
-                <div className="grid min-h-0 flex-1 grid-cols-1 gap-6 lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] 2xl:grid-cols-[minmax(320px,420px)_minmax(0,1fr)]">
+                <div className="grid min-h-0 flex-1 grid-cols-1 gap-6 lg:grid-cols-[minmax(190px,240px)_minmax(0,1fr)] 2xl:grid-cols-[minmax(220px,280px)_minmax(0,1fr)]">
                     <div className="flex h-full min-h-0 flex-col gap-4">
                         <GlassComp
                           width="100%"
@@ -120,14 +120,14 @@ const PresetComp = ({ initialTemplate, onBack, onSave }: PresetCompProps) => {
                                       height="100%"
                                       tintOpacity={0.5}
                                       borderRadius={24}
-                                      className="rounded-3xl border border-gray-700 px-4 py-4 hover:bg-gray-800/40"
+                                      className="rounded-3xl border border-gray-700 px-4 py-3 hover:bg-gray-800/40"
                                       isHoverable
                                     >
-                                        <div className="flex h-full w-full flex-col gap-2">
-                                            <span className="font-mono text-sm font-semibold text-white">
+                                        <div className="flex h-full w-full flex-col gap-1.5">
+                                            <span className="font-mono text-xs font-semibold text-white">
                                                 {placeholder.tag}
                                             </span>
-                                            <span className="text-sm text-gray-400">{placeholder.label}</span>
+                                            <span className="text-xs text-gray-400">{placeholder.label}</span>
                                         </div>
                                     </GlassComp>
                                 </button>
