@@ -142,10 +142,6 @@ const SettingsComp = () => {
             content: (
                 <>
                     <p className="mb-2 text-lg font-semibold">Mailserver</p>
-                    <p className="text-sm text-white/70">
-                        Hier koennen die SMTP-Zugangsdaten und Absenderinformationen hinterlegt werden.
-                    </p>
-
                     <div className="mt-6 space-y-4">
                         <div>
                             <p className="mb-2 text-sm text-white/80">SMTP-Host</p>
@@ -235,8 +231,8 @@ const SettingsComp = () => {
             content: (
                 <>
                     <p className="mb-2 text-lg font-semibold">Broker</p>
-                    <p>Automatisch an neue Broker senden</p>
-                    <p>Mail Preset</p>
+                    <CheckboxComp text="Automatisch Fall starten, wenn Broker hinzugefügt wird" />
+                    {/*TODO: connect to mail preset */}
                 </>
             ),
         },
@@ -244,13 +240,50 @@ const SettingsComp = () => {
             id: "user",
             content: (
                 <>
-                    <p className="mb-2 text-lg font-semibold">Nutzer</p>
-                    <div>
-                        <p>Name</p>
-                        <p>EMail</p>
-                        <p>Adresse</p>
-                        <p>Telefonnummer</p>
-                        <p>Geburtsdatum</p>
+                    <p className="mb-2 text-lg font-semibold">Nutzerdaten</p>
+                    <div className="mt-6 space-y-4">
+                        <div>
+                            <p className="mb-2 text-sm text-white/80">Name</p>
+                            <InputComp
+                              width="100%"
+                              height={30}
+                              placeholder="Max Mustermann" />
+                        </div>
+
+                        <div>
+                            <p className="mb-2 text-sm text-white/80">E-Mail</p>
+                            <InputComp
+                              width="100%"
+                              height={30}
+                              type="email"
+                              placeholder="max.mustermann@beispiel.de" />
+                        </div>
+
+                        <div>
+                            <p className="mb-2 text-sm text-white/80">Adresse</p>
+                            <InputComp
+                              width="100%"
+                              height={30}
+                              placeholder="Musterstrasse 1, 12345 Musterstadt" />
+                        </div>
+
+                        <div>
+                            <p className="mb-2 text-sm text-white/80">Telefonnummer</p>
+                            <InputComp
+                              width="100%"
+                              height={30}
+                              type="tel"
+                              placeholder="+49 170 1234567" />
+                        </div>
+
+                        <div>
+                            <p className="mb-2 text-sm text-white/80">Geburtsdatum</p>
+                            <InputComp
+                              width="100%"
+                              height={30}
+                              type="date"
+                              className="pr-4" />
+                        </div>
                     </div>
                 </>
             ),
