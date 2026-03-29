@@ -290,7 +290,23 @@ const SettingsComp = () => {
         },
         {
             id: "security",
-            content: <h1>Sicherheit</h1>,
+            content: (
+                <>
+                    <p className="mb-2 text-lg font-semibold">Sicherheit</p>
+                    <div className="mt-6">
+                        <CheckboxComp text="Passwort erforderlich" />
+                    </div>
+
+                    <div className="mt-6 space-y-4">
+                        <p className="text-sm text-white/80">Passwort</p>
+                        <InputComp
+                          width="100%"
+                          height={30}
+                          type="password"
+                          placeholder="Aktuelles Passwort" />
+                    </div>
+                </>
+            ),
         },
     ];
 
