@@ -7,6 +7,7 @@ import Log from "./views/LogComp";
 import Mail from "./views/MailComp";
 import BrokerList from "./views/BrokerListComp";
 import Settings from "./views/SettingsComp";
+import PresetComp, { type Template } from "./views/PresetComp";
 import ColorBlendBackground from "./backgrounds/ColorBlendBackground";
 import OnboardingComp from "./views/OnboardingComp";
 import OnboardingDataComp from "./views/OnboardingDataComp";
@@ -41,6 +42,7 @@ type AccessScreen = "LOADING" | "ONBOARDING" | "ONBOARDING_DATA" | "LOGIN" | "AP
 
 const Wrapper = () => {
     const [active_view, setActiveView] = useState(Object.keys(view_data)[0]);
+    const [presetTemplate, setPresetTemplate] = useState<Template>();
     const [isLoadingAccessState, setIsLoadingAccessState] = useState(true);
     const [onboardingCompleted, setOnboardingCompletedState] = useState(getOnboardingCompleted);
     const [passwordStepCompleted, setPasswordStepCompleted] = useState(getOnboardingPasswordStepCompleted);
@@ -168,7 +170,17 @@ const Wrapper = () => {
             {active_view === 'LOG' && <Log />}
             {active_view === 'MAIL' && <Mail />}
             {active_view === 'BROKERLIST' && <BrokerList />}
-            {active_view === 'SETTINGS' && <Settings />}
+            {active_view === 'SETTINGS' && <Settings onOpenPreset={() => setActiveView('PRESET')} />}
+            {active_view === 'PRESET' && (
+                <PresetComp
+                    initialTemplate={presetTemplate}
+                    onBack={() => setActiveView('SETTINGS')}
+                    onSave={(template) => {
+                        setPresetTemplate(template);
+                        setActiveView('SETTINGS');
+                    }}
+                />
+            )}
             <div className="fixed w-full h-full -z-50 top-0 left-0">
                 <ColorBlendBackground />
             </div>

@@ -29,8 +29,8 @@ const LogComp = () => {
                 logDate.toLocaleDateString("de-DE"),
                 logDate.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }),
             ]
-                .join(" ")
-                .toLowerCase();
+            .join(" ")
+            .toLowerCase();
 
             return searchableContent.includes(normalizedQuery);
         });

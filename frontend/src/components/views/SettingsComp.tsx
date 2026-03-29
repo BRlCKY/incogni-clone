@@ -16,13 +16,16 @@ interface PanelDefinition {
     content: ReactNode;
 }
 
-const SettingsComp = () => {
+type SettingsCompProps = {
+    onOpenPreset: () => void;
+};
+
+const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
     const [settingsData, setSettingsData] = useState<SettingsData>(defaultSettings);
     const [isTwoColumnLayout, setIsTwoColumnLayout] = useState(() => {
         if (typeof window === "undefined") {
             return false;
         }
-
         return window.matchMedia("(min-width: 640px)").matches;
     });
     const [panelHeights, setPanelHeights] = useState<Record<string, number>>({});
@@ -421,7 +424,23 @@ const SettingsComp = () => {
                       onChange={(event) =>
                           updateBrokerField("auto_start_when_added", event.target.checked)
                       } />
-                    {/*TODO: connect to mail preset */}
+                    <div className="mt-6 h-[44px] w-full">
+                        <GlassComp
+                          width="100%"
+                          height="100%"
+                          tintOpacity={0.5}
+                          borderRadius={999}
+                          className="cursor-pointer border border-gray-700 transition-colors hover:bg-gray-800/50"
+                          isHoverable
+                          onClick={onOpenPreset}
+                          role="button">
+                            <div className="flex h-full w-full items-center justify-center px-4 text-center">
+                                <p className="text-sm font-semibold text-white">
+                                    Automatische Nachricht bearbeiten
+                                </p>
+                            </div>
+                        </GlassComp>
+                    </div>
                 </>
             ),
         },
