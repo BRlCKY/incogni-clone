@@ -31,7 +31,6 @@ const defaultSettings: Settings = {
   user: {
     name: "",
     email: "",
-    address: "",
     phone: "",
     birth_date: "",
   },
@@ -82,7 +81,7 @@ export const isSettings = (value: unknown): value is Settings => {
     return false;
   }
 
-  if (!isObjectRecord(user) || !hasExactKeys(user, ["name", "email", "address", "phone", "birth_date"])) {
+  if (!isObjectRecord(user) || !hasExactKeys(user, ["name", "email", "phone", "birth_date"])) {
     return false;
   }
 
@@ -145,7 +144,6 @@ export const isSettings = (value: unknown): value is Settings => {
   if (
     typeof user.name !== "string" ||
     typeof user.email !== "string" ||
-    typeof user.address !== "string" ||
     typeof user.phone !== "string" ||
     typeof user.birth_date !== "string"
   ) {
@@ -163,5 +161,11 @@ export const readSettings = (): Settings =>
   ensureJsonFile(dataPaths.settings, defaultSettings, isSettings);
 
 export const writeSettings = (settings: Settings) => {
-  writeJsonFile(dataPaths.settings, settings);
+  writeJsonFile(dataPaths.settings, {
+    ...settings,
+    security: {
+      ...settings.security,
+      current_password: "",
+    },
+  });
 };

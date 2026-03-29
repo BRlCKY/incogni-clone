@@ -2,17 +2,46 @@ import { FormEvent, useState } from "react";
 import ColorBlendBackground from "../backgrounds/ColorBlendBackground";
 import GlassContainer from "../GlassComp";
 import InputComp from "../InputComp";
-import type { ProfileRemovalData } from "../../../../shared/types";
+import type { Settings } from "../../../../shared/types";
 
-const defaultRemovalData: ProfileRemovalData = {
+type OnboardingRemovalData = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+};
+
+const defaultRemovalData: OnboardingRemovalData = {
     firstName: "",
     lastName: "",
     email: "",
-    address: "",
-    city: "",
-    zipCode: "",
-    country: "",
     phone: "",
+};
+
+const SETTINGS_ENDPOINT = "http://localhost:3000/settings";
+
+const isObjectRecord = (value: unknown): value is Record<string, unknown> =>
+    typeof value === "object" && value !== null && !Array.isArray(value);
+
+const loadSettings = async (): Promise<Settings> => {
+    const response = await fetch(SETTINGS_ENDPOINT, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error(`Failed to load settings: ${response.status}`);
+    }
+
+    const payload = (await response.json()) as unknown;
+
+    if (!isObjectRecord(payload)) {
+        throw new Error("Invalid settings response");
+    }
+
+    return payload as Settings;
 };
 
 type OnboardingDataCompProps = {
@@ -20,11 +49,11 @@ type OnboardingDataCompProps = {
 };
 
 const OnboardingDataComp = ({ onOnboardingComplete }: OnboardingDataCompProps) => {
-    const [removalData, setRemovalData] = useState<ProfileRemovalData>(defaultRemovalData);
+    const [removalData, setRemovalData] = useState<OnboardingRemovalData>(defaultRemovalData);
     const [errorMessage, setErrorMessage] = useState("");
     const [isSaving, setIsSaving] = useState(false);
 
-    const updateField = (key: keyof ProfileRemovalData, value: string) => {
+    const updateField = (key: keyof OnboardingRemovalData, value: string) => {
         setRemovalData((prev) => ({ ...prev, [key]: value }));
     };
 
@@ -55,17 +84,29 @@ const OnboardingDataComp = ({ onOnboardingComplete }: OnboardingDataCompProps) =
         setErrorMessage("");
 
         try {
-            const response = await fetch("http://localhost:3000/profile/data", {
+            const currentSettings = await loadSettings();
+            const combinedName = `${removalData.firstName} ${removalData.lastName}`.trim();
+            const nextSettings: Settings = {
+                ...currentSettings,
+                user: {
+                    ...currentSettings.user,
+                    name: combinedName,
+                    email: removalData.email,
+                    phone: removalData.phone,
+                },
+            };
+
+            const response = await fetch(SETTINGS_ENDPOINT, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(removalData),
+                body: JSON.stringify(nextSettings),
             });
 
             if (!response.ok) {
                 const payload = (await response.json().catch(() => null)) as { message?: string } | null;
-                setErrorMessage(payload?.message ?? "Profildaten konnten nicht gespeichert werden.");
+                setErrorMessage(payload?.message ?? "Einstellungen konnten nicht gespeichert werden.");
                 return;
             }
 
@@ -76,8 +117,8 @@ const OnboardingDataComp = ({ onOnboardingComplete }: OnboardingDataCompProps) =
 
             onOnboardingComplete();
         } catch (error) {
-            console.error("Failed to save profile data:", error);
-            setErrorMessage("Profildaten konnten nicht gespeichert werden.");
+            console.error("Failed to save onboarding data:", error);
+            setErrorMessage("Einstellungen konnten nicht gespeichert werden.");
         } finally {
             setIsSaving(false);
         }
@@ -99,7 +140,7 @@ const OnboardingDataComp = ({ onOnboardingComplete }: OnboardingDataCompProps) =
         <div className="min-h-screen w-full flex justify-center items-center py-6">
             <GlassContainer 
                 width={580}
-                height={610}
+                height={520}
                 tintOpacity={0.5}
                 >
                 <div className="w-full h-full flex flex-col items-center px-8 py-8">
@@ -133,32 +174,6 @@ const OnboardingDataComp = ({ onOnboardingComplete }: OnboardingDataCompProps) =
                             placeholder="Telefon"
                             value={removalData.phone}
                             onChange={(event) => updateField("phone", event.target.value)}
-                        />
-                        <InputComp
-                            type="text"
-                            placeholder="Adresse"
-                            value={removalData.address}
-                            onChange={(event) => updateField("address", event.target.value)}
-                            className="md:col-span-2"
-                        />
-                        <InputComp
-                            type="text"
-                            placeholder="Stadt"
-                            value={removalData.city}
-                            onChange={(event) => updateField("city", event.target.value)}
-                        />
-                        <InputComp
-                            type="text"
-                            placeholder="PLZ"
-                            value={removalData.zipCode}
-                            onChange={(event) => updateField("zipCode", event.target.value)}
-                        />
-                        <InputComp
-                            type="text"
-                            placeholder="Land"
-                            value={removalData.country}
-                            onChange={(event) => updateField("country", event.target.value)}
-                            className="md:col-span-2"
                         />
                         {errorMessage ? <p className="text-sm text-red-400 md:col-span-2">{errorMessage}</p> : null}
 

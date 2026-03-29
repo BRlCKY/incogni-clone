@@ -37,7 +37,6 @@ const defaultSettings: SettingsData = {
     user: {
         name: "",
         email: "",
-        address: "",
         phone: "",
         birth_date: "",
     },
@@ -48,6 +47,12 @@ const defaultSettings: SettingsData = {
 };
 
 const SETTINGS_ENDPOINT = "http://localhost:3000/settings";
+const AUTH_STATE_ENDPOINT = "http://localhost:3000/auth/state";
+const AUTH_SET_PASSWORD_ENDPOINT = "http://localhost:3000/auth/setpassword";
+
+type AuthStatePayload = {
+    passwordConfigured: boolean;
+};
 
 const cloneSettings = (settings: SettingsData): SettingsData =>
     JSON.parse(JSON.stringify(settings)) as SettingsData;
@@ -114,13 +119,21 @@ const loadSettings = async (): Promise<SettingsData> => {
     }
 };
 
+const toPersistedSettings = (settings: SettingsData): SettingsData => ({
+    ...settings,
+    security: {
+        ...settings.security,
+        current_password: "",
+    },
+});
+
 const saveSettings = async (settings: SettingsData): Promise<void> => {
     const response = await fetch(SETTINGS_ENDPOINT, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(settings),
+        body: JSON.stringify(toPersistedSettings(settings)),
     });
 
     if (!response.ok) {
@@ -132,6 +145,50 @@ const saveSettings = async (settings: SettingsData): Promise<void> => {
     }
 };
 
+const loadAuthPasswordRequired = async (): Promise<boolean | null> => {
+    try {
+        const response = await fetch(AUTH_STATE_ENDPOINT, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to load auth state: ${response.status}`);
+        }
+
+        const payload = (await response.json()) as unknown;
+
+        if (!isObjectRecord(payload) || typeof payload.passwordConfigured !== "boolean") {
+            throw new Error("Invalid auth state response");
+        }
+
+        return (payload as AuthStatePayload).passwordConfigured;
+    } catch (error) {
+        console.error("Error loading auth state:", error);
+        return null;
+    }
+};
+
+const setAuthPassword = async (password: string): Promise<void> => {
+    const response = await fetch(AUTH_SET_PASSWORD_ENDPOINT, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password }),
+    });
+
+    if (!response.ok) {
+        const errorPayload = (await response.json().catch(() => null)) as
+            | { message?: string }
+            | null;
+        const message = errorPayload?.message ?? `Failed to set password: ${response.status}`;
+        throw new Error(message);
+    }
+};
+
 interface PanelDefinition {
     id: string;
     content: ReactNode;
@@ -139,6 +196,9 @@ interface PanelDefinition {
 
 const SettingsComp = () => {
     const [settingsData, setSettingsData] = useState<SettingsData>(defaultSettings);
+    const [securityErrorMessage, setSecurityErrorMessage] = useState("");
+    const [securitySuccessMessage, setSecuritySuccessMessage] = useState("");
+    const [isSecurityActionPending, setIsSecurityActionPending] = useState(false);
     const [isTwoColumnLayout, setIsTwoColumnLayout] = useState(() => {
         if (typeof window === "undefined") {
             return false;
@@ -156,13 +216,23 @@ const SettingsComp = () => {
         let isMounted = true;
 
         const hydrateSettings = async () => {
-            const storedSettings = await loadSettings();
+            const [storedSettings, passwordRequiredFromAuth] = await Promise.all([
+                loadSettings(),
+                loadAuthPasswordRequired(),
+            ]);
 
             if (!isMounted) {
                 return;
             }
 
-            setSettingsData(storedSettings);
+            setSettingsData({
+                ...storedSettings,
+                security: {
+                    ...storedSettings.security,
+                    password_required: passwordRequiredFromAuth ?? storedSettings.security.password_required,
+                    current_password: "",
+                },
+            });
             settingsLoadedRef.current = true;
         };
 
@@ -333,17 +403,85 @@ const SettingsComp = () => {
         }));
     };
 
-    const updateSecurityField = <Key extends keyof SettingsData["security"]>(
-        key: Key,
-        value: SettingsData["security"][Key],
-    ) => {
-        persistSettings((currentSettings) => ({
+    const updateSecurityPasswordInput = (value: string) => {
+        setSecurityErrorMessage("");
+        setSecuritySuccessMessage("");
+        setSettingsData((currentSettings) => ({
             ...currentSettings,
             security: {
                 ...currentSettings.security,
-                [key]: value,
+                current_password: value,
             },
         }));
+    };
+
+    const enablePasswordProtection = async () => {
+        const trimmedPassword = settingsData.security.current_password.trim();
+
+        if (!trimmedPassword) {
+            setSecurityErrorMessage("Bitte gib ein Passwort ein.");
+            setSecuritySuccessMessage("");
+            return;
+        }
+
+        setIsSecurityActionPending(true);
+        setSecurityErrorMessage("");
+        setSecuritySuccessMessage("");
+
+        try {
+            await setAuthPassword(trimmedPassword);
+
+            persistSettings((currentSettings) => ({
+                ...currentSettings,
+                security: {
+                    ...currentSettings.security,
+                    password_required: true,
+                    current_password: "",
+                },
+            }));
+            setSecuritySuccessMessage("Passwort wurde gespeichert.");
+        } catch (error) {
+            console.error("Error saving password:", error);
+            setSecurityErrorMessage(
+                error instanceof Error ? error.message : "Passwort konnte nicht gespeichert werden.",
+            );
+        } finally {
+            setIsSecurityActionPending(false);
+        }
+    };
+
+    const disablePasswordProtection = async () => {
+        setIsSecurityActionPending(true);
+        setSecurityErrorMessage("");
+        setSecuritySuccessMessage("");
+
+        try {
+            await setAuthPassword("");
+
+            persistSettings((currentSettings) => ({
+                ...currentSettings,
+                security: {
+                    ...currentSettings.security,
+                    password_required: false,
+                    current_password: "",
+                },
+            }));
+            setSecuritySuccessMessage("Passwortschutz deaktiviert.");
+        } catch (error) {
+            console.error("Error clearing password:", error);
+            setSecurityErrorMessage("Passwortschutz konnte nicht deaktiviert werden.");
+        } finally {
+            setIsSecurityActionPending(false);
+        }
+    };
+
+    const handlePasswordRequiredChange = (nextRequired: boolean) => {
+        if (nextRequired) {
+            void enablePasswordProtection();
+            return;
+        }
+
+        void disablePasswordProtection();
     };
 
     const panels: PanelDefinition[] = [
@@ -576,16 +714,6 @@ const SettingsComp = () => {
                         </div>
 
                         <div>
-                            <p className="mb-2 text-sm text-white/80">Adresse</p>
-                            <InputComp
-                              width="100%"
-                              height={30}
-                              placeholder="Musterstrasse 1, 12345 Musterstadt"
-                              value={settingsData.user.address}
-                              onChange={(event) => updateUserField("address", event.target.value)} />
-                        </div>
-
-                        <div>
                             <p className="mb-2 text-sm text-white/80">Telefonnummer</p>
                             <InputComp
                               width="100%"
@@ -619,9 +747,8 @@ const SettingsComp = () => {
                         <CheckboxComp
                           text="Passwort erforderlich"
                           checked={settingsData.security.password_required}
-                          onChange={(event) =>
-                              updateSecurityField("password_required", event.target.checked)
-                          } />
+                          disabled={isSecurityActionPending}
+                          onChange={(event) => handlePasswordRequiredChange(event.target.checked)} />
                     </div>
 
                     <div className="mt-6 space-y-4">
@@ -630,11 +757,27 @@ const SettingsComp = () => {
                           width="100%"
                           height={30}
                           type="password"
-                          placeholder="Aktuelles Passwort"
+                          placeholder={
+                              settingsData.security.password_required
+                                  ? "Neues Passwort eingeben"
+                                  : "Passwort eingeben und aktivieren"
+                          }
                           value={settingsData.security.current_password}
-                          onChange={(event) =>
-                              updateSecurityField("current_password", event.target.value)
-                          } />
+                          disabled={isSecurityActionPending}
+                          onChange={(event) => updateSecurityPasswordInput(event.target.value)} />
+                        <button
+                          type="button"
+                          disabled={isSecurityActionPending}
+                          onClick={() => void enablePasswordProtection()}
+                          className="h-[30px] rounded-full bg-transparent px-4 text-sm font-semibold outline outline-[1.5px] outline-white transition-[outline-width,background-color] duration-75 hover:bg-white/15 focus:outline-[3px] focus:outline-white disabled:cursor-not-allowed disabled:opacity-60">
+                            {isSecurityActionPending ? "Speichert..." : "Passwort speichern"}
+                        </button>
+                        {securitySuccessMessage ? (
+                            <p className="text-sm text-green-300">{securitySuccessMessage}</p>
+                        ) : null}
+                        {securityErrorMessage ? (
+                            <p className="text-sm text-red-400">{securityErrorMessage}</p>
+                        ) : null}
                     </div>
                 </>
             ),
