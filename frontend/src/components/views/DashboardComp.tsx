@@ -1,54 +1,90 @@
+import { useEffect, useState } from "react";
 import GlassComp from "../GlassComp";
+import { LogEntry } from "../../../../shared/types";
 
-// TODO: API
-const summaryData = [
-    { label: "Broker angeschrieben", value: 41, colorClass: "text-yellow-400" },
-    { label: "Broker haben geantwortet", value: 18, colorClass: "text-green-400" },
-    { label: "Cases aktuell offen", value: 12, colorClass: "text-red-400" },
+type DashboardSummary = {
+    brokersMessaged: number;
+    brokersAccepted: number;
+    brokersRejected: number;
+    brokersPending: number;
+    brokersToDo: number;
+};
+
+const summaryUiConfig: Array<{
+    key: keyof DashboardSummary;
+    label: string;
+    colorClass: string;
+}> = [
+    { key: "brokersMessaged", label: "Broker wurden kontaktiert", colorClass: "text-white" },
+    { key: "brokersAccepted", label: "Broker haben akzeptiert", colorClass: "text-green-400" },
+    { key: "brokersRejected", label: "Broker haben abgelehnt", colorClass: "text-red-400" },
+    { key: "brokersPending", label: "Broker sind in Bearbeitung", colorClass: "text-yellow-400" },
+    { key: "brokersToDo", label: "Broker sind offen", colorClass: "text-blue-400" },
 ];
 
-// TODO: API
-const brokerPerformance = [
-    { name: "Broker G", time: "14 Tage", colorClass: "text-red-400" },
-    { name: "Broker F", time: "12 Tage", colorClass: "text-red-400" },
-    { name: "Broker E", time: "8 Tage", colorClass: "text-yellow-400" },
-    { name: "Broker D", time: "6 Tage", colorClass: "text-yellow-400" },
-    { name: "Broker C", time: "2 Tage", colorClass: "text-green-400" },
-    { name: "Broker B", time: "1 Tag", colorClass: "text-green-400" },
-    { name: "Broker A", time: "4 Stunden", colorClass: "text-green-400" },
+type WaitingTimeItem = {
+    name: string;
+    waitingTimeMs: number;
+};
+
+const WAIT_TIME_GREEN_MAX_MS = 2 * 24 * 60 * 60 * 1000; // <= 2 days
+const WAIT_TIME_YELLOW_MAX_MS = 7 * 24 * 60 * 60 * 1000; // <= 7 days
+
+const relativeTimeFormatter = new Intl.RelativeTimeFormat("de-DE", {
+    numeric: "auto",
+});
+
+const waitingTimeUnits: Array<{ unit: Intl.RelativeTimeFormatUnit; ms: number }> = [
+    { unit: "year", ms: 365 * 24 * 60 * 60 * 1000 },
+    { unit: "month", ms: 30 * 24 * 60 * 60 * 1000 },
+    { unit: "week", ms: 7 * 24 * 60 * 60 * 1000 },
+    { unit: "day", ms: 24 * 60 * 60 * 1000 },
+    { unit: "hour", ms: 60 * 60 * 1000 },
+    { unit: "minute", ms: 60 * 1000 },
+    { unit: "second", ms: 1000 },
 ];
 
-// Maybe add random dates in the API
-const activityLog = [
-    { time: "14:32", message: "Broker A hat der Datenloeschung zugestimmt" },
-    { time: "13:45", message: "Broker B hat um mehr Zeit gebeten" },
-    { time: "13:12", message: "Fall mit Broker C abgeschlossen" },
-    { time: "12:58", message: "Broker D hat eine Bestaetigung gesendet" },
-    { time: "12:20", message: "Neue Anfrage an Broker E" },
-    { time: "11:45", message: "Broker F hat mit Rueckfragen geantwortet" },
-    { time: "11:00", message: "Erinnerung an Broker G gesendet" },
-    { time: "14:32", message: "Broker A hat der Datenloeschung zugestimmt" },
-    { time: "13:45", message: "Broker B hat um mehr Zeit gebeten" },
-    { time: "13:12", message: "Fall mit Broker C abgeschlossen" },
-    { time: "12:58", message: "Broker D hat eine Bestaetigung gesendet" },
-    { time: "12:20", message: "Neue Anfrage an Broker E" },
-    { time: "11:45", message: "Broker F hat mit Rueckfragen geantwortet" },
-    { time: "11:00", message: "Erinnerung an Broker G gesendet" },
-    { time: "14:32", message: "Broker A hat der Datenloeschung zugestimmt" },
-    { time: "13:45", message: "Broker B hat um mehr Zeit gebeten" },
-    { time: "13:12", message: "Fall mit Broker C abgeschlossen" },
-    { time: "12:58", message: "Broker D hat eine Bestaetigung gesendet" },
-    { time: "12:20", message: "Neue Anfrage an Broker E" },
-    { time: "11:45", message: "Broker F hat mit Rueckfragen geantwortet" },
-    { time: "11:00", message: "Erinnerung an Broker G gesendet" },
-    { time: "14:32", message: "Broker A hat der Datenloeschung zugestimmt" },
-    { time: "13:45", message: "Broker B hat um mehr Zeit gebeten" },
-    { time: "13:12", message: "Fall mit Broker C abgeschlossen" },
-    { time: "12:58", message: "Broker D hat eine Bestaetigung gesendet" },
-    { time: "12:20", message: "Neue Anfrage an Broker E" },
-    { time: "11:45", message: "Broker F hat mit Rueckfragen geantwortet" },
-    { time: "11:00", message: "Erinnerung an Broker G gesendet" },
-];
+const formatWaitingTime = (waitingTimeMs: number): string => {
+    const absoluteMs = Math.max(0, waitingTimeMs);
+    if (absoluteMs < 1000) {
+        return "gerade eben";
+    }
+
+    for (const { unit, ms } of waitingTimeUnits) {
+        if (absoluteMs >= ms) {
+            const value = Math.floor(absoluteMs / ms);
+            const formatted = relativeTimeFormatter.format(-value, unit);
+            return formatted.startsWith("vor ") ? formatted.slice(4) : formatted;
+        }
+    }
+
+    return "gerade eben";
+};
+
+const getWaitingTimeColorClass = (waitingTimeMs: number): string => {
+    if (waitingTimeMs <= WAIT_TIME_GREEN_MAX_MS) {
+        return "text-green-400";
+    }
+    if (waitingTimeMs <= WAIT_TIME_YELLOW_MAX_MS) {
+        return "text-yellow-400";
+    }
+    return "text-red-400";
+};
+
+const formatLogTimestamp = (timestamp: string): string => {
+    const date = new Date(timestamp);
+    if (Number.isNaN(date.getTime())) {
+        return timestamp;
+    }
+
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = String(date.getFullYear());
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+
+    return `${day}.${month}.${year} ${hours}:${minutes}`;
+};
 
 const cardClassName =
     "rounded-3xl bg-gray-800 hover:bg-gray-700 border border-gray-700 transition-colors duration-200 p-6";
@@ -62,8 +98,47 @@ const getTileInteractionProps = (onClick: () => void) => ({
 });
 
 const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
+    const [summary, setSummary] = useState<DashboardSummary>({
+        brokersMessaged: 0,
+        brokersAccepted: 0,
+        brokersRejected: 0,
+        brokersPending: 0,
+        brokersToDo: 0,
+    });
+    const [waitingTimes, setWaitingTimes] = useState<WaitingTimeItem[]>([]);
+    const [activityLog, setActivityLog] = useState<LogEntry[]>([]);
+
+    useEffect(() => {
+        fetch("http://localhost:3000/dashboard/summary")
+            .then((response) => response.json())
+            .then((data: DashboardSummary) => setSummary(data))
+            .catch((error) => console.error("Error fetching dashboard summary:", error));
+    }, []);
+
+    useEffect(() => {
+        fetch("http://localhost:3000/dashboard/waitingtime")
+            .then((response) => response.json())
+            .then((data: WaitingTimeItem[]) =>
+                setWaitingTimes([...data].sort((a, b) => b.waitingTimeMs - a.waitingTimeMs)),
+            )
+            .catch((error) => console.error("Error fetching dashboard waiting times:", error));
+    }, []);
+
+    useEffect(() => {
+        fetch("http://localhost:3000/logs")
+            .then((response) => response.json())
+            .then((data: LogEntry[]) => setActivityLog(data))
+            .catch((error) => console.error("Error fetching activity log:", error));
+    }, []);
+
+    const summaryData = summaryUiConfig.map((item) => ({
+        label: item.label,
+        value: summary[item.key],
+        colorClass: item.colorClass,
+    }));
+
     return (
-        <div className="h-[calc(100dvh-100px)] w-full overflow-y-auto px-4 py-4 md:px-6 md:py-6">
+        <div className="h-full-respect-nav w-full overflow-y-auto px-4 py-4 md:px-6 md:py-6">
             <div className="grid h-full w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[1fr_1.5fr] lg:grid-rows-2">
                 <GlassComp
                     width="100%"
@@ -72,7 +147,7 @@ const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
                     className={`${cardClassName} min-h-[260px] cursor-pointer md:min-h-[320px] lg:min-h-0 lg:h-full`}
                     {...getTileInteractionProps(() => onTileClick("CASES"))}
                 >
-                    <div className="flex h-full w-full flex-col items-start justify-start text-left">
+                    <div className="h-full w-full">
                         <div className="mb-5 text-base text-gray-300">Übersicht</div>
                         <div className="flex w-full flex-1 flex-col justify-between lg:justify-start lg:gap-6">
                             {summaryData.map((item) => (
@@ -92,13 +167,15 @@ const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
                     className={`${cardClassName} min-h-[260px] cursor-pointer md:min-h-[320px] lg:col-start-1 lg:row-start-2 lg:min-h-0 lg:h-full`}
                     {...getTileInteractionProps(() => onTileClick("MAIL"))}
                 >
-                    <div className="flex h-full w-full flex-col items-start justify-start text-left">
-                        <div className="mb-5 text-base text-gray-300">Antwortzeiten</div>
+                    <div className="h-full w-full">
+                        <div className="mb-5 text-base text-gray-300">Keine Antwort seit</div>
                         <div className="flex w-full flex-1 flex-col gap-3 overflow-y-auto no-scrollbar pr-1">
-                            {brokerPerformance.map((broker) => (
+                            {waitingTimes.map((broker) => (
                                 <div key={broker.name} className="flex items-center justify-between text-sm">
                                     <span className="text-white">{broker.name}</span>
-                                    <span className={`font-semibold ${broker.colorClass}`}>{broker.time}</span>
+                                    <span className={`font-semibold ${getWaitingTimeColorClass(broker.waitingTimeMs)}`}>
+                                        {formatWaitingTime(broker.waitingTimeMs)}
+                                    </span>
                                 </div>
                             ))}
                         </div>
@@ -112,13 +189,13 @@ const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
                     className={`${cardClassName} min-h-[300px] cursor-pointer md:min-h-[390px] lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:min-h-0 lg:h-full`}
                     {...getTileInteractionProps(() => onTileClick("LOG"))}
                 >
-                    <div className="flex h-full w-full flex-col items-start justify-start text-left">
+                    <div className="flex flex-col h-full w-full">
                         <div className="mb-5 text-base text-gray-300">Aktuell</div>
                         <div className="flex w-full flex-1 flex-col gap-3 overflow-y-auto no-scrollbar pr-1">
                             {activityLog.map((log) => (
-                                <div key={`${log.time}-${log.message}`} className="flex gap-3 text-sm">
-                                    <div className="min-w-fit font-semibold text-purple-primary">{log.time}</div>
-                                    <div className="text-gray-200">{log.message}</div>
+                                <div key={`${log.timestamp}-${log.description}`} className="flex gap-3 text-sm">
+                                    <div className="min-w-fit font-semibold text-purple-primary">{formatLogTimestamp(log.timestamp)}</div>
+                                    <div className="text-gray-200">{log.description}</div>
                                 </div>
                             ))}
                         </div>

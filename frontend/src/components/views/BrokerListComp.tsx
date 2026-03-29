@@ -1,45 +1,14 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import GlassComp from "../GlassComp";
 import InputComp from "../InputComp";
 import SearchbarComp from "../SearchbarComp";
-
-type Broker = {
-    id: number;
-    name: string;
-    email: string;
-    website: string;
-    locale: string;
-};
+import { Broker, BrokerStatus } from "../../../../shared/types";
 
 type SortKey = "name" | "email" | "website" | "locale";
 type SortDirection = "asc" | "desc";
 
-const initialBrokers: Broker[] = [
-    {
-        id: 1,
-        name: "Acme Data Brokers",
-        email: "privacy@acme-brokers.com",
-        website: "https://acme-brokers.com",
-        locale: "Englisch / USA",
-    },
-    {
-        id: 2,
-        name: "Nordic Insight",
-        email: "contact@nordic-insight.eu",
-        website: "https://nordic-insight.eu",
-        locale: "Englisch / Deutschland",
-    },
-    {
-        id: 3,
-        name: "Global Registry Services",
-        email: "support@globalregistry.io",
-        website: "https://globalregistry.io",
-        locale: "Englisch / UK",
-    },
-];
-
 const BrokerListComp = () => {
-    const [brokers, setBrokers] = useState<Broker[]>(initialBrokers);
+    const [brokers, setBrokers] = useState<Broker[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [sortKey, setSortKey] = useState<SortKey>("name");
     const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
@@ -49,7 +18,19 @@ const BrokerListComp = () => {
         email: "",
         website: "",
         locale: "",
+        status: BrokerStatus.NEW,
+        latestLog: "",
+        latestLogTimestamp: new Date(0).toISOString(),
     });
+
+    useEffect(() => {
+        fetch("http://localhost:3000/brokers")
+            .then((response) => response.json())
+            .then((data) => setBrokers(data))
+            .catch((error) => {
+                console.error("Error fetching brokers:", error);
+            });
+    }, []);
 
     const setDraftBrokerField = (field: keyof Omit<Broker, "id">, value: string) => {
         setDraftBroker((previous) => ({
@@ -74,6 +55,9 @@ const BrokerListComp = () => {
             email: "",
             website: "",
             locale: "",
+            status: BrokerStatus.NEW,
+            latestLog: "",
+            latestLogTimestamp: new Date(0).toISOString(),
         });
         setIsCreatingBroker(true);
     };
@@ -85,6 +69,9 @@ const BrokerListComp = () => {
             email: "",
             website: "",
             locale: "",
+            status: BrokerStatus.NEW,
+            latestLog: "",
+            latestLogTimestamp: new Date(0).toISOString(),
         });
     };
 
@@ -93,26 +80,52 @@ const BrokerListComp = () => {
         const email = draftBroker.email.trim();
         const website = draftBroker.website.trim();
         const locale = draftBroker.locale.trim();
+        const status = BrokerStatus.NEW;
+        const latestLog = "";
+        const latestLogTimestamp = new Date(0).toISOString();
 
         if (!name || !email) {
             return;
         }
 
-        setBrokers((previous) => [
-            ...previous,
-            {
-                id: Date.now(),
-                name,
-                email,
-                website,
-                locale,
+        fetch("http://localhost:3000/brokers/add", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
             },
-        ]);
-        closeDraftBrokerRow();
+            body: JSON.stringify({ name, email, website, locale, status, latestLog, latestLogTimestamp }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to add broker");
+                }
+                return response.json();
+            })
+            .then((newBroker: Broker) => {
+                setBrokers((previous) => [...previous, newBroker]);
+                closeDraftBrokerRow();
+            })
+            .catch((error) => {
+                console.error("Error adding broker:", error);
+            });
     };
 
     const handleRemoveBroker = (id: number) => {
-        setBrokers((previous) => previous.filter((broker) => broker.id !== id));
+        fetch(`http://localhost:3000/brokers/${id}`, {
+            method: "DELETE",
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to remove broker");
+                }
+                return response.json();
+            })
+            .then(() => {
+                setBrokers((previous) => previous.filter((broker) => broker.id !== id));
+            })
+            .catch((error) => {
+                console.error("Error removing broker:", error);
+            });
     };
 
     const displayedBrokers = useMemo(() => {

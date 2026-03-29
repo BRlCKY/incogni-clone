@@ -19,6 +19,7 @@ const ListComp = (props: ListCompProps) => {
             height={props.height}
             borderRadius={9999}
             isHoverable={true}
+            tintOpacity={0.5}
             className="w-full flex items-center cursor-pointer"
         >
             <div

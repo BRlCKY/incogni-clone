@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Acme Data Brokers",
+    "email": "privacy@acme-brokers.com",
+    "website": "https://acme-brokers.com",
+    "locale": "Englisch / USA",
+    "status": "pending",
+    "latestLog": "Mail gesendet: dafs",
+    "latestLogTimestamp": "2026-03-26T17:57:57.694Z"
+  },
+  {
+    "id": 2,
+    "name": "Nordic Insight",
+    "email": "contact@nordic-insight.eu",
+    "website": "https://nordic-insight.eu",
+    "locale": "Englisch / Deutschland",
+    "status": "pending",
+    "latestLog": "Mail gesendet: asfdsa",
+    "latestLogTimestamp": "2026-03-26T19:24:31.685Z"
+  },
+  {
+    "id": 3,
+    "name": "test",
+    "email": "test",
+    "website": "tes",
+    "locale": "tes",
+    "status": "pending",
+    "latestLog": "Mail gesendet: testset",
+    "latestLogTimestamp": "2026-03-26T21:07:18.463Z"
+  }
+]

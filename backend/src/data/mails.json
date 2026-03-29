@@ -1,0 +1,114 @@
+[
+  {
+    "id": 1,
+    "subject": "Rueckfrage zu Identitaetsnachweis",
+    "body": "Danke fuer Ihre Anfrage. Bitte senden Sie uns einen gueltigen Ausweis zur Verifizierung.",
+    "counterparty": "Acme Data Brokers",
+    "folder": "posteingang",
+    "date": "20.03.2026, 14:10"
+  },
+  {
+    "id": 2,
+    "subject": "Datenauskunft angefordert",
+    "body": "Wir haben den Broker kontaktiert und um vollstaendige Datenauskunft nach DSGVO gebeten.",
+    "counterparty": "Nordic Insight",
+    "folder": "gesendet",
+    "date": "20.03.2026, 12:32"
+  },
+  {
+    "id": 3,
+    "subject": "Erinnerung zur offenen Anfrage",
+    "body": "Eine Erinnerung wurde versendet, da innerhalb von 14 Tagen keine Rueckmeldung eingegangen ist.",
+    "counterparty": "Global Registry Services",
+    "folder": "gesendet",
+    "date": "19.03.2026, 18:05"
+  },
+  {
+    "id": 4,
+    "subject": "Loeschung personenbezogener Daten",
+    "body": "Der Broker wurde zur vollstaendigen Loeschung aller gespeicherten personenbezogenen Daten aufgefordert.",
+    "counterparty": "Data Harbor GmbH",
+    "folder": "gesendet",
+    "date": "19.03.2026, 11:48"
+  },
+  {
+    "id": 5,
+    "subject": "Loeschung bestaetigt",
+    "body": "Der Broker hat die Loeschung bestaetigt. Der Fall kann nun abgeschlossen werden.",
+    "counterparty": "Blue Point Markets",
+    "folder": "posteingang",
+    "date": "14.03.2026, 09:20"
+  },
+  {
+    "id": 6,
+    "subject": "Follow-up in 7 Tagen geplant",
+    "body": "Falls keine Antwort erfolgt, wird in sieben Tagen automatisch ein weiteres Follow-up versendet.",
+    "counterparty": "Arbor Analytics",
+    "folder": "gesendet",
+    "date": "13.03.2026, 14:30"
+  },
+  {
+    "id": 7,
+    "subject": "Finale Mahnung versendet",
+    "body": "Eine letzte Mahnung mit Fristsetzung wurde versendet, bevor rechtliche Schritte eingeleitet werden.",
+    "counterparty": "Zenith Audience Labs",
+    "folder": "gesendet",
+    "date": "11.03.2026, 10:15"
+  },
+  {
+    "id": 8,
+    "subject": "df",
+    "body": "dasdfasdf",
+    "counterparty": "Global Registry Services",
+    "folder": "gesendet",
+    "date": "10.03.2026, 15:30"
+  },
+  {
+    "id": 9,
+    "subject": "asdfasdfasdfasdf",
+    "body": "asdfasdfasdfasdf",
+    "counterparty": "Data Harbor GmbH",
+    "folder": "gesendet",
+    "date": "20.03.2026, 19:15"
+  },
+  {
+    "id": 10,
+    "subject": "tests",
+    "body": "stestste",
+    "counterparty": "Nordic Insight",
+    "folder": "gesendet",
+    "date": "20.03.2026, 19:16"
+  },
+  {
+    "id": 11,
+    "subject": "dafs",
+    "body": "asdfasd",
+    "counterparty": "Acme Data Brokers",
+    "folder": "gesendet",
+    "date": "26.03.2026, 18:57"
+  },
+  {
+    "id": 12,
+    "subject": "asfdsa",
+    "body": "asdfasdf",
+    "counterparty": "Nordic Insight",
+    "folder": "gesendet",
+    "date": "26.03.2026, 20:24"
+  },
+  {
+    "id": 13,
+    "subject": "testset",
+    "body": "testasdfasdfasdfasdf",
+    "counterparty": "test",
+    "folder": "gesendet",
+    "date": "26.03.2026, 22:07"
+  },
+  {
+    "id": 14,
+    "subject": "Test",
+    "body": "Hello",
+    "counterparty": "Broker Inc",
+    "folder": "gesendet",
+    "date": "2026-03-28T10:00:00Z"
+  }
+]

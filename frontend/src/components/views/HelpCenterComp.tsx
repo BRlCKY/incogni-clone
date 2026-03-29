@@ -1,28 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Topic from "../TopicComp";
 import QuestionModal from "../ModalComp";
-
-export type Question =
-  | { text: string; content: string; url?: never }
-  | { text: string; url: string; content?: never };
-
-const questions: Question[] = [
-  { text: "Geht erkin ins Gym?", content: "Ja" },
-  { text: "Frage 2", content: "Antwort zu Frage 2" },
-  { text: "Google", url: "https://google.com" },
-  { text: "Frage 4", content: "Antwort zu Frage 4" },
-  { text: "Frage 5", content: "Antwort zu Frage 5" },
-  { text: "Frage 6", content: "Antwort zu Frage 6" },
-  { text: "Frage 7", content: "Antwort zu Frage 7" },
-  { text: "Frage 8", content: "Antwort zu Frage 8" },
-  { text: "Frage 9", content: "Antwort zu Frage 9" },
-  { text: "Frage 10", content: "Antwort zu Frage 10" },
-  { text: "Frage 11", content: "Antwort zu Frage 11" },
-  { text: "Frage 12", content: "Antwort zu Frage 12" },
-];
+import { Question } from "../../../../shared/types";
 
 const HelpCenterComp = () => {
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/faq")
+      .then((response) => response.json())
+      .then((data) => setQuestions(data));
+  }, []);
 
   const handleClick = (q: Question) =>
     q.url ? window.open(q.url) : setSelectedQuestion(q);
