@@ -1,3 +1,4 @@
+import { useEffect, useId } from "react";
 import ButtonComp from "./ButtonComp";
 import GlassComp from "./GlassComp";
 import type { Question } from "../../../shared/types";
@@ -8,6 +9,23 @@ interface Modal {
 }
 
 const QuestionModal = ({ question, onClose }: Modal) => {
+    const titleId = useId();
+
+    useEffect(() => {
+        if (!question) {
+            return;
+        }
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") {
+                onClose();
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [onClose, question]);
+
     if (!question) {
         return null;
     }
@@ -16,8 +34,15 @@ const QuestionModal = ({ question, onClose }: Modal) => {
         <div
             onClick={onClose}
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-6 backdrop-blur-sm"
+            role="presentation"
         >
-            <div className="w-full max-w-3xl" onClick={(event) => event.stopPropagation()}>
+            <div
+              className="w-full max-w-3xl"
+              onClick={(event) => event.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={titleId}
+            >
                 <GlassComp
                     width="100%"
                     height="auto"
@@ -31,7 +56,7 @@ const QuestionModal = ({ question, onClose }: Modal) => {
                                 <span className="rounded-full bg-blue-400/15 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-200">
                                     Hilfeartikel
                                 </span>
-                                <h2 className="mt-4 text-2xl font-semibold leading-tight text-white md:text-3xl">
+                                <h2 id={titleId} className="mt-4 text-2xl font-semibold leading-tight text-white md:text-3xl">
                                     {question.text}
                                 </h2>
                             </div>

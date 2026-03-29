@@ -1,4 +1,5 @@
 import GlassComp from "../GlassComp";
+import { getAccessibleClickProps } from "../../utils/accessibility";
 
 type MailFolder = "posteingang" | "gesendet";
 
@@ -82,10 +83,10 @@ const MailViewComp = ({ mail, onBack, onReply }: MailViewCompProps) => {
                           height={50}
                           tintOpacity={0.5}
                           borderRadius={999}
-                          className="cursor-pointer rounded-full border border-gray-700 hover:bg-gray-800/50"
+                          className="cursor-pointer rounded-full border border-gray-700 hover:bg-gray-800/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                           onClick={onBack}
-                          role="button"
                           isHoverable={true}
+                          {...getAccessibleClickProps(onBack, { label: "Zurueck zum Postfach" })}
                         >
                             <p className="text-sm font-semibold text-white">Zurück zum Postfach</p>
                         </GlassComp>
@@ -96,10 +97,10 @@ const MailViewComp = ({ mail, onBack, onReply }: MailViewCompProps) => {
                           height={50}
                           tintOpacity={0.5}
                           borderRadius={999}
-                          className="cursor-pointer rounded-full border border-blue-400/60 bg-blue-900/25 hover:bg-blue-900/45"
+                          className="cursor-pointer rounded-full border border-blue-400/60 bg-blue-900/25 hover:bg-blue-900/45 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                           onClick={onReply}
-                          role="button"
                           isHoverable={true}
+                          {...getAccessibleClickProps(onReply, { label: `Auf E-Mail antworten: ${mail.subject}` })}
                         >
                             <p className="text-sm font-semibold text-white">Antworten</p>
                         </GlassComp>

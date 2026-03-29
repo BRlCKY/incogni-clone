@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import GlassComp from "../GlassComp";
+import { getAccessibleClickProps } from "../../utils/accessibility";
 import { LogEntry } from "../../../../shared/types";
 
 type DashboardSummary = {
@@ -27,8 +28,8 @@ type WaitingTimeItem = {
     waitingTimeMs: number;
 };
 
-const WAIT_TIME_GREEN_MAX_MS = 2 * 24 * 60 * 60 * 1000; // <= 2 days
-const WAIT_TIME_YELLOW_MAX_MS = 7 * 24 * 60 * 60 * 1000; // <= 7 days
+const WAIT_TIME_GREEN_MAX_MS = 2 * 24 * 60 * 60 * 1000;
+const WAIT_TIME_YELLOW_MAX_MS = 7 * 24 * 60 * 60 * 1000;
 
 const relativeTimeFormatter = new Intl.RelativeTimeFormat("de-DE", {
     numeric: "auto",
@@ -87,14 +88,15 @@ const formatLogTimestamp = (timestamp: string): string => {
 };
 
 const cardClassName =
-    "rounded-3xl bg-gray-800 hover:bg-gray-700 border border-gray-700 transition-colors duration-200 p-6";
+    "rounded-3xl border border-gray-700 bg-gray-800 p-6 transition-colors duration-200 hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
 
 type DashboardCompProps = {
     onTileClick: (view: string) => void;
 };
 
-const getTileInteractionProps = (onClick: () => void) => ({
+const getTileInteractionProps = (onClick: () => void, label: string) => ({
     onClick,
+    ...getAccessibleClickProps(onClick, { label }),
 });
 
 const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
@@ -144,8 +146,8 @@ const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
                     width="100%"
                     height="auto"
                     tintOpacity={0.5}
-                    className={`${cardClassName} min-h-[260px] cursor-pointer md:min-h-[320px] lg:min-h-0 lg:h-full`}
-                    {...getTileInteractionProps(() => onTileClick("CASES"))}
+                    className={`${cardClassName} min-h-[260px] cursor-pointer md:min-h-[320px] lg:h-full lg:min-h-0`}
+                    {...getTileInteractionProps(() => onTileClick("CASES"), "Zur Faelle-Uebersicht wechseln")}
                 >
                     <div className="h-full w-full">
                         <div className="mb-5 text-base text-gray-300">Übersicht</div>
@@ -164,12 +166,12 @@ const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
                     width="100%"
                     height="auto"
                     tintOpacity={0.5}
-                    className={`${cardClassName} min-h-[260px] cursor-pointer md:min-h-[320px] lg:col-start-1 lg:row-start-2 lg:min-h-0 lg:h-full`}
-                    {...getTileInteractionProps(() => onTileClick("MAIL"))}
+                    className={`${cardClassName} min-h-[260px] cursor-pointer md:min-h-[320px] lg:col-start-1 lg:row-start-2 lg:h-full lg:min-h-0`}
+                    {...getTileInteractionProps(() => onTileClick("MAIL"), "Zur Mail-Uebersicht wechseln")}
                 >
                     <div className="h-full w-full">
                         <div className="mb-5 text-base text-gray-300">Keine Antwort seit</div>
-                        <div className="flex w-full flex-1 flex-col gap-3 overflow-y-auto no-scrollbar pr-1">
+                        <div className="flex w-full flex-1 flex-col gap-3 overflow-y-auto pr-1 no-scrollbar">
                             {waitingTimes.map((broker) => (
                                 <div key={broker.name} className="flex items-center justify-between text-sm">
                                     <span className="text-white">{broker.name}</span>
@@ -186,12 +188,12 @@ const DashboardComp = ({ onTileClick }: DashboardCompProps) => {
                     width="100%"
                     height="auto"
                     tintOpacity={0.5}
-                    className={`${cardClassName} min-h-[300px] cursor-pointer md:min-h-[390px] lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:min-h-0 lg:h-full`}
-                    {...getTileInteractionProps(() => onTileClick("LOG"))}
+                    className={`${cardClassName} min-h-[300px] cursor-pointer md:min-h-[390px] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:h-full lg:min-h-0`}
+                    {...getTileInteractionProps(() => onTileClick("LOG"), "Zum Aktivitaetslog wechseln")}
                 >
-                    <div className="flex flex-col h-full w-full">
+                    <div className="flex h-full w-full flex-col">
                         <div className="mb-5 text-base text-gray-300">Aktuell</div>
-                        <div className="flex w-full flex-1 flex-col gap-3 overflow-y-auto no-scrollbar pr-1">
+                        <div className="flex w-full flex-1 flex-col gap-3 overflow-y-auto pr-1 no-scrollbar">
                             {activityLog.map((log) => (
                                 <div key={`${log.timestamp}-${log.description}`} className="flex gap-3 text-sm">
                                     <div className="min-w-fit font-semibold text-purple-primary">{formatLogTimestamp(log.timestamp)}</div>

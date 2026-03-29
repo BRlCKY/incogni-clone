@@ -57,8 +57,8 @@ const OnboardingComp = ({ onPasswordConfigured, onContinueToData }: OnboardingCo
 
     return (
         <div className="min-h-screen w-full flex justify-center items-center">
-            <GlassContainer 
-              width={500} 
+            <GlassContainer
+              width={500}
               height={390}
               tintOpacity={0.5}>
                 <div className="w-full h-full flex flex-col justify-center items-center px-8">
@@ -72,12 +72,14 @@ const OnboardingComp = ({ onPasswordConfigured, onContinueToData }: OnboardingCo
                         <InputComp
                             type="password"
                             placeholder="Password"
+                            aria-label="Passwort"
                             value={password}
                             onChange={(event) => setPassword(event.target.value)}
                         />
                         {errorMessage ? <p className="text-sm text-red-400">{errorMessage}</p> : null}
                         <button
                             type="submit"
+                            aria-label="Passwort speichern"
                             disabled={isSavingPassword}
                             className="h-[50px] w-full bg-transparent rounded-full items-center justify-center flex font-bold hover:bg-[rgba(255,255,255,0.2)] cursor-pointer transition-colors duration-200">
                             {isSavingPassword ? "Speichert..." : "Passwort speichern"}
@@ -85,6 +87,7 @@ const OnboardingComp = ({ onPasswordConfigured, onContinueToData }: OnboardingCo
                         <button
                             type="button"
                             onClick={onContinueWithoutPassword}
+                            aria-label="Ohne Passwort fortfahren"
                             disabled={isSavingPassword}
                             className="h-[50px] w-full bg-transparent rounded-full items-center justify-center flex font-bold hover:bg-[rgba(255,255,255,0.2)] cursor-pointer transition-colors duration-200">
                             Ohne Passwort fortfahren

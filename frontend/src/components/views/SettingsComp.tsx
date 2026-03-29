@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 import GlassComp from "../GlassComp";
 import InputComp from "../InputComp";
 import CheckboxComp from "../SettingCheckboxComp";
+import { getAccessibleClickProps } from "../../utils/accessibility";
 import type { Settings } from "../../../../shared/types";
 
 type IntervalUnit = Settings["messages"]["auto_start_new_case"]["interval_unit"];
@@ -369,6 +370,7 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
                               height={30}
                               type="number"
                               min={1}
+                              aria-label="Intervall fuer neue Faelle"
                               className="text-right"
                               value={settingsData.messages.auto_start_new_case.interval}
                               onChange={(event) =>
@@ -424,6 +426,7 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
                       height={30}
                       className="mt-2"
                       type="email"
+                      aria-label="Benachrichtigungs-E-Mail"
                       placeholder="mail@beispiel.de"
                       value={settingsData.messages.notification_email}
                       onChange={(event) => updateMessagesField("notification_email", event.target.value)} />
@@ -442,6 +445,7 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
                               width="100%"
                               height={30}
                               placeholder="smtp.beispiel.de"
+                              aria-label="SMTP-Host"
                               value={settingsData.mailserver.smtp_host}
                               onChange={(event) => updateMailserverField("smtp_host", event.target.value)} />
                         </div>
@@ -454,6 +458,7 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
                                   height={30}
                                   type="number"
                                   placeholder="587"
+                                  aria-label="SMTP-Port"
                                   value={settingsData.mailserver.port}
                                   onChange={(event) =>
                                       updateMailserverField("port", Math.max(1, Number(event.target.value) || 1))
@@ -496,6 +501,7 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
                                   width="100%"
                                   height={30}
                                   placeholder="smtp-user"
+                                  aria-label="SMTP-Benutzername"
                                   value={settingsData.mailserver.username}
                                   onChange={(event) => updateMailserverField("username", event.target.value)} />
                             </div>
@@ -506,6 +512,7 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
                                   height={30}
                                   type="password"
                                   placeholder="Passwort"
+                                  aria-label="SMTP-Passwort"
                                   value={settingsData.mailserver.password}
                                   onChange={(event) => updateMailserverField("password", event.target.value)} />
                             </div>
@@ -518,6 +525,7 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
                                   width="100%"
                                   height={30}
                                   placeholder="Mein Unternehmen"
+                                  aria-label="Absendername"
                                   value={settingsData.mailserver.sender_name}
                                   onChange={(event) => updateMailserverField("sender_name", event.target.value)} />
                             </div>
@@ -528,6 +536,7 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
                                   height={30}
                                   type="email"
                                   placeholder="noreply@beispiel.de"
+                                  aria-label="Absender-E-Mail"
                                   value={settingsData.mailserver.sender_email}
                                   onChange={(event) => updateMailserverField("sender_email", event.target.value)} />
                             </div>
@@ -556,6 +565,7 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
                               type="number"
                               min={1}
                               step={1}
+                              aria-label="Antwortfrist in Tagen"
                               value={settingsData.broker.response_deadline_days}
                               onChange={(event) => {
                                   const nextValue = Number.parseInt(event.target.value, 10);
@@ -572,10 +582,10 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
                           height="100%"
                           tintOpacity={0.5}
                           borderRadius={999}
-                          className="cursor-pointer border border-gray-700 transition-colors hover:bg-gray-800/50"
+                          className="cursor-pointer border border-gray-700 transition-colors hover:bg-gray-800/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                           isHoverable
                           onClick={onOpenPreset}
-                          role="button">
+                          {...getAccessibleClickProps(onOpenPreset, { label: "Automatische Nachricht bearbeiten" })}>
                             <div className="flex h-full w-full items-center justify-center px-4 text-center">
                                 <p className="text-sm font-semibold text-white">
                                     Automatische Nachricht bearbeiten
@@ -598,6 +608,7 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
                               width="100%"
                               height={30}
                               placeholder="Max Mustermann"
+                              aria-label="Name"
                               value={settingsData.user.name}
                               onChange={(event) => updateUserField("name", event.target.value)} />
                         </div>
@@ -608,6 +619,7 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
                               width="100%"
                               height={30}
                               placeholder="Frühere Namen oder Schreibweisen, kommagetrennt"
+                              aria-label="Aliase"
                               value={settingsData.user.aliases}
                               onChange={(event) => updateUserField("aliases", event.target.value)} />
                         </div>
@@ -619,6 +631,7 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
                               height={30}
                               type="email"
                               placeholder="max.mustermann@beispiel.de"
+                              aria-label="E-Mail"
                               value={settingsData.user.email}
                               onChange={(event) => updateUserField("email", event.target.value)} />
                         </div>
@@ -629,6 +642,7 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
                               width="100%"
                               height={30}
                               placeholder="Musterstrasse 1, 12345 Musterstadt"
+                              aria-label="Adresse"
                               value={settingsData.user.address}
                               onChange={(event) => updateUserField("address", event.target.value)} />
                         </div>
@@ -640,6 +654,7 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
                               height={30}
                               type="tel"
                               placeholder="+49 170 1234567"
+                              aria-label="Telefonnummer"
                               value={settingsData.user.phone}
                               onChange={(event) => updateUserField("phone", event.target.value)} />
                         </div>
@@ -650,6 +665,7 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
                               width="100%"
                               height={30}
                               type="date"
+                              aria-label="Geburtsdatum"
                               className="pr-4"
                               value={settingsData.user.birth_date}
                               onChange={(event) => updateUserField("birth_date", event.target.value)} />
@@ -679,6 +695,7 @@ const SettingsComp = ({ onOpenPreset }: SettingsCompProps) => {
                           height={30}
                           type="password"
                           placeholder="Aktuelles Passwort"
+                          aria-label="Aktuelles Passwort"
                           value={settingsData.security.current_password}
                           onChange={(event) =>
                               updateSecurityField("current_password", event.target.value)

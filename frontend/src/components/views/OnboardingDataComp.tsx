@@ -97,7 +97,7 @@ const OnboardingDataComp = ({ onOnboardingComplete }: OnboardingDataCompProps) =
 
     return (
         <div className="min-h-screen w-full flex justify-center items-center py-6">
-            <GlassContainer 
+            <GlassContainer
                 width={580}
                 height={610}
                 tintOpacity={0.5}
@@ -113,30 +113,35 @@ const OnboardingDataComp = ({ onOnboardingComplete }: OnboardingDataCompProps) =
                         <InputComp
                             type="text"
                             placeholder="Vorname"
+                            aria-label="Vorname"
                             value={removalData.firstName}
                             onChange={(event) => updateField("firstName", event.target.value)}
                         />
                         <InputComp
                             type="text"
                             placeholder="Nachname"
+                            aria-label="Nachname"
                             value={removalData.lastName}
                             onChange={(event) => updateField("lastName", event.target.value)}
                         />
                         <InputComp
                             type="email"
                             placeholder="E-Mail"
+                            aria-label="E-Mail"
                             value={removalData.email}
                             onChange={(event) => updateField("email", event.target.value)}
                         />
                         <InputComp
                             type="tel"
                             placeholder="Telefon"
+                            aria-label="Telefon"
                             value={removalData.phone}
                             onChange={(event) => updateField("phone", event.target.value)}
                         />
                         <InputComp
                             type="text"
                             placeholder="Adresse"
+                            aria-label="Adresse"
                             value={removalData.address}
                             onChange={(event) => updateField("address", event.target.value)}
                             className="md:col-span-2"
@@ -144,18 +149,21 @@ const OnboardingDataComp = ({ onOnboardingComplete }: OnboardingDataCompProps) =
                         <InputComp
                             type="text"
                             placeholder="Stadt"
+                            aria-label="Stadt"
                             value={removalData.city}
                             onChange={(event) => updateField("city", event.target.value)}
                         />
                         <InputComp
                             type="text"
                             placeholder="PLZ"
+                            aria-label="PLZ"
                             value={removalData.zipCode}
                             onChange={(event) => updateField("zipCode", event.target.value)}
                         />
                         <InputComp
                             type="text"
                             placeholder="Land"
+                            aria-label="Land"
                             value={removalData.country}
                             onChange={(event) => updateField("country", event.target.value)}
                             className="md:col-span-2"
@@ -164,6 +172,7 @@ const OnboardingDataComp = ({ onOnboardingComplete }: OnboardingDataCompProps) =
 
                         <button
                             type="submit"
+                            aria-label="Daten speichern und weiter"
                             disabled={isSaving}
                             className="h-[50px] w-full bg-transparent rounded-full items-center justify-center flex font-bold hover:bg-[rgba(255,255,255,0.2)] cursor-pointer transition-colors duration-200 md:col-span-2">
                             {isSaving ? "Speichert..." : "Daten speichern & weiter"}
@@ -171,6 +180,7 @@ const OnboardingDataComp = ({ onOnboardingComplete }: OnboardingDataCompProps) =
                         <button
                             type="button"
                             onClick={onSkip}
+                            aria-label="Onboarding ueberspringen"
                             disabled={isSaving}
                             className="h-[50px] w-full bg-transparent rounded-full items-center justify-center flex font-bold hover:bg-[rgba(255,255,255,0.2)] cursor-pointer transition-colors duration-200 md:col-span-2">
                             Überspringen
