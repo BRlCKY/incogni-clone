@@ -3,6 +3,7 @@ import express, { json } from "express";
 import fs from "node:fs";
 import {
   BrokerStatus,
+  type AuthState,
   type Broker,
   type LogEntry,
   type MailItem,
@@ -12,6 +13,35 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 const port = 3000;
+const onboardingStatePath = "./src/data/onboarding.json";
+
+type OnboardingState = {
+  completed: boolean;
+};
+
+const defaultOnboardingState: OnboardingState = {
+  completed: false,
+};
+
+const readOnboardingState = (): OnboardingState => {
+  if (!fs.existsSync(onboardingStatePath)) {
+    fs.writeFileSync(onboardingStatePath, JSON.stringify(defaultOnboardingState, null, 2));
+    return defaultOnboardingState;
+  }
+
+  const rawState = JSON.parse(fs.readFileSync(onboardingStatePath, "utf8")) as Partial<OnboardingState>;
+
+  if (typeof rawState.completed !== "boolean") {
+    fs.writeFileSync(onboardingStatePath, JSON.stringify(defaultOnboardingState, null, 2));
+    return defaultOnboardingState;
+  }
+
+  return { completed: rawState.completed };
+};
+
+const writeOnboardingState = (state: OnboardingState) => {
+  fs.writeFileSync(onboardingStatePath, JSON.stringify(state, null, 2));
+};
 
 const getBrokerById = (id: number): Broker | null => {
   const data: Broker[] = JSON.parse(fs.readFileSync("./src/data/brokers.json", "utf8"));
@@ -238,6 +268,17 @@ app.get("/cases", (req: any, res: any) => {
 
 // Auth and onboarding endpoints
 
+app.get("/auth/state", (req: any, res: any) => {
+  const authState = JSON.parse(fs.readFileSync("./src/data/auth.json", "utf8")) as AuthState;
+  const onboardingState = readOnboardingState();
+  const passwordConfigured = typeof authState.password === "string" && authState.password.trim().length > 0;
+
+  res.status(200).json({
+    passwordConfigured,
+    onboardingCompleted: onboardingState.completed,
+  });
+});
+
 app.post("/auth/login", (req: any, res: any) => {
   const body = req.body as unknown;
   const allowedLoginKeys = ["password"] as const;
@@ -272,12 +313,12 @@ app.post("/auth/login", (req: any, res: any) => {
 
   if (submittedPassword !== password) {
     return res.status(401).json({
-      message: "Invalid password",
+      message: "Passwort ist falsch",
     });
   }
 
   res.status(200).json({
-    message: "Login successful",
+    message: "Login erfolgreich",
   });
 });
 
@@ -314,6 +355,14 @@ app.post("/auth/setpassword", (req: any, res: any) => {
 
   res.status(201).json({
     message: "Password saved",
+  });
+});
+
+app.post("/onboarding/complete", (req: any, res: any) => {
+  writeOnboardingState({ completed: true });
+
+  res.status(200).json({
+    message: "Onboarding marked as completed",
   });
 });
 
