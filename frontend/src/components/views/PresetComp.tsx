@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import GlassComp from "../GlassComp";
+import InputComp from "../InputComp";
 
 const placeholders = [
-    { tag: "%%ANREDE%%", label: "Anrede (Herr/Frau)" },
-    { tag: "%%VORNAME%%", label: "Vorname" },
-    { tag: "%%NACHNAME%%", label: "Nachname" },
-    { tag: "%%DATUM%%", label: "Aktuelles Datum" }
+    { tag: "%%VOLLER_NAME%%", label: "Vollstaendiger Name" },
+    { tag: "%%EMAIL%%", label: "E-Mail-Adresse" },
+    { tag: "%%TELEFON%%", label: "Telefonnummer" },
+    { tag: "%%GEBURTSDATUM%%", label: "Geburtsdatum" },
+    { tag: "%%ANSCHRIFT%%", label: "Anschrift" },
+    { tag: "%%ALIASE%%", label: "Fruehere Namen oder Aliase" },
+    { tag: "%%FRIST%%", label: "Antwortfrist in Tagen" },
+    { tag: "%%ANTWORT_EMAIL%%", label: "Antwort-E-Mail" },
+    { tag: "%%DATUM%%", label: "Aktuelles Datum" },
 ];
 
 export type Template = {
@@ -20,126 +26,209 @@ type PresetCompProps = {
     onSave: (template: Template) => void;
 };
 
+const defaultTemplate = (): Template => ({
+    id: `tpl_${Date.now()}`,
+    subject: "Loeschantrag nach Art. 17 DSGVO - %%VOLLER_NAME%%",
+    text: "Sehr geehrte Damen und Herren,\n\nhiermit fordere ich Sie auf, meine personenbezogenen Daten gemäß Art. 17 DSGVO unverzüglich zu löschen, soweit keine gesetzliche Aufbewahrungspflicht entgegensteht.\n\nZur Identifizierung meiner Person finden Sie nachfolgend die relevanten Angaben:\n\nVollständiger Name: %%VOLLER_NAME%%\nE-Mail-Adresse: %%E_MAIL%%\nTelefonnummer: %%TELEFON%%\nGeburtsdatum: %%GEBURTSDATUM%%\nAnschrift: %%ANSCHRIFT%%\nFrühere Namen / Aliase: %%ALIASE%%\n\nIch fordere Sie insbesondere dazu auf,\n\n1. sämtliche personenbezogenen Daten zu meiner Person zu löschen,\n2. die Verarbeitung meiner Daten einzustellen,\n3. mich aus allen Datenbanken, Verzeichnissen und Marketingverteilern zu entfernen,\n4. etwaige Empfänger, an die meine Daten weitergegeben wurden, über die Löschung zu informieren,\n5. mir eine Bestätigung der vollständigen Löschung zukommen zu lassen.\n\nBitte teilen Sie mir außerdem mit, welche Daten Sie zu meiner Person gespeichert hatten und an welche Dritten diese Daten weitergegeben wurden, soweit dies erforderlich ist, um die Löschung nachvollziehbar zu bestätigen.\n\nIch setze Ihnen hierfür eine Frist von %%FRIST%% Tagen ab Zugang dieser Nachricht. Sollte ich innerhalb dieser Frist keine vollständige und zufriedenstellende Rückmeldung erhalten, werde ich die Angelegenheit an einen Anwalt übergeben und weitere rechtliche Schritte prüfen.\n\nBitte senden Sie Ihre Antwort an: %%ANTWORT_EMAIL%%\n\nMit freundlichen Grüßen\n\n%%VOLLER_NAME%%",
+});
+
 const PresetComp = ({ initialTemplate, onBack, onSave }: PresetCompProps) => {
-    const [template, setTemplate] = useState<Template>(
-        initialTemplate || {
-            id: "tpl_" + Date.now(),
-            subject: "Löschantrag nach Art. 17 DSGVO - %%VOLLER_NAME%%",
-            text: "Sehr geehrte Damen und Herren,\n\nhiermit fordere ich Sie auf, meine personenbezogenen Daten gemäß Art. 17 DSGVO unverzüglich zu löschen, soweit keine gesetzliche Aufbewahrungspflicht entgegensteht.\n\nZur Identifizierung meiner Person finden Sie nachfolgend die relevanten Angaben:\n\nVollständiger Name: %%VOLLER_NAME%%\nE-Mail-Adresse: %%E_MAIL%%\nTelefonnummer: %%TELEFONNUMMER%%\nGeburtsdatum: %%GEBURTSDATUM%%\nAnschrift: %%ANSCHRIFT%%\nFrühere Namen / Aliase: %%ALIASE%%\n\nIch fordere Sie insbesondere dazu auf,\n\n1. sämtliche personenbezogenen Daten zu meiner Person zu löschen,\n2. die Verarbeitung meiner Daten einzustellen,\n3. mich aus allen Datenbanken, Verzeichnissen und Marketingverteilern zu entfernen,\n4. etwaige Empfänger, an die meine Daten weitergegeben wurden, über die Löschung zu informieren,\n5. mir eine Bestätigung der vollständigen Löschung zukommen zu lassen.\n\nBitte teilen Sie mir außerdem mit, welche Daten Sie zu meiner Person gespeichert hatten und an welche Dritten diese Daten weitergegeben wurden, soweit dies erforderlich ist, um die Löschung nachvollziehbar zu bestätigen.\n\nIch setze Ihnen hierfür eine Frist von %%FRIST_TAGE%% Tagen ab Zugang dieser Nachricht. Sollte ich innerhalb dieser Frist keine vollständige und zufriedenstellende Rückmeldung erhalten, werde ich die Angelegenheit an einen Anwalt übergeben und weitere rechtliche Schritte prüfen.\n\nBitte senden Sie Ihre Antwort an: %%ANTWORT_E_MAIL%%\n\nMit freundlichen Grüßen\n\n%%VOLLER_NAME%%"
+    const [template, setTemplate] = useState<Template>(initialTemplate ?? defaultTemplate());
+    const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+    const selectionRef = useRef({ start: template.text.length, end: template.text.length });
+
+    const updateSelection = () => {
+        const textarea = textareaRef.current;
+
+        if (!textarea) {
+            return;
         }
-    );
+
+        selectionRef.current = {
+            start: textarea.selectionStart,
+            end: textarea.selectionEnd,
+        };
+    };
+
+    const insertPlaceholder = (tag: string) => {
+        const textarea = textareaRef.current;
+        const start = textarea ? textarea.selectionStart : selectionRef.current.start;
+        const end = textarea ? textarea.selectionEnd : selectionRef.current.end;
+        const nextCursorPosition = start + tag.length;
+
+        setTemplate((currentTemplate) => ({
+            ...currentTemplate,
+            text: `${currentTemplate.text.slice(0, start)}${tag}${currentTemplate.text.slice(end)}`,
+        }));
+        selectionRef.current = {
+            start: nextCursorPosition,
+            end: nextCursorPosition,
+        };
+
+        requestAnimationFrame(() => {
+            const nextTextarea = textareaRef.current;
+
+            if (!nextTextarea) {
+                return;
+            }
+
+            nextTextarea.focus();
+            nextTextarea.setSelectionRange(nextCursorPosition, nextCursorPosition);
+        });
+    };
 
     const handleSave = () => {
+        if (!template.subject.trim()) {
+            alert("Der Betreff darf nicht leer sein.");
+            return;
+        }
+
         if (!template.text.trim()) {
             alert("Der Nachrichtentext darf nicht leer sein.");
             return;
         }
+
         onSave(template);
     };
 
     return (
-        <div className="flex h-[calc(100vh-70px)] w-full flex-col overflow-hidden p-6">
-            <div className="grid w-full flex-1 grid-cols-[300px_minmax(0,1fr)] gap-6 min-h-0">
-                <div className="flex h-full flex-col">
-                    <GlassComp
-                        width="100%"
-                        height="100%"
-                        tintOpacity={0.5}
-                        className="flex-1 rounded-3xl border border-gray-700 p-8"
-                    >
-                        <div className="flex h-full flex-col gap-3 overflow-y-auto no-scrollbar">
-                            <h2 className="mb-2 w-full text-left text-2xl font-bold text-white">Preset Mail</h2>
-                            <p className="mb-2 text-sm text-gray-300">
-                                Diese Platzhalter kannst du im Text verwenden:
-                            </p>
-                            
-                            {placeholders.map((ph, idx) => (
-                                <div key={idx} className="h-[80px] w-full flex-shrink-0">
+        <div className="h-full-respect-nav w-full overflow-y-auto p-6 no-scrollbar">
+            <div className="flex h-full w-full flex-col gap-6 pb-24">
+                <div className="grid min-h-0 flex-1 grid-cols-1 gap-6 lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] 2xl:grid-cols-[minmax(320px,420px)_minmax(0,1fr)]">
+                    <div className="flex min-h-0 flex-col gap-4">
+                        <GlassComp
+                          width="100%"
+                          height="auto"
+                          tintOpacity={0.5}
+                          className="rounded-3xl border border-gray-700 p-5"
+                        >
+                            <div className="w-full">
+                                <h2 className="text-xl font-semibold text-white">Platzhalter</h2>
+                            </div>
+                        </GlassComp>
+
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                            {placeholders.map((placeholder) => (
+                                <button
+                                  key={placeholder.tag}
+                                  type="button"
+                                  onClick={() => insertPlaceholder(placeholder.tag)}
+                                  className="w-full min-w-0 bg-transparent text-left"
+                                >
                                     <GlassComp
-                                        width="100%"
-                                        height="100%"
-                                        tintOpacity={0.5}
-                                        className="rounded-xl border border-gray-700"
+                                      width="100%"
+                                      height="100%"
+                                      tintOpacity={0.5}
+                                      borderRadius={24}
+                                      className="rounded-3xl border border-gray-700 px-4 py-4 hover:bg-gray-800/40"
+                                      isHoverable
                                     >
-                                        <div className="flex h-full w-full flex-col justify-center bg-transparent px-4 py-3 text-left">
-                                            <span className="mb-1 font-mono text-sm font-semibold text-white">
-                                                {ph.tag}
+                                        <div className="flex h-full w-full flex-col gap-2">
+                                            <span className="font-mono text-sm font-semibold text-white">
+                                                {placeholder.tag}
                                             </span>
-                                            <span className="truncate text-xs text-gray-300">
-                                                {ph.label}
-                                            </span>
+                                            <span className="text-sm text-gray-400">{placeholder.label}</span>
                                         </div>
                                     </GlassComp>
-                                </div>
+                                </button>
                             ))}
                         </div>
-                    </GlassComp>
-                </div>
+                    </div>
 
-                <div className="flex h-full w-full min-w-0 flex-col">
                     <GlassComp
-                        width="100%"
-                        height="100%"
-                        tintOpacity={0.50}
-                        className="flex-1 rounded-3xl border border-gray-700 p-8"
+                      width="100%"
+                      height="auto"
+                      tintOpacity={0.5}
+                      className="rounded-3xl border border-gray-700 p-6"
                     >
-                        <div className="flex h-full w-full flex-col overflow-y-auto no-scrollbar">
-                            
-                            <label className="mb-8 w-full text-left text-2xl font-bold tracking-wide text-white">
-                                E-Mail Vorlage
-                            </label>
-                            
-                            <div className="flex w-full flex-1 flex-col min-h-[250px]">
-                                <GlassComp width="100%" height="100%" tintOpacity={0.5} className="rounded-xl border border-gray-700 transition-colors focus-within:border-gray-500">
-                                    <textarea 
-                                        value={template.text}
-                                        onChange={(e) => setTemplate({ ...template, text: e.target.value })}
-                                        placeholder="Schreibe hier deinen Vorlagentext..."
-                                        className="h-full w-full resize-none bg-transparent p-4 text-base leading-relaxed text-white placeholder-gray-500 focus:outline-none no-scrollbar"
+                        <div className="flex h-full w-full flex-col gap-6">
+                            <div className="w-full">
+                                <h2 className="text-2xl font-semibold text-white">E-Mail Vorlage</h2>
+                            </div>
+
+                            <div className="w-full">
+                                <p className="mb-2 text-sm text-white/80">Betreff</p>
+                                <InputComp
+                                  width="100%"
+                                  height={44}
+                                  value={template.subject}
+                                  onChange={(event) =>
+                                      setTemplate((currentTemplate) => ({
+                                          ...currentTemplate,
+                                          subject: event.target.value,
+                                      }))
+                                  }
+                                  placeholder="Betreff eingeben"
+                                  className="px-4"
+                                />
+                            </div>
+
+                            <div className="flex min-h-[420px] w-full flex-1 flex-col">
+                                <p className="mb-2 text-sm text-white/80">Nachricht</p>
+                                <GlassComp
+                                  width="100%"
+                                  height="100%"
+                                  tintOpacity={0.5}
+                                  borderRadius={24}
+                                  className="min-h-[420px] rounded-3xl border border-gray-700 transition-colors focus-within:border-gray-500"
+                                >
+                                    <textarea
+                                      ref={textareaRef}
+                                      value={template.text}
+                                      onChange={(event) =>
+                                          setTemplate((currentTemplate) => ({
+                                              ...currentTemplate,
+                                              text: event.target.value,
+                                          }))
+                                      }
+                                      onClick={updateSelection}
+                                      onKeyUp={updateSelection}
+                                      onSelect={updateSelection}
+                                      placeholder="Schreibe hier deinen Vorlagentext..."
+                                      className="h-full w-full resize-none bg-transparent p-4 text-base leading-relaxed text-white placeholder-gray-500 focus:outline-none no-scrollbar"
                                     />
                                 </GlassComp>
                             </div>
-
                         </div>
                     </GlassComp>
                 </div>
 
+                <div className="flex w-full flex-wrap items-center justify-end gap-3">
+                    <div className="h-[52px] w-full sm:w-[160px]">
+                        <GlassComp
+                          width="100%"
+                          height="100%"
+                          tintOpacity={0.5}
+                          borderRadius={999}
+                          className="cursor-pointer border border-gray-700 transition-colors hover:bg-gray-800/50"
+                          onClick={onBack}
+                          role="button"
+                          isHoverable
+                        >
+                            <div className="flex h-full w-full items-center justify-center">
+                                <p className="text-sm font-semibold text-white">Abbrechen</p>
+                            </div>
+                        </GlassComp>
+                    </div>
+
+                    <div className="h-[52px] w-full sm:w-[200px]">
+                        <GlassComp
+                          width="100%"
+                          height="100%"
+                          tintOpacity={0.5}
+                          borderRadius={999}
+                          className="cursor-pointer border border-emerald-400/60 bg-emerald-900/25 transition-colors hover:bg-emerald-900/45"
+                          onClick={handleSave}
+                          role="button"
+                          isHoverable
+                        >
+                            <div className="flex h-full w-full items-center justify-center">
+                                <p className="text-sm font-semibold text-white">Vorlage speichern</p>
+                            </div>
+                        </GlassComp>
+                    </div>
+                </div>
             </div>
-
-            <div className="mt-6 flex w-full flex-shrink-0 items-center justify-end gap-3">
-                <div className="h-[52px] w-[160px]">
-                    <GlassComp
-                        width="100%"
-                        height="100%"
-                        tintOpacity={0.5}
-                        borderRadius={999}
-                        className="cursor-pointer border border-gray-700 transition-colors hover:bg-gray-800/50"
-                        onClick={onBack}
-                        role="button"
-                    >
-                        <div className="flex h-full w-full items-center justify-center">
-                            <p className="text-sm font-semibold text-white">Abbrechen</p>
-                        </div>
-                    </GlassComp>
-                </div>
-                
-                <div className="h-[52px] w-[200px]">
-                    <GlassComp
-                        width="100%"
-                        height="100%"
-                        tintOpacity={0.5}
-                        borderRadius={999}
-                        className="cursor-pointer border border-emerald-400/60 bg-emerald-900/25 transition-colors hover:bg-emerald-900/45"
-                        onClick={handleSave}
-                        role="button"
-                    >
-                        <div className="flex h-full w-full items-center justify-center">
-                            <p className="text-sm font-semibold text-white">Vorlage speichern</p>
-                        </div>
-                    </GlassComp>
-                </div>
-            </div>
-
         </div>
     );
 };
