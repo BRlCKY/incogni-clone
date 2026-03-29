@@ -49,6 +49,7 @@ const CasesComp = () => {
             <div className="h-full-respect-nav p-4">
 
                 <div className="mt-16"> {/* mt-16, to respect the buttons on top */}
+                    {/* on mac buttons are slightly moved. this is a problem on apples side */}
                     {items.map((item) => (
                         <div className="mb-1" key={item.brokerName}>
                             <ListComp
